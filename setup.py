@@ -1,6 +1,6 @@
 from setuptools import setup
 
-broker_name = 'template'
+broker_name = 'tendersallbiz'
 pkg_name = 'robot_tests.broker.{}'.format(broker_name)
 description = '{} broker for OpenProcurement Robot tests'.format(broker_name)
 
