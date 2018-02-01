@@ -151,14 +151,5 @@ def add_second_sign_after_point(amount):
     return amount
 
 
-# def get_bid_phone(internal_id, bid_index):
-#     r = urllib.urlopen('https://api-sandbox.prozorro.openprocurement.net/api/dev/tenders/{}'.format(internal_id)).read()
-#     tender = json.loads(r)
-#     bid_id = tender['data']['qualifications'][int(bid_index)]["bidID"]
-#     for bid in tender['data']['bids']:
-#         if bid['id'] == bid_id:
-#             return bid['tenderers'][0]['contactPoint']['telephone']
-
-
 def get_upload_file_path():
     return os.path.join(os.getcwd(), 'src/robot_tests.broker.allbiz/testFileForUpload.txt')

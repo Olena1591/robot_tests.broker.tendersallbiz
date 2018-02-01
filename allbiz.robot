@@ -537,6 +537,18 @@ Feature Count Should Not Be Zero
 
 Відповісти на вимогу про виправлення умов закупівлі
   [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${answer_data}
+  allbiz.Відповісти на вимогу  ${username}  ${tender_uaid}  ${complaintID}  ${answer_data}
+
+Відповісти на вимогу про виправлення умов лоту
+  [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${answer_data}
+  allbiz.Відповісти на вимогу  ${username}  ${tender_uaid}  ${complaintID}  ${answer_data}
+
+Відповісти на вимогу про виправлення визначення переможця
+  [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${answer_data}  ${award_index}
+  allbiz.Відповісти на вимогу  ${username}  ${tender_uaid}  ${complaintID}  ${answer_data}
+
+Відповісти на вимогу
+  [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${answer_data}
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Run Keyword If  "переможця" in "${TEST_NAME}"  Run Keywords
   ...    Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
@@ -551,14 +563,6 @@ Feature Count Should Not Be Zero
   Дочекатися І Клікнути  xpath=//*[contains(text(),"${complaintID}")]/../descendant::input[@value="${answer_data.data.resolutionType}"]/..
   Дочекатися І Клікнути  name=answer_complaint_submit
   Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
-
-Відповісти на вимогу про виправлення умов лоту
-  [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${answer_data}
-  allbiz.Відповісти на вимогу про виправлення умов закупівлі  ${username}  ${tender_uaid}  ${complaintID}  ${answer_data}
-
-Відповісти на вимогу про виправлення визначення переможця
-  [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${answer_data}  ${award_index}
-  allbiz.Відповісти на вимогу про виправлення умов закупівлі  ${username}  ${tender_uaid}  ${complaintID}  ${answer_data}
 
 Створити чернетку вимоги про виправлення умов закупівлі
   [Arguments]  ${username}  ${tender_uaid}  ${claim}
@@ -968,22 +972,6 @@ Feature Count Should Not Be Zero
   ...  Page Should Contain  Зверніть увагу
   ...  AND  Wait Element Animation  xpath=//*[@class="modal-dialog"]/descendant::*[contains(text(),"Накласти ЕЦП")]
   Накласти ЄЦП
-
-#Відхилити кваліфікацію
-#  [Arguments]  ${username}  ${tender_uaid}  ${qualification_num}
-#  ${document}=  get_upload_file_path
-#  allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
-#  ${internal_id}=  Get Text  xpath=//div[text()="ID"]/following-sibling::div/span
-#  ${bid_phone}=  get_bid_phone  ${internal_id}  ${qualification_num}
-#  Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/euprequalification")]
-#  Wait And Select From List By Value  xpath=//*[contains(text(),"${bid_phone}")]/ancestor::tr/following-sibling::tr[1]/descendant::select[@class="choose_prequalification"]  unsuccessful
-#  Дочекатися І Клікнути  xpath=//*[contains(text(),"${bid_phone}")]/ancestor::tr/following-sibling::tr[1]/descendant::div[@id="qualifications-cause"]/label[1]
-#  Choose File  xpath=//*[contains(text(),"${bid_phone}")]/ancestor::tr/following-sibling::tr[1]/descendant::input[@name="FileUpload[file]"]  ${document}
-#  Дочекатися І Клікнути  xpath=(//*[contains(text(),"${bid_phone}")]/ancestor::tr/following-sibling::tr[1]/descendant::button[@name="send_prequalification"])[last()]
-#  Wait Until Keyword Succeeds  10 x  1 s  Run Keywords
-#  ...  Click Element  xpath=(//*[@data-dismiss="modal"])[last()]
-#  ...  AND  Wait Until Page Does Not Contain  Зверніть увагу  10
-#  Накласти ЄЦП
 
 Скасувати кваліфікацію
   [Arguments]  ${username}  ${tender_uaid}  ${qualification_num}
