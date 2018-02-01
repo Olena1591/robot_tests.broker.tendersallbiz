@@ -308,12 +308,12 @@ Get Last Feature Index
   Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
 
 Змінити лот
-  [Arguments]  ${username}  ${tender_uaid}  ${lot_id}  ${fieldname}  ${fieldvalue}
+  [Arguments]  ${username}  ${tender_uaid}  ${lot_id}  ${field_name}  ${field_value}
   ${field_value}=  Run Keyword If  "amount" in "${field_name}"  add_second_sign_after_point  ${field_value}
   ...  ELSE  Set Variable  ${field_value}
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//a[contains(text(),'Редагувати')]
-  Input Text  xpath=(//input[contains(@value,"${lot_id}")]/ancestor::div[@class="lots_marker"]/descendant::*[contains(@name,"${fieldname.replace(".", "][")}")])[1]  ${fieldvalue}
+  Input Text  xpath=(//input[contains(@value,"${lot_id}")]/ancestor::div[@class="lots_marker"]/descendant::*[contains(@name,"${field_name.replace(".", "][")}")])[1]  ${field_value}
   Дочекатися І Клікнути  xpath=//button[contains(@class,'btn_submit_form')]
   Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
 
@@ -969,21 +969,21 @@ Feature Count Should Not Be Zero
   ...  AND  Wait Element Animation  xpath=//*[@class="modal-dialog"]/descendant::*[contains(text(),"Накласти ЕЦП")]
   Накласти ЄЦП
 
-Відхилити кваліфікацію
-  [Arguments]  ${username}  ${tender_uaid}  ${qualification_num}
-  ${document}=  get_upload_file_path
-  allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
-  ${internal_id}=  Get Text  xpath=//div[text()="ID"]/following-sibling::div/span
-  ${bid_phone}=  get_bid_phone  ${internal_id}  ${qualification_num}
-  Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/euprequalification")]
-  Wait And Select From List By Value  xpath=//*[contains(text(),"${bid_phone}")]/ancestor::tr/following-sibling::tr[1]/descendant::select[@class="choose_prequalification"]  unsuccessful
-  Дочекатися І Клікнути  xpath=//*[contains(text(),"${bid_phone}")]/ancestor::tr/following-sibling::tr[1]/descendant::div[@id="qualifications-cause"]/label[1]
-  Choose File  xpath=//*[contains(text(),"${bid_phone}")]/ancestor::tr/following-sibling::tr[1]/descendant::input[@name="FileUpload[file]"]  ${document}
-  Дочекатися І Клікнути  xpath=(//*[contains(text(),"${bid_phone}")]/ancestor::tr/following-sibling::tr[1]/descendant::button[@name="send_prequalification"])[last()]
-  Wait Until Keyword Succeeds  10 x  1 s  Run Keywords
-  ...  Click Element  xpath=(//*[@data-dismiss="modal"])[last()]
-  ...  AND  Wait Until Page Does Not Contain  Зверніть увагу  10
-  Накласти ЄЦП
+#Відхилити кваліфікацію
+#  [Arguments]  ${username}  ${tender_uaid}  ${qualification_num}
+#  ${document}=  get_upload_file_path
+#  allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
+#  ${internal_id}=  Get Text  xpath=//div[text()="ID"]/following-sibling::div/span
+#  ${bid_phone}=  get_bid_phone  ${internal_id}  ${qualification_num}
+#  Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/euprequalification")]
+#  Wait And Select From List By Value  xpath=//*[contains(text(),"${bid_phone}")]/ancestor::tr/following-sibling::tr[1]/descendant::select[@class="choose_prequalification"]  unsuccessful
+#  Дочекатися І Клікнути  xpath=//*[contains(text(),"${bid_phone}")]/ancestor::tr/following-sibling::tr[1]/descendant::div[@id="qualifications-cause"]/label[1]
+#  Choose File  xpath=//*[contains(text(),"${bid_phone}")]/ancestor::tr/following-sibling::tr[1]/descendant::input[@name="FileUpload[file]"]  ${document}
+#  Дочекатися І Клікнути  xpath=(//*[contains(text(),"${bid_phone}")]/ancestor::tr/following-sibling::tr[1]/descendant::button[@name="send_prequalification"])[last()]
+#  Wait Until Keyword Succeeds  10 x  1 s  Run Keywords
+#  ...  Click Element  xpath=(//*[@data-dismiss="modal"])[last()]
+#  ...  AND  Wait Until Page Does Not Contain  Зверніть увагу  10
+#  Накласти ЄЦП
 
 Скасувати кваліфікацію
   [Arguments]  ${username}  ${tender_uaid}  ${qualification_num}
