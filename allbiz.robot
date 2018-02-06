@@ -900,12 +900,11 @@ Feature Count Should Not Be Zero
   Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  xpath=//div[contains(@class, 'alert-success')]
 
 Завантажити документ в ставку
-  [Arguments]  ${username}  ${path}  ${tender_uaid}  ${doc_type}=documents
+  [Arguments]  ${username}  ${path}  ${tender_uaid}  ${doc_type}=technicalSpecifications
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
   Choose File  xpath=(//input[@type="file"])[last()]  ${path}
-  Run Keyword And Ignore Error  Wait Until Element Is Visible  xpath=(//select[contains(@name,"[relatedItem]")])[last()]
-  ${doc_type_status}=  Run Keyword And Return Status  Element Should Be Visible  xpath=(//select[contains(@name,"[documentType]")])[last()]
-  Run Keyword If  ${doc_type_status}  Wait And Select From List By Value  xpath=(//select[contains(@name,"[documentType]")])[last()]  technicalSpecifications
+  ${doc_type_status}=  Run Keyword And Return Status  Wait Until Element Is visible  xpath=(//select[contains(@name,"[documentType]")])[last()]  10
+  Run Keyword If  ${doc_type_status}  Wait And Select From List By Value  xpath=(//select[contains(@name,"[documentType]")])[last()]  ${doc_type}
   ${related_status}=  Run Keyword And Return Status  Element Should Be Visible  xpath=(//select[contains(@name,"[relatedItem]")])[last()]
   Run Keyword If  ${related_status}  Wait And Select From List By Value  xpath=(//select[contains(@name,"[relatedItem]")])[last()]  tender
   Подати Пропозицію Без Накладення ЕЦП
