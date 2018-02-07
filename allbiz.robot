@@ -321,6 +321,7 @@ Get Last Feature Index
   [Arguments]  ${username}  ${filepath}  ${tender_uaid}  ${lot_id}
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//a[contains(text(),'Редагувати')]
+  Sleep  5  # !!Teprorary!! At slow environment or Chrome 59 + chromedriver 2.32, JS does not have time to index Inputs
   Wait Until Page Contains Element  xpath=//input[contains(@value,"${lot_id}")]/ancestor::div[@class="lots_marker"]/descendant::input[@type="file"][last()]
   Choose File  xpath=//input[contains(@value,"${lot_id}")]/ancestor::div[@class="lots_marker"]/descendant::input[@type="file"][last()]  ${filepath}
   ${last_doc_name}=  Get Element Attribute  xpath=(//input[contains(@name,"Tender[documents]") and not (contains(@name, "__empty_doc__"))])[last()]@name
