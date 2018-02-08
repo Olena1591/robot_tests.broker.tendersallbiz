@@ -1109,7 +1109,7 @@ Scroll To Element
   ...  AND  Choose File  id=PKeyFileInput  ${CURDIR}/Key-6.dat
   ...  AND  Input text  id=PKeyPassword  12345677
   ...  AND  Дочекатися І Клікнути  id=PKeyReadButton
-  ...  AND  Wait Until Page Contains  Горобець  10
+  ...  AND  Wait Until Page Contains  Ключ успішно завантажено  10
   Дочекатися І Клікнути  id=SignDataButton
   Wait Until Keyword Succeeds  60 x  1 s  Page Should Not Contain Element  id=SignDataButton  120
 
