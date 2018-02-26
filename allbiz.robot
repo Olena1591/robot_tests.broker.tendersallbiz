@@ -283,7 +283,8 @@ Get Last Feature Index
   [Arguments]  ${username}  ${tender_uaid}
   Switch browser  ${username}
   Go To  ${host}/tenders/
-  Run Keyword And Ignore Error  Wait Until Keyword Succeeds  10 x  1 s  Закрити модалку  xpath=//button[@data-dismiss="modal"]
+  ${status}=  Run Keyword And Return Status  Wait Until Element Is Visible  xpath=//button[@data-dismiss="modal"]  5
+  Run Keyword If  ${status}  Закрити модалку  xpath=//button[@data-dismiss="modal"]
   Wait Until Element Is Visible  name=TendersSearch[tender_cbd_id]  10
   Input text  name=TendersSearch[tender_cbd_id]  ${tender_uaid}
   Wait Until Keyword Succeeds  6x  20s  Run Keywords
@@ -1028,7 +1029,7 @@ Feature Count Should Not Be Zero
   Input Text  xpath=//input[contains(@name,"[contractNumber]")]  777
   Input Text  name=ContractPeriod[0][startDate]  01/06/2018 00:00:00
   Input Text  name=ContractPeriod[0][endDate]  09/06/2018 00:00:00
-  Choose Ok On Next Confirmation
+  Focus  xpath=//button[text()='Активувати']
   Дочекатися І Клікнути  xpath=//button[text()='Активувати']
   Run Keyword If  '${MODE}' != 'belowThreshold'  Run Keywords
   ...  Wait Element Animation  xpath=//*[@class="modal-dialog"]/descendant::button[contains(text(),"Накласти ЕЦП")]
