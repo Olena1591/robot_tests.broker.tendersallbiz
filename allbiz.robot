@@ -77,7 +77,7 @@ Login
   Run Keyword If  "${SUITE_NAME}" == "Tests Files.Complaints"  Execute Javascript  $('input[name="accelerator"]').val('${custom_acceleration}')
   Get Element Attribute  xpath=//input[@name="accelerator"]@value
   Select From List By Index  id=contact-point-select  1
-  Дочекатися І Клікнути  xpath=//button[contains(@class,'btn_submit_form')]
+  Click Element  xpath=//button[contains(@class,'btn_submit_form')]
   Wait Until Element Is Visible  xpath=//*[@data-test-id="tenderID"]  20
   ${tender_uaid}=  Get Text  xpath=//*[@data-test-id="tenderID"]
   [Return]  ${tender_uaid}
@@ -1030,7 +1030,7 @@ Feature Count Should Not Be Zero
   Input Text  name=ContractPeriod[0][startDate]  01/06/2018 00:00:00
   Input Text  name=ContractPeriod[0][endDate]  09/06/2018 00:00:00
   Focus  xpath=//button[text()='Активувати']
-  Дочекатися І Клікнути  xpath=//button[text()='Активувати']
+  Click Element  xpath=//button[text()='Активувати']
   Run Keyword If  '${MODE}' != 'belowThreshold'  Run Keywords
   ...  Wait Element Animation  xpath=//*[@class="modal-dialog"]/descendant::button[contains(text(),"Накласти ЕЦП")]
   ...  AND  Накласти ЄЦП
