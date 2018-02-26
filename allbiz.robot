@@ -331,7 +331,6 @@ Get Last Feature Index
   ${doc_name}=  Set Variable  ${full_doc_name.split(".")[0]}
   Wait Until Element Is Visible  xpath=//input[contains(@value,"${doc_name}")]/../descendant::input[contains(@name, "[title]")]
   Input Text  xpath=//input[contains(@value,"${doc_name}")]/../descendant::input[contains(@name, "[title]")]  ${filepath.split("/")[-1]}
-#  Select From List By Label  id=document-${doc_index}-relateditem  Поточний лот
   Select From List By Label  xpath=(//select[contains(@name, "Tender[documents]")])[last()]  Поточний лот
   Click Button  xpath=//button[contains(@class,'btn_submit_form')]
   Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
