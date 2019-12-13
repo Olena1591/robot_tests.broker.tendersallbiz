@@ -44,6 +44,103 @@ Login
   Input text  id=loginform-password  ${USERS.users['${username}'].password}
   Дочекатися І Клікнути  name=login-button
 
+###############################################################################################################
+######################################    СТВОРЕННЯ ПЛАНУ    ################################################
+###############################################################################################################
+
+Створити план
+  [Arguments]  ${username}  ${tender_data}
+  ${number_of_breakdowns}=  Get length  ${tender_data.data.budget.breakdown}
+  ${items}=  Get From Dictionary  ${tender_data.data}  items
+  ${number_of_items}=  Get length  ${items}
+  ${budget_amount}=  Convert to string  ${tender_data.data.budget.amount}
+
+  Click Element  xpath=//a[@href="${host}/tenders"]
+  Дочекатися І Клікнути  xpath=//a[@href="${host}/plan"]
+  Дочекатися І Клікнути  xpath=//a[@href="${host}/buyer/plan/create"]
+  Conv And Select From List By Value  name=procurementMethod  open_belowThreshold
+  Input text  name=Plan[budget][description]  ${tender_data.data.budget.description}
+  Input text  name=Plan[budget][amount]  ${budget_amount}
+  Conv And Select From List By Value  name=Plan[budget][currency]  UAH
+  Input Date  name=Plan[tender][tenderPeriod][startDate]  ${tender_data.data.tender.tenderPeriod.startDate}
+  Input Date  name=Plan[budget][period][startDate]  ${tender_data.data.tender.tenderPeriod.startDate}
+  Execute Javascript  document.querySelector('[name="Plan[budget][period][endDate]"]').value="31/12/2019"
+  Click Element  xpath=//label[@for="classification-cpv-description"]
+  Wait Element Animation  id=search_code
+  Input Text  id=search_code  ${tender_data.data.classification.id}
+  Wait Until Page Contains  ${tender_data.data.classification.id}
+  Click element  xpath=//div[@id="${tender_data.data.classification.id}"]
+  Click element  xpath=//button[@id="btn-ok"]
+  Wait until element is visible  xpath=//button[@class="mk-btn mk-btn_default add_plan_breakdown"]
+
+#  Conv And Select From List By Value  name=Plan[additionalClassifications][0][dkType]  ${tender_data.data.additionalClassifications}
+  :FOR   ${breakdown_index}   IN RANGE   ${number_of_breakdowns}
+  \  Add breakdown  ${breakdown_index}  ${tender_data.data.budget.breakdown[${breakdown_index}]}
+  :FOR  ${item_index}   IN RANGE   ${number_of_items}
+  \  Add item plan  ${item_index}  ${items[${item_index}]}
+  Wait until element is not visible  xpath=//div[@id="mbody"]
+  Дочекатися І Клікнути  xpath=//button[@class="mk-btn mk-btn_accept"]
+  Накласти ЄЦП
+  Wait until element is visible  xpath=//div[@data-test-id="planID"]
+  ${planID}=  Get text  xpath=//div[@data-test-id="planID"]
+  [Return]  ${planID}
+
+Add breakdown
+  [Arguments]  ${breakdown_index}  ${breakdown}
+  ${breakdown.value.amount}=  Convert to string  ${breakdown.value.amount}
+  Дочекатися І Клікнути  xpath=//button[@class="mk-btn mk-btn_default add_plan_breakdown"]
+  Conv And Select From List By Value  name=Plan[budget][breakdown][${breakdown_index + 1}][title]  ${breakdown.title}
+  Input text  name=Plan[budget][breakdown][${breakdown_index + 1}][description]  ${breakdown.description}
+  Input text  name=Plan[budget][breakdown][${breakdown_index + 1}][value][amount]  ${breakdown.value.amount}
+  Conv And Select From List By Value  name=Plan[budget][breakdown][${breakdown_index + 1}][value][currency]  ${breakdown.value.currency}
+
+Add item plan
+  [Arguments]  ${item_index}  ${item}
+  ${item.quantity}=  Convert to string  ${item.quantity}
+  Wait until element is not visible  xpath=//div[@class="modal-backdrop fade"]
+  Wait until element is not visible  xpath=//div[@id="mbody"]
+  Дочекатися І Клікнути   xpath=//button[@class="mk-btn mk-btn_default add_item_plan"]
+  Input text  name=Plan[items][${item_index + 1}][description]  ${item.description}
+  Input text  name=Plan[items][${item_index + 1}][quantity]  ${item.quantity}
+  Conv And Select From List By Value  name=Plan[items][${item_index + 1}][unit][code]  ${item.unit.code}
+  Input Date  id=deliverydate-${item_index + 1}-enddate  ${item.deliveryDate.endDate}
+  Click Element  xpath=//label[@for="classification-cpv-${item_index + 1}-description"]
+  Wait Element Animation  id=search_code
+  Input Text  id=search_code  ${item.classification.id}
+  Wait Until Page Contains  ${item.classification.id}
+  Click element  xpath=//div[@id="${item.classification.id}"]
+  Click element  xpath=//button[@id="btn-ok"]
+
+
+Оновити сторінку з планом
+  [Arguments]  ${username}  ${tender_uaid}
+  Reload page
+
+
+Пошук плану по ідентифікатору
+  [Arguments]  ${username}  ${planID}
+  Go To  ${host}/plan
+  Дочекатися І Клікнути  xpath=//span[@id="more-filter"]
+  Wait Until Page Contains  xpass=//input[@id="plan-id"]
+  Input text  name="PlansSearch[planID]"  ${planID}
+  Click element  xpass=//button[@id="search"]
+  Wait Until Element Is Visible  class="search-result_article"  ${planID}
+  Click Element  xpath=//*[contains(text(),'${planID}')]/ancestor::div[@class="search-result"]/descendant::a[1]
+  Wait Until Element Is Visible  xpath=//button[@data-placeholder-id="#check-sign-place"]
+
+
+  ${status}=  Run Keyword And Return Status  Wait Until Element Is Visible  xpath=//button[@data-dismiss="modal"]  5
+  Run Keyword If  ${status}  Закрити модалку  xpath=//button[@data-dismiss="modal"]
+  Wait Until Element Is Visible  name=TendersSearch[tender_cbd_id]  10
+  Input text  name=TendersSearch[tender_cbd_id]  ${tender_uaid}
+  Wait Until Keyword Succeeds  6x  20s  Run Keywords
+  ...  Run Keyword And Ignore Error  Wait Until Keyword Succeeds  3 x  1 s  Click Element  xpath=//button[@data-dismiss="modal"]
+  ...  AND  Дочекатися І Клікнути  xpath=//button[text()='Шукати']
+  ...  AND  Wait Until Element Is Visible  xpath=//*[contains(@class, "btn-search_cancel")]  10
+  ...  AND  Wait Until Element Is Visible  xpath=//*[contains(text(),'${tender_uaid}')]/ancestor::div[@class="search-result"]/descendant::a[1]  10
+  Click Element  xpath=//*[contains(text(),'${tender_uaid}')]/ancestor::div[@class="search-result"]/descendant::a[1]
+  Run Keyword And Ignore Error  Wait Until Keyword Succeeds  3 x  1 s  Click Element  xpath=//button[@data-dismiss="modal"]
+  Wait Until Element Is Visible  xpath=//*[@data-test-id="tenderID"]  10
 
 ###############################################################################################################
 ######################################    СТВОРЕННЯ ТЕНДЕРУ    ################################################
@@ -167,8 +264,8 @@ Input Minimal Step Amount
   Log Many  ${items}
   ${items_length}=  Get Length  ${items}
   :FOR  ${index}  IN RANGE  ${items_length}
-  \  Run Keyword if  ${index} != 0  Дочекатися і Клікнути  xpath=(//button[contains(@class, "add_item")])[last()]
-  \  Додати предмет   ${items[${index}]}
+
+
 
 
 Додати предмет
@@ -1126,18 +1223,20 @@ Scroll To Element
   Execute Javascript  window.scrollTo(0,${elem_vert_pos - 300});
 
 Накласти ЄЦП
-  Wait Until Page Contains  Накласти ЕЦП
-  Дочекатися І Клікнути  xpath=//*[@class="modal-dialog"]/descendant::*[contains(text(),"Накласти ЕЦП")]
-  Wait Until Keyword Succeeds  30 x  1 s  Page Should Contain Element  id=SignDataButton
-  Execute Javascript  $(".fade.modal.in").scrollTop(2000)
+  Wait Until Page Contains  Накласти ЕЦП/КЕП
+  Дочекатися І Клікнути  xpath=//button[@class="sign_btn mk-btn mk-btn_default"][contains(text(),"Накласти ЕЦП/КЕП")]
+  Wait Until Page Contains Element  xpath=//button[@id="SignDataButton"]
+  Дочекатися І Клікнути  xpath=//select[@id="CAsServersSelect"]
   ${status}=  Run Keyword And Return Status  Wait Until Keyword Succeeds  30 x  1 s  Page Should Contain  Оберіть файл з особистим ключем (зазвичай з ім'ям Key-6.dat) та вкажіть пароль захисту
   Run Keyword If  ${status}  Wait Until Keyword Succeeds  30 x  20 s  Run Keywords
   ...  Wait And Select From List By Label  id=CAsServersSelect  Тестовий ЦСК АТ "ІІТ"
-  ...  AND  Execute Javascript  var element = document.getElementById('PKeyFileInput'); element.style.visibility="visible";  $(".fade.modal.in").scrollTop(2000)
+  ...  AND  Execute Javascript  var element = document.getElementById('PKeyFileInput'); element.style.visibility="visible";
   ...  AND  Choose File  id=PKeyFileInput  ${CURDIR}/Key-6.dat
   ...  AND  Input text  id=PKeyPassword  12345677
   ...  AND  Дочекатися І Клікнути  id=PKeyReadButton
   ...  AND  Wait Until Page Contains  Ключ успішно завантажено  10
+  Click element  xpath=//span[@id="slidePanelArrowR"]
+  Wait Until Element Is Not Visible  xpath=//button[@id="delete-draft"]
   Дочекатися І Клікнути  id=SignDataButton
   Wait Until Keyword Succeeds  60 x  1 s  Page Should Not Contain Element  id=SignDataButton  120
 
