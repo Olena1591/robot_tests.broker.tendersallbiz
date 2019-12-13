@@ -7,7 +7,7 @@ Library  allbiz_service.py
 
 *** Variables ***
 ${custom_acceleration}=  360
-${host}=  https://tenders.all.biz
+${host}=  http://test-tenders.all.biz
 
 *** Keywords ***
 
