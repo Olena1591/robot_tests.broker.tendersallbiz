@@ -18,8 +18,14 @@ ${host}=  http://test-tenders.all.biz
 
 Підготувати клієнт для користувача
   [Arguments]  ${username}
-  Open Browser  ${USERS.users['${username}'].homepage}  ${USERS.users['${username}'].browser}  alias=${username}
+  ${chromeOptions}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
+#  ${prefs} =    Create Dictionary    download.default_directory=${downloadDir}
+  Call Method    ${chromeOptions}    add_argument    --headless
+
+  Create Webdriver    ${USERS.users['${username}'].browser}  alias=${username}   chrome_options=${chromeOptions}
+#  Open Browser  ${USERS.users['${username}'].homepage}  ${USERS.users['${username}'].browser}  alias=${username}  desired_capabilities= ${chromeOptions}
   Set Window Size  1024  768
+  Go To  ${USERS.users['${username}'].homepage}
   Run Keyword If  '${username}' != 'allbiz_Viewer'  Run Keywords
   ...  Login  ${username}
   ...  AND  Run Keyword And Ignore Error  Wait Until Keyword Succeeds  10 x  1 s  Закрити модалку з новинами  xpath=//button[@data-dismiss="modal"]
