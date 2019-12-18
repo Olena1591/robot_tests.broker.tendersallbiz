@@ -60,6 +60,9 @@ def convert_string_from_dict_allbiz(string):
         u'відмінено': u'cancelled',
         u'відмінена': u'cancelled',
         u'Переможець': u'active',
+        u'ящик': u'BX',
+        u'open_belowThreshold': u'belowThreshold',
+        u'Код ДК 021-2015 (CPV)': u'ДК021'
     }.get(string, string)
 
 
@@ -91,7 +94,7 @@ def adapt_delivery_data(tender_data):
 
 
 def adapt_view_tender_data(value, field_name):
-    if 'value.amount' in field_name:
+    if 'amount' in field_name:
         value = float(value.replace(" ", ""))
     elif 'currency' in field_name and 'awards' in field_name:
         value = value.split(' ')[-1]
