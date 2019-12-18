@@ -8,6 +8,27 @@ Library  allbiz_service.py
 *** Variables ***
 ${custom_acceleration}=  360
 ${host}=  http://test-tenders.all.biz
+${index}=  0
+#${cpv_id}=  0
+#${unit_code}=  0
+#${locator.plan.status}=  xpath=//div[@data-test-id="status"]
+${locator.plan.tender.procurementMethodType}=  xpath=//*[@data-test-id="procurementMethodType"]
+#${locator.plan.budget.amount}=  xpath=//*[contains(text(),"Очікувана вартість")]/following-sibling::div
+#${locator.plan.budget.description}=  xpath=//div[@data-test-id="description"]
+#${locator.plan.budget.currency}=  xpath=//span[@data-test-id="value.currency"]
+#${locator.plan.procuringEntity.name}=  xpath=//*[@data-test-id="procuringEntity.name"]
+#${locator.plan.procuringEntity.identifier.scheme}=  xpath=//*[@data-test-id="procuringEntity.address"]
+#${locator.plan.procuringEntity.identifier.id}=  xpath=//*[@data-test-id="procuringEntity.identifier.id"]
+#${locator.plan.procuringEntity.identifier.legalName}=  xpath=//*[@data-test-id="procuringEntity.name"]
+#${locator.plan.classification.description}=  xpath=(//*[contains(text(),"Код ДК 021-2015 (CPV)") ]/following-sibling::div)[1]
+#${locator.plan.classification.scheme}=  xpath=//div[contains(text(), 'Код ДК 021-2015')][@class="col-xs-12 col-sm-6 col-md-4 item-bl_t"]
+#${locator.plan.classification.id}=  xpath=//div[contains(text(), 'Код ДК 021-2015')][@class="col-xs-12 col-sm-6 col-md-4 item-bl_t"][${cpv_id}]
+#${locator.plan.items.description}=  xpath=(//div[@data-test-id="items.description"])[${index + 1}]
+#${locator.plan.items.quantity}=  xpath=//*[@data-test-id="items.quantity"][${index + 1}]
+#${locator.plan.items.deliveryDate.endDate}=  xpath=//*[contains(text(),"Кінцевий строк поставки товарів, виконання робіт чи надання послуг") ]/following-sibling::div ${index + 1}
+#${locator.plan.items.unit.code}=  xpath=//*[contains(text(),"Кiлькiсть") ]/following-sibling::div[${index + 1}]
+
+
 
 *** Keywords ***
 
@@ -121,26 +142,49 @@ Add item plan
   [Arguments]  ${username}  ${planID}
   Go To  ${host}/plan
   Дочекатися І Клікнути  xpath=//span[@id="more-filter"]
-  Wait Until Page Contains  xpass=//input[@id="plan-id"]
-  Input text  name="PlansSearch[planID]"  ${planID}
-  Click element  xpass=//button[@id="search"]
-  Wait Until Element Is Visible  class="search-result_article"  ${planID}
-  Click Element  xpath=//*[contains(text(),'${planID}')]/ancestor::div[@class="search-result"]/descendant::a[1]
-  Wait Until Element Is Visible  xpath=//button[@data-placeholder-id="#check-sign-place"]
+  Wait Until Element Is Visible  xpath=//input[@id="plan-id"]
+  Input text  xpath=//input[@name="PlansSearch[planID]"]  ${planID}
+  Click element  xpath=//button[@id="search"]
+  Wait Until Keyword Succeeds  6x  20s   Page Should Contain Element  xpath=//div[@class="search-result_article"]
+  Дочекатися І Клікнути  xpath=//*[contains(text(),'${planID}')]/ancestor::div[contains(@class,"row")]/descendant::a[1]
+  Wait Until Element Is Visible  xpath=//div[@class="col-xs-12 col-sm-6 col-md-8 item-bl_val"]  10
 
 
-  ${status}=  Run Keyword And Return Status  Wait Until Element Is Visible  xpath=//button[@data-dismiss="modal"]  5
-  Run Keyword If  ${status}  Закрити модалку  xpath=//button[@data-dismiss="modal"]
-  Wait Until Element Is Visible  name=TendersSearch[tender_cbd_id]  10
-  Input text  name=TendersSearch[tender_cbd_id]  ${tender_uaid}
-  Wait Until Keyword Succeeds  6x  20s  Run Keywords
-  ...  Run Keyword And Ignore Error  Wait Until Keyword Succeeds  3 x  1 s  Click Element  xpath=//button[@data-dismiss="modal"]
-  ...  AND  Дочекатися І Клікнути  xpath=//button[text()='Шукати']
-  ...  AND  Wait Until Element Is Visible  xpath=//*[contains(@class, "btn-search_cancel")]  10
-  ...  AND  Wait Until Element Is Visible  xpath=//*[contains(text(),'${tender_uaid}')]/ancestor::div[@class="search-result"]/descendant::a[1]  10
-  Click Element  xpath=//*[contains(text(),'${tender_uaid}')]/ancestor::div[@class="search-result"]/descendant::a[1]
-  Run Keyword And Ignore Error  Wait Until Keyword Succeeds  3 x  1 s  Click Element  xpath=//button[@data-dismiss="modal"]
-  Wait Until Element Is Visible  xpath=//*[@data-test-id="tenderID"]  10
+Отримати інформацію із плану
+  [Arguments]  ${username}  ${planID}  ${field_name}
+#  ${index}=  Run Keyword If "items[0]" in '${field_name}' ${field_name.split('[')[1].split(']')[0]}
+#  ${index}=  Convert To Integer  ${index}
+  ${field_name}=  Set Variable if  "${field_name}" == "procuringEntity.name"  procuringEntity.identifier.legalName  ${field_name}
+
+  ${text}=  Run Keyword If  "${field_name}" == "tender.procurementMethodType"  Get Element Attribute  ${locator.plan.${field_name}}@data-test-procurementMethod
+#  ...  ELSE IF  "budget.amount" in '${field_name}'  Get Text  xpath=//*[contains(text(),"Очікувана вартість") ]/following-sibling::div
+  ...  ELSE IF  "items[0].description" in '${field_name}'  Get Text  xpath=(//*[@data-test-id="items.description"])
+  ...  ELSE IF  "items[0].quantity" in '${field_name}'  Get Text  xpath=(//*[@data-test-id="items.quantity"])["${index + 1}"]
+  ...  ELSE IF  "items[0].deliveryDate.endDate" in '${field_name}'  Get Text  xpath=(//*[@data-test-id="items.deliveryDate.endDate"])["${index + 1}"]
+#  ...  ELSE   "procuringEntity.name" in '${field_name}'  Get Text  xpath=//*[@data-test-id="procuringEntity.name"]
+#  ...  ELSE IF   "items" in "${field_name}"  Get Text
+  ...  ELSE  Get Text  xpath=//*[@data-test-id="${field_name}"]
+
+  ${text}=  Run Keyword If  "amount" in "${field_name}"  Convert To Number  ${text}
+  ...  ELSE  Set Variable  ${text}
+
+  ${value}=  convert_string_from_dict_allbiz  ${text}
+  [Return]  ${value}
+
+
+Внести зміни в план
+  [Arguments]  ${username}  ${planID}  ${field_name}  ${value}
+  allbiz.Пошук плану по ідентифікатору  ${username}  ${planID}
+  Дочекатися І Клікнути  xpath=//a[contains(text(),'Редагувати')]
+  ${field_value}=   Run Keyword If  "${field_name}" =="budget.amount"  Convert To String  ${field_name}
+  ...  ELSE  Set Variable ${field_value}
+  Input text  xpath=//*[@data-test-id="${field_name}"]  ${value}
+  Дочекатися І Клікнути  xpath=//button[@name="publish"]
+  Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
+
+
+
+
 
 ###############################################################################################################
 ######################################    СТВОРЕННЯ ТЕНДЕРУ    ################################################
@@ -1169,7 +1213,7 @@ ConvToStr And Input Text
 Conv And Select From List By Value
   [Arguments]  ${locator}  ${smth_to_select}
   ${smth_to_select}=  Convert To String  ${smth_to_select}
-  ${smth_to_select}=  convert_string_from_dict_allbiz  ${smth_to_select}
+#  ${smth_to_select}=  convert_string_from_dict_allbiz  ${smth_to_select}
   Wait And Select From List By Value  ${locator}  ${smth_to_select}
 
 Input Date
