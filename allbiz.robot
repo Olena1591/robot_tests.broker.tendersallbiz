@@ -74,7 +74,7 @@ Login
   ${number_of_breakdowns}=  Get length  ${tender_data.data.budget.breakdown}
   ${items}=  Get From Dictionary  ${tender_data.data}  items
   ${number_of_items}=  Get length  ${items}
-  ${budget_amount}=  Convert to string  ${tender_data.data.budget.amount}
+  ${budget_amount}=  add_second_sign_after_point  ${tender_data.data.budget.amount}
 
   Click Element  xpath=//a[@href="${host}/tenders"]
   Дочекатися І Клікнути  xpath=//a[@href="${host}/plan"]
@@ -118,13 +118,15 @@ Add breakdown
 Add item plan
   [Arguments]  ${item_index}  ${item}
   ${item.quantity}=  Convert to string  ${item.quantity}
+  ${item.deliveryDate.endDate}=  convert_datetime_plan__to_allbiz_format  ${item.deliveryDate.endDate}
   Wait until element is not visible  xpath=//div[@class="modal-backdrop fade"]
   Wait until element is not visible  xpath=//div[@id="mbody"]
   Дочекатися І Клікнути   xpath=//button[@class="mk-btn mk-btn_default add_item_plan"]
   Input text  name=Plan[items][${item_index + 1}][description]  ${item.description}
   Input text  name=Plan[items][${item_index + 1}][quantity]  ${item.quantity}
   Conv And Select From List By Value  name=Plan[items][${item_index + 1}][unit][code]  ${item.unit.code}
-  Input Date  id=deliverydate-${item_index + 1}-enddate  ${item.deliveryDate.endDate}
+#  Input Date  id=deliverydate-${item_index + 1}-enddate  ${item.deliveryDate.endDate}
+  Execute Javascript  document.querySelector('[id="deliverydate-${item_index + 1}-enddate"]').value="${item.deliveryDate.endDate}"
   Click Element  xpath=//label[@for="classification-cpv-${item_index + 1}-description"]
   Wait Element Animation  id=search_code
   Input Text  id=search_code  ${item.classification.id}
@@ -152,17 +154,17 @@ Add item plan
 
 Отримати інформацію із плану
   [Arguments]  ${username}  ${planID}  ${field_name}
-#  ${index}=  Run Keyword If "items[0]" in '${field_name}' ${field_name.split('[')[1].split(']')[0]}
-#  ${index}=  Convert To Integer  ${index}
+    #  ${index}=  Run Keyword If "items" in '${field_name}' ${field_name.split('[')[1].split(']')[0]}
+    #  ${index}=  Convert To Integer  ${index}
   ${field_name}=  Set Variable if  "${field_name}" == "procuringEntity.name"  procuringEntity.identifier.legalName  ${field_name}
-
+#  Log  ${index}
   ${text}=  Run Keyword If  "${field_name}" == "tender.procurementMethodType"  Get Element Attribute  ${locator.plan.${field_name}}@data-test-procurementMethod
 #  ...  ELSE IF  "budget.amount" in '${field_name}'  Get Text  xpath=//*[contains(text(),"Очікувана вартість") ]/following-sibling::div
-  ...  ELSE IF  "items[0].description" in '${field_name}'  Get Text  xpath=(//*[@data-test-id="items.description"])
-  ...  ELSE IF  "items[0].quantity" in '${field_name}'  Get Text  xpath=(//*[@data-test-id="items.quantity"])["${index + 1}"]
-  ...  ELSE IF  "items[0].deliveryDate.endDate" in '${field_name}'  Get Text  xpath=(//*[@data-test-id="items.deliveryDate.endDate"])["${index + 1}"]
+#  ...  ELSE IF  "items[0].description" in '${field_name}'  Get Text  xpath=(//*[@data-test-id="items.description"])
+#  ...  ELSE IF  "items[0].quantity" in '${field_name}'  Get Text  xpath=(//*[@data-test-id="items.quantity"])["${index + 1}"]
+#  ...  ELSE IF  "items[0].deliveryDate.endDate" in '${field_name}'  Get Text  xpath=(//*[@data-test-id="items.deliveryDate.endDate"])["${index + 1}"]
 #  ...  ELSE   "procuringEntity.name" in '${field_name}'  Get Text  xpath=//*[@data-test-id="procuringEntity.name"]
-#  ...  ELSE IF   "items" in "${field_name}"  Get Text
+  ...  ELSE IF   "items" in "${field_name}"  Get Info From Plan Items  ${field_name}
   ...  ELSE  Get Text  xpath=//*[@data-test-id="${field_name}"]
 
   ${text}=  Run Keyword If  "amount" in "${field_name}"  Convert To Number  ${text}
@@ -172,17 +174,50 @@ Add item plan
   [Return]  ${value}
 
 
+Get Info From Plan Items
+  [Arguments]  ${field_name}
+#  ${index}=  Set Variable  ${field_name.split('[')[1].split(']')[0]}
+  ${match_res}=  Get Regexp Matches  ${field_name}  \\[(\\d+)\\]  1
+  ${index}=  Convert To Integer  ${match_res[0]}
+  ${field_name}=  Remove String Using Regexp  ${field_name}  \\[(\\d+)\\]
+  log  ${field_name}
+  ${text}=  Run Keyword If
+  ...  "unit.code" in "${field_name}"  Get Element Attribute  xpath=(//*[@data-test-id="items.unit.name"])[${index + 1}]@data-test-item-unit-code
+  ...  ELSE  Get text  xpath=(//*[@data-test-id="${field_name}"])["${index + 1}"]
+  ${text}=  Run Keyword If  "quantity" in "${field_name}"  Convert To Number  ${text}
+  ...  ELSE IF  "deliveryDate.endDate" in "${field_name}"  convert_time_item  ${text}
+  ...  ELSE  Set Variable  ${text}
+  [Return]  ${text}
+
+
 Внести зміни в план
   [Arguments]  ${username}  ${planID}  ${field_name}  ${value}
+  ${match_res}=  Get Regexp Matches  ${field_name}  \\[(\\d+)\\]  1
+  ${index}=  Convert To Integer  ${match_res[0]}
+  ${field_name}=  Remove String Using Regexp  ${field_name}  \\[(\\d+)\\]
   allbiz.Пошук плану по ідентифікатору  ${username}  ${planID}
   Дочекатися І Клікнути  xpath=//a[contains(text(),'Редагувати')]
-  ${field_value}=   Run Keyword If  "${field_name}" =="budget.amount"  Convert To String  ${field_name}
-  ...  ELSE  Set Variable ${field_value}
-  Input text  xpath=//*[@data-test-id="${field_name}"]  ${value}
+  ${value}=  Run Keyword If  "budget.amount" in ${field_name}  Convert To Number  ${value}
+  ...  ELSE  Set Variable  ${value}
+  Run Keyword If  "items" in ${field_name}  xpath=(//*[@data-test-id="${field_name}"])["${index + 1}"]  ${value}
+  ...  ELSE  Input text  xpath=//*[@data-test-id="${field_name}"]  ${value}
   Дочекатися І Клікнути  xpath=//button[@name="publish"]
   Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
 
+Видалити предмет закупівлі плану
+  [Arguments]  ${username}  ${planID}  ${item_index}
+  allbiz.Пошук плану по ідентифікатору  ${username}  ${planID}
+  Дочекатися І Клікнути  xpath=//a[contains(text(),'Редагувати')]
+  Дочекатися І Клікнути  xpath=//textarea[contains(text(), "${item_index}")]/ancestor::div[@class="item"]/descendant::button[contains(@class, "delete_item")]
+  Confirm Action
+  Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
 
+allbiz.Додати предмет закупівлі в план
+  [Arguments]  ${username}  ${planID}  ${item}
+  allbiz.Пошук плану по ідентифікатору  ${username}  ${planID}
+  Дочекатися І Клікнути  xpath=//a[contains(text(),'Редагувати')]
+  Add item plan
+  Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
 
 
 

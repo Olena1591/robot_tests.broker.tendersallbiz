@@ -14,6 +14,11 @@ def convert_time(date):
     return timezone('Europe/Kiev').localize(date).strftime('%Y-%m-%dT%H:%M:%S.%f%z')
 
 
+def convert_time_item(date):
+    date = datetime.strptime(date, "%d/%m/%Y %H:%M")
+    res_date = date.strftime('%Y-%m-%dT%H:%M:%S')
+    return "{}+{}".format(res_date, "02:00")
+
 def subtract_min_from_date(date, minutes, template):
     date_obj = datetime.strptime(date.split("+")[0], template)
     return "{}+{}".format(date_obj - timedelta(minutes=minutes), date.split("+")[1])
@@ -24,8 +29,13 @@ def convert_datetime_to_allbiz_format(isodate):
     day_string = iso_dt.strftime("%d/%m/%Y %H:%M")
     return day_string
 
+def convert_datetime_plan__to_allbiz_format(isodate):
+    iso_dt = parse_date(isodate)
+    day_string = iso_dt.strftime("%d/%m/%Y")
+    return day_string
 
-def convert_string_from_dict_allbiz(string):
+def convert_string_from_d
+    ict_allbiz(string):
     return {
         u"грн.": u"UAH",
         u"True": u"1",
@@ -62,22 +72,23 @@ def convert_string_from_dict_allbiz(string):
         u'Переможець': u'active',
         u'ящик': u'BX',
         u'open_belowThreshold': u'belowThreshold',
-        u'Код ДК 021-2015 (CPV)': u'ДК021'
+        u'Код ДК 021-2015 (CPV)': u'ДК021',
+        u'Запланований': u'scheduled'
     }.get(string, string)
 
 
 def adapt_procuringEntity(role_name, tender_data):
     if role_name == 'tender_owner':
-        tender_data['data']['procuringEntity']['name'] = u"ТОВ Величний Свинарник"
-        tender_data['data']['procuringEntity']['address']['postalCode'] = u"01010"
-        tender_data['data']['procuringEntity']['address']['region'] = u"Вінницька область"
-        tender_data['data']['procuringEntity']['address']['locality'] = u"Яйківка"
-        tender_data['data']['procuringEntity']['address']['streetAddress'] = u"вул. Рогатої Худоби"
-        tender_data['data']['procuringEntity']['identifier']['legalName'] = u"ТОВ Величний Свинарник"
-        tender_data['data']['procuringEntity']['identifier']['id'] = u"12345677"
-        tender_data['data']['procuringEntity']['contactPoint']['name'] = u"Олександров Олександр Олександрович"
-        tender_data['data']['procuringEntity']['contactPoint']['telephone'] = u"+38(222)222-22-22"
-        tender_data['data']['procuringEntity']['contactPoint']['url'] = u"https://tenders.all.biz"
+        tender_data['data']['procuringEntity']['name'] = u"prozorroytenderowner"
+        # tender_data['data']['procuringEntity']['address']['postalCode'] = u"01010"
+        # tender_data['data']['procuringEntity']['address']['region'] = u"Вінницька область"
+        # tender_data['data']['procuringEntity']['address']['locality'] = u"Яйківка"
+        # tender_data['data']['procuringEntity']['address']['streetAddress'] = u"вул. Рогатої Худоби"
+        tender_data['data']['procuringEntity']['identifier']['legalName'] = u"prozorroytenderowner"
+        tender_data['data']['procuringEntity']['identifier']['id'] = u"12312312"
+        # tender_data['data']['procuringEntity']['contactPoint']['name'] = u"Олександров Олександр Олександрович"
+        # tender_data['data']['procuringEntity']['contactPoint']['telephone'] = u"+38(222)222-22-22"
+        # tender_data['data']['procuringEntity']['contactPoint']['url'] = u"https://tenders.all.biz"
         if tender_data['data'].has_key('procurementMethodType'):
             if "above" in tender_data['data']['procurementMethodType']:
                 tender_data['data']['tenderPeriod']['startDate'] = subtract_min_from_date(
