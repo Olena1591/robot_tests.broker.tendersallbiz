@@ -43,6 +43,7 @@ ${locator.plan.tender.procurementMethodType}=  xpath=//*[@data-test-id="procurem
 #  ${prefs} =    Create Dictionary    download.default_directory=${downloadDir}
   Call Method    ${chromeOptions}    add_argument    --headless
 
+
   Create Webdriver    ${USERS.users['${username}'].browser}  alias=${username}   chrome_options=${chromeOptions}
 #  Open Browser  ${USERS.users['${username}'].homepage}  ${USERS.users['${username}'].browser}  alias=${username}  desired_capabilities= ${chromeOptions}
   Set Window Size  1024  768
@@ -101,6 +102,10 @@ Login
   \  Add item plan  ${item_index}  ${items[${item_index}]}
   Wait until element is not visible  xpath=//div[@id="mbody"]
   Дочекатися І Клікнути  xpath=//button[@class="mk-btn mk-btn_accept"]
+#  Дочекатися І Клікнути  xpath=(//*[@class="close"])[3]
+#  Дочекатися І Клікнути  xpath=(//*[@class="close"])[1]
+#  Дочекатися І Клікнути  xpath=(//*[@class="close"])[2]
+#  Wait until element is not visible  xpath=//*[contains(@class, "alert fade in")]
   Накласти ЄЦП
   Wait until element is visible  xpath=//div[@data-test-id="planID"]
   ${planID}=  Get text  xpath=//div[@data-test-id="planID"]
@@ -108,25 +113,25 @@ Login
 
 Add breakdown
   [Arguments]  ${breakdown_index}  ${breakdown}
-  ${breakdown.value.amount}=  Convert to string  ${breakdown.value.amount}
+  ${amount}=  add_second_sign_after_point  ${breakdown.value.amount}
   Дочекатися І Клікнути  xpath=//button[@class="mk-btn mk-btn_default add_plan_breakdown"]
   Conv And Select From List By Value  name=Plan[budget][breakdown][${breakdown_index + 1}][title]  ${breakdown.title}
   Input text  name=Plan[budget][breakdown][${breakdown_index + 1}][description]  ${breakdown.description}
-  Input text  name=Plan[budget][breakdown][${breakdown_index + 1}][value][amount]  ${breakdown.value.amount}
+  Input text  name=Plan[budget][breakdown][${breakdown_index + 1}][value][amount]  ${amount}
   Conv And Select From List By Value  name=Plan[budget][breakdown][${breakdown_index + 1}][value][currency]  ${breakdown.value.currency}
 
 Add item plan
   [Arguments]  ${item_index}  ${item}
-  ${item.quantity}=  Convert to string  ${item.quantity}
-  ${item.deliveryDate.endDate}=  convert_datetime_plan__to_allbiz_format  ${item.deliveryDate.endDate}
+  ${quantity}=  Convert to string  ${item.quantity}
+  ${delivery_end_date}=  convert_date_plan_to_allbiz_format  ${item.deliveryDate.endDate}
   Wait until element is not visible  xpath=//div[@class="modal-backdrop fade"]
   Wait until element is not visible  xpath=//div[@id="mbody"]
   Дочекатися І Клікнути   xpath=//button[@class="mk-btn mk-btn_default add_item_plan"]
   Input text  name=Plan[items][${item_index + 1}][description]  ${item.description}
-  Input text  name=Plan[items][${item_index + 1}][quantity]  ${item.quantity}
+  Input text  name=Plan[items][${item_index + 1}][quantity]  ${quantity}
   Conv And Select From List By Value  name=Plan[items][${item_index + 1}][unit][code]  ${item.unit.code}
 #  Input Date  id=deliverydate-${item_index + 1}-enddate  ${item.deliveryDate.endDate}
-  Execute Javascript  document.querySelector('[id="deliverydate-${item_index + 1}-enddate"]').value="${item.deliveryDate.endDate}"
+  Execute Javascript  document.querySelector('[id="deliverydate-${item_index + 1}-enddate"]').value="${delivery_end_date}"
   Click Element  xpath=//label[@for="classification-cpv-${item_index + 1}-description"]
   Wait Element Animation  id=search_code
   Input Text  id=search_code  ${item.classification.id}
@@ -149,7 +154,7 @@ Add item plan
   Click element  xpath=//button[@id="search"]
   Wait Until Keyword Succeeds  6x  20s   Page Should Contain Element  xpath=//div[@class="search-result_article"]
   Дочекатися І Клікнути  xpath=//*[contains(text(),'${planID}')]/ancestor::div[contains(@class,"row")]/descendant::a[1]
-  Wait Until Element Is Visible  xpath=//div[@class="col-xs-12 col-sm-6 col-md-8 item-bl_val"]  10
+  Wait Until Element Is Visible  xpath=(//div[@class="col-xs-12 col-sm-6 col-md-8 item-bl_val"])[1]  20
 
 
 Отримати інформацію із плану
@@ -183,6 +188,7 @@ Get Info From Plan Items
   log  ${field_name}
   ${text}=  Run Keyword If
   ...  "unit.code" in "${field_name}"  Get Element Attribute  xpath=(//*[@data-test-id="items.unit.name"])[${index + 1}]@data-test-item-unit-code
+  ...  "unit.name" in "${field_name}"  xpath=(//*[@data-test-id="items.unit.name"])[${index + 1}]
   ...  ELSE  Get text  xpath=(//*[@data-test-id="${field_name}"])["${index + 1}"]
   ${text}=  Run Keyword If  "quantity" in "${field_name}"  Convert To Number  ${text}
   ...  ELSE IF  "deliveryDate.endDate" in "${field_name}"  convert_time_item  ${text}
@@ -192,32 +198,62 @@ Get Info From Plan Items
 
 Внести зміни в план
   [Arguments]  ${username}  ${planID}  ${field_name}  ${value}
+  allbiz.Пошук плану по ідентифікатору  ${username}  ${planID}
+  Дочекатися І Клікнути  xpath=//a[contains(text(),'Редагувати')]
+  ${value}=  Run Keyword If  "budget.amount" in "${field_name}"  Convert To String  ${value}
+  ...  ELSE  Set Variable  ${value}
+  Run Keyword If  "items" in "${field_name}"  Update plan items info  ${username}  ${planID}  ${field_name}  ${value}
+  ...  ELSE IF  "budget.period" in "${field_name}"  Update plan budget.period  ${username}  ${planID}  ${field_name}  ${value}
+  ...  ELSE  Input text  xpath=//*[@data-test-id="${field_name}"]  ${value}
+  Дочекатися І Клікнути  xpath=//button[@name="publish"]
+#  Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
+  Wait Until Keyword Succeeds  10 x  1 s  Page Should Contain Element  xpath=//div[contains(@class, "alert-success")]
+
+Update plan budget.period
+  [Arguments]  ${username}  ${planID}  ${field_name}  ${value}
+#  ${data}=  convert_date_plan_tender_to_allbiz_format  ${value}
+  ${startDate}=  convert_date_plan_to_allbiz_format  ${value['startDate']}
+  ${endDate}=  convert_date_plan_to_allbiz_format  ${value['endDate']}
+  Run Keyword If  "startDate" in "${value['startDate']}"  Execute Javascript  document.querySelector('[id="period-startdate"]').value="${startDate}}"
+  ...  ELSE  Execute Javascript  document.querySelector('[id="period-enddate"]').value="${endDate}"
+#  Дочекатися І Клікнути  xpath=//button[@name="publish"]
+##  Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
+#  Wait Until Keyword Succeeds  10 x  1 s  Page Should Contain Element  xpath=//div[contains(@class, "alert-success")]
+
+Update plan items info
+  [Arguments]  ${username}  ${planID}  ${field_name}  ${value}
   ${match_res}=  Get Regexp Matches  ${field_name}  \\[(\\d+)\\]  1
   ${index}=  Convert To Integer  ${match_res[0]}
   ${field_name}=  Remove String Using Regexp  ${field_name}  \\[(\\d+)\\]
-  allbiz.Пошук плану по ідентифікатору  ${username}  ${planID}
-  Дочекатися І Клікнути  xpath=//a[contains(text(),'Редагувати')]
-  ${value}=  Run Keyword If  "budget.amount" in ${field_name}  Convert To Number  ${value}
-  ...  ELSE  Set Variable  ${value}
-  Run Keyword If  "items" in ${field_name}  xpath=(//*[@data-test-id="${field_name}"])["${index + 1}"]  ${value}
-  ...  ELSE  Input text  xpath=//*[@data-test-id="${field_name}"]  ${value}
-  Дочекатися І Клікнути  xpath=//button[@name="publish"]
-  Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
+  ${data}=  Run Keyword If  "deliveryDate.endDate" in "${field_name}"  convert_date_plan_to_allbiz_format  ${value}
+  Run Keyword If
+  ...  "deliveryDate.endDate" in "${field_name}"  Execute Javascript  document.querySelector('[name="Plan[items][${index + 1}][deliveryDate][endDate]"]').value="${data}"
+  ...  ELSE IF  "quantity" in "${field_name}"  Input text  xpath=//*[@name="Plan[items][${index + 1}][quantity]"]  ${value}
+#  Дочекатися І Клікнути  xpath=//button[@name="publish"]
+#  Wait Until Keyword Succeeds  10 x  1 s  Page Should Contain Element  xpath=//div[contains(@class, "alert-success")]
+#  Wait Until Page Contains Element  xpath=//a[contains(text(),'Редагувати')]
+
 
 Видалити предмет закупівлі плану
-  [Arguments]  ${username}  ${planID}  ${item_index}
+  [Arguments]  ${username}  ${planID}  ${item_id}
   allbiz.Пошук плану по ідентифікатору  ${username}  ${planID}
   Дочекатися І Клікнути  xpath=//a[contains(text(),'Редагувати')]
-  Дочекатися І Клікнути  xpath=//textarea[contains(text(), "${item_index}")]/ancestor::div[@class="item"]/descendant::button[contains(@class, "delete_item")]
+  Дочекатися І Клікнути  xpath=//textarea[contains(text(), "${item_id}")]/ancestor::div[@class="item"]/descendant::button[contains(@class, "delete_item")]
   Confirm Action
-  Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
+  Дочекатися І Клікнути  xpath=//button[@class="mk-btn mk-btn_accept"]
+  Wait Until Keyword Succeeds  10 x  1 s  Page Should Contain Element  xpath=//div[contains(@class, "alert-success")]
 
-allbiz.Додати предмет закупівлі в план
+
+Додати предмет закупівлі в план
   [Arguments]  ${username}  ${planID}  ${item}
   allbiz.Пошук плану по ідентифікатору  ${username}  ${planID}
   Дочекатися І Клікнути  xpath=//a[contains(text(),'Редагувати')]
-  Add item plan
-  Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
+  ${item_index}=  Get Matching Xpath Count  xpath=//button[contains(@class, "delete_item")]
+  ${item_index}=  Convert To Integer   ${item_index}
+  Add item plan  ${item_index - 1}  ${item}
+  Дочекатися І Клікнути  xpath=//button[@class="mk-btn mk-btn_accept"]
+  Wait Until Keyword Succeeds  10 x  1 s  Page Should Contain Element  xpath=//div[contains(@class, "alert-success")]
+
 
 
 

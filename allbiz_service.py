@@ -29,13 +29,19 @@ def convert_datetime_to_allbiz_format(isodate):
     day_string = iso_dt.strftime("%d/%m/%Y %H:%M")
     return day_string
 
-def convert_datetime_plan__to_allbiz_format(isodate):
+def convert_date_plan_to_allbiz_format(isodate):
     iso_dt = parse_date(isodate)
     day_string = iso_dt.strftime("%d/%m/%Y")
     return day_string
 
-def convert_string_from_d
-    ict_allbiz(string):
+
+def convert_date_plan_tender_to_allbiz_format(isodate):
+    iso_dt = parse_date(isodate)
+    day_string = iso_dt.strftime("%m/%Y")
+    return day_string
+
+
+def convert_string_from_dict_allbiz(string):
     return {
         u"грн.": u"UAH",
         u"True": u"1",
