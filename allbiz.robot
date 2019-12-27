@@ -41,7 +41,7 @@ ${locator.plan.tender.procurementMethodType}=  xpath=//*[@data-test-id="procurem
   [Arguments]  ${username}
   ${chromeOptions}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
 #  ${prefs} =    Create Dictionary    download.default_directory=${downloadDir}
-  Call Method    ${chromeOptions}    add_argument    --headless
+#  Call Method    ${chromeOptions}    add_argument    --headless
 
 
   Create Webdriver    ${USERS.users['${username}'].browser}  alias=${username}   chrome_options=${chromeOptions}
@@ -76,7 +76,13 @@ Login
   ${items}=  Get From Dictionary  ${tender_data.data}  items
   ${number_of_items}=  Get length  ${items}
   ${budget_amount}=  add_second_sign_after_point  ${tender_data.data.budget.amount}
-
+  ${tenderPeriod.startDate}=  convert_date_plan_tender_to_allbiz_format  ${tender_data.data.tender.tenderPeriod.startDate}
+  ${is_visible}=  Run Keyword And Return Status  Element Should Be Visible  xpath=//*[@id="action-test-mode-msg"]
+  Run Keyword If  ${is_visible} and "${role}" != "tender_owner"  Run Keywords
+  ...  Click element  xpath=(//*[@class="glyphicon glyphicon-user"])[1]
+  ...  AND  Дочекатися І Клікнути  xpath=//*[@class="switch_t"]
+  ...  AND  Дочекатися І Клікнути  xpath=//*[@class="bg-close"]
+  ...  AND  Wait Until Element Is Not Visible  xpath=//*[@class="switch_t"]
   Click Element  xpath=//a[@href="${host}/tenders"]
   Дочекатися І Клікнути  xpath=//a[@href="${host}/plan"]
   Дочекатися І Клікнути  xpath=//a[@href="${host}/buyer/plan/create"]
@@ -84,9 +90,9 @@ Login
   Input text  name=Plan[budget][description]  ${tender_data.data.budget.description}
   Input text  name=Plan[budget][amount]  ${budget_amount}
   Conv And Select From List By Value  name=Plan[budget][currency]  UAH
-  Input Date  name=Plan[tender][tenderPeriod][startDate]  ${tender_data.data.tender.tenderPeriod.startDate}
-  Input Date  name=Plan[budget][period][startDate]  ${tender_data.data.tender.tenderPeriod.startDate}
-  Execute Javascript  document.querySelector('[name="Plan[budget][period][endDate]"]').value="31/12/2019"
+  Execute Javascript   document.querySelector('[name="Plan[tender][tenderPeriod][startDate]"]').value="${tenderPeriod.startDate}"
+  Input Date  name="Plan[budget][period][startDate]"  ${tender_data.data.budget.period.startDate}
+  Input Date  name="Plan[budget][period][endDate]"  ${tender_data.data.budget.period.endDate}
   Click Element  xpath=//label[@for="classification-cpv-description"]
   Wait Element Animation  id=search_code
   Input Text  id=search_code  ${tender_data.data.classification.id}
@@ -107,7 +113,7 @@ Login
 #  Дочекатися І Клікнути  xpath=(//*[@class="close"])[2]
 #  Wait until element is not visible  xpath=//*[contains(@class, "alert fade in")]
   Накласти ЄЦП
-  Wait until element is visible  xpath=//div[@data-test-id="planID"]
+  Wait until element is visible  xpath=//div[@data-test-id="planID"]  20
   ${planID}=  Get text  xpath=//div[@data-test-id="planID"]
   [Return]  ${planID}
 
@@ -148,10 +154,16 @@ Add item plan
 Пошук плану по ідентифікатору
   [Arguments]  ${username}  ${planID}
   Go To  ${host}/plan
+  ${is_visible}=  Run Keyword And Return Status  Element Should Be Visible  xpath=//*[@id="action-test-mode-msg"]
+  Run Keyword If  ${is_visible} and "${role}" != "tender_owner"  Run Keywords
+  ...  Click element  xpath=(//*[@class="glyphicon glyphicon-user"])[1]
+  ...  AND  Дочекатися І Клікнути  xpath=//*[@class="switch_t"]
+  ...  AND  Дочекатися І Клікнути  xpath=//*[@class="bg-close"]
+  ...  AND  Wait Until Element Is Not Visible  xpath=//*[@class="switch_t"]
   Дочекатися І Клікнути  xpath=//span[@id="more-filter"]
   Wait Until Element Is Visible  xpath=//input[@id="plan-id"]
   Input text  xpath=//input[@name="PlansSearch[planID]"]  ${planID}
-  Click element  xpath=//button[@id="search"]
+  Дочекатися І Клікнути  xpath=//button[@id="search"]
   Wait Until Keyword Succeeds  6x  20s   Page Should Contain Element  xpath=//div[@class="search-result_article"]
   Дочекатися І Клікнути  xpath=//*[contains(text(),'${planID}')]/ancestor::div[contains(@class,"row")]/descendant::a[1]
   Wait Until Element Is Visible  xpath=(//div[@class="col-xs-12 col-sm-6 col-md-8 item-bl_val"])[1]  20
@@ -159,19 +171,10 @@ Add item plan
 
 Отримати інформацію із плану
   [Arguments]  ${username}  ${planID}  ${field_name}
-    #  ${index}=  Run Keyword If "items" in '${field_name}' ${field_name.split('[')[1].split(']')[0]}
-    #  ${index}=  Convert To Integer  ${index}
   ${field_name}=  Set Variable if  "${field_name}" == "procuringEntity.name"  procuringEntity.identifier.legalName  ${field_name}
-#  Log  ${index}
   ${text}=  Run Keyword If  "${field_name}" == "tender.procurementMethodType"  Get Element Attribute  ${locator.plan.${field_name}}@data-test-procurementMethod
-#  ...  ELSE IF  "budget.amount" in '${field_name}'  Get Text  xpath=//*[contains(text(),"Очікувана вартість") ]/following-sibling::div
-#  ...  ELSE IF  "items[0].description" in '${field_name}'  Get Text  xpath=(//*[@data-test-id="items.description"])
-#  ...  ELSE IF  "items[0].quantity" in '${field_name}'  Get Text  xpath=(//*[@data-test-id="items.quantity"])["${index + 1}"]
-#  ...  ELSE IF  "items[0].deliveryDate.endDate" in '${field_name}'  Get Text  xpath=(//*[@data-test-id="items.deliveryDate.endDate"])["${index + 1}"]
-#  ...  ELSE   "procuringEntity.name" in '${field_name}'  Get Text  xpath=//*[@data-test-id="procuringEntity.name"]
   ...  ELSE IF   "items" in "${field_name}"  Get Info From Plan Items  ${field_name}
   ...  ELSE  Get Text  xpath=//*[@data-test-id="${field_name}"]
-
   ${text}=  Run Keyword If  "amount" in "${field_name}"  Convert To Number  ${text}
   ...  ELSE  Set Variable  ${text}
 
@@ -188,7 +191,7 @@ Get Info From Plan Items
   log  ${field_name}
   ${text}=  Run Keyword If
   ...  "unit.code" in "${field_name}"  Get Element Attribute  xpath=(//*[@data-test-id="items.unit.name"])[${index + 1}]@data-test-item-unit-code
-  ...  "unit.name" in "${field_name}"  xpath=(//*[@data-test-id="items.unit.name"])[${index + 1}]
+#  ...  ELSE IF  "unit.name" in "${field_name}"  Get text  xpath=(//*[@data-test-id="items.unit.name"])[${index + 1}]
   ...  ELSE  Get text  xpath=(//*[@data-test-id="${field_name}"])["${index + 1}"]
   ${text}=  Run Keyword If  "quantity" in "${field_name}"  Convert To Number  ${text}
   ...  ELSE IF  "deliveryDate.endDate" in "${field_name}"  convert_time_item  ${text}
@@ -262,33 +265,62 @@ Update plan items info
 ###############################################################################################################
 
 Створити тендер
-  [Arguments]  ${username}  ${tender_data}
+  [Arguments]  ${username}  ${tender_data}  ${plan_id}  ${plan_access_token}
   ${items}=  Get From Dictionary  ${tender_data.data}  items
+  ${number_of_items}=  Get length  ${items}
   ${amount}=   add_second_sign_after_point   ${tender_data.data.value.amount}
   ${meat}=  Evaluate  ${tender_meat} + ${lot_meat} + ${item_meat}
+  ${file_path}=  Get Variable Value  ${ARTIFACT_FILE}  artifact_plan.yaml
+  ${ARTIFACT}=  load_data_from  ${file_path}
+  ${plan_uaid}=  Set Variable  ${ARTIFACT.tender_uaid}
+#  ${milestones}=  Get From Dictionary  ${tender_data.data}  milestones
+#  ${number_of_milestones}= Get length  ${milestones}
+  ${valueAddedTaxIncluded}=  Set Variable If  ${tender_data.data.value.valueAddedTaxIncluded}  1  0
+  ${milestones}=  Get From Dictionary  ${tender_data.data}  milestones
+
   Switch Browser  ${username}
   Wait Until Element Is Not Visible  xpath=//div[@class="modal-backdrop fade"]  10
-  Дочекатися І Клікнути  xpath=//a[@href="${host}/tenders"]
-  Дочекатися І Клікнути  xpath=//a[@href="${host}/tenders/index"]
-  Дочекатися І Клікнути  xpath=//a[contains(@href,"/buyer/tender/create")]
+#  Дочекатися І Клікнути  xpath=//a[@href="${host}/tenders"]
+#  Дочекатися І Клікнути  xpath=//a[@href="${host}/tenders/index"]
+  allbiz.Пошук плану по ідентифікатору  ${username}  ${plan_uaid}
+  Дочекатися І Клікнути  xpath=//*[@id="create_auction_modal_btn"]
+  Run Keyword If  ${number_of_lots} > 0  Wait And Select From List By Value  name=tender_type  2
+  ...  ELSE  Wait And Select From List By Value  name=tender_type  1
+  Click Element  xpath=(//button[@class="mk-btn mk-btn_accept"])[2]
+
   Run Keyword If  "below" in "${tender_data.data.procurementMethodType}"  Заповнити поля для допорогової закупівлі  ${tender_data}
   ...  ELSE IF  "aboveThreshold" in "${tender_data.data.procurementMethodType}"  Заповнити поля для понадпорогів  ${tender_data}
   ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "negotiation"  Заповнити поля для переговорної процедури  ${tender_data}
   ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "reporting"  Wait And Select From List By Value  name=tender_method  limited_reporting
-  Run Keyword If  ${number_of_lots} > 0  Wait And Select From List By Value  name=tender_type  2
-  ...  ELSE  Wait And Select From List By Value  name=tender_type  1
-  Conv And Select From List By Value  name=Tender[value][valueAddedTaxIncluded]  ${tender_data.data.value.valueAddedTaxIncluded}
-  Wait And Select From List By Value  name=Tender[value][currency]  ${tender_data.data.value.currency}
+  Conv And Select From List By Value  name=Tender[value][valueAddedTaxIncluded]  ${valueAddedTaxIncluded}
+
+
+  Conv And Select From List By Value  xpath=(//select[@id="guarantee-exist"])[1]  1
+#  Input text  xpath=//*[@id="value-amount"]  ${tender_data.data.value.amount}
   Run Keyword If  ${number_of_lots} == 0  Run Keywords
   ...  ConvToStr And Input Text  name=Tender[value][amount]  ${amount}
   ...  AND  Run Keyword If  "${tender_data.data.procurementMethodType}" not in "reporting negotiation"  Select From List By Value  id=guarantee-exist  0
+#  Conv And Select From List By Value  name=Tender[value][valueAddedTaxIncluded]  ${tender_data.data.value.valueAddedTaxIncluded}
+  Wait And Select From List By Value  name=Tender[value][currency]  ${tender_data.data.value.currency}
+  Conv And Select From List By Value   xpath=//*[@id="tender-mainprocurementcategory"]  ${tender_data.data.mainProcurementCategory}
+#  Run Keyword If  ${number_of_lots} == 0  Run Keywords
+#  ...  ConvToStr And Input Text  name=Tender[value][amount]  ${amount}
+#  ...  AND  Run Keyword If  "${tender_data.data.procurementMethodType}" not in "reporting negotiation"  Select From List By Value  id=guarantee-exist  0
+  :FOR   ${milestones_index}   IN RANGE   ${number_of_milestones}
+  \  Add milestone_tender  ${milestones_index}  ${milestones[${milestones_index}]}
   Input text  name=Tender[title]  ${tender_data.data.title}
   Input text  name=Tender[description]  ${tender_data.data.description}
   Run Keyword If  "${tender_data.data.procurementMethodType}" == "belowThreshold"  Run Keywords
-  ...  Input Date  name=Tender[enquiryPeriod][endDate]  ${tender_data.data.tenderPeriod.startDate}
-  ...  AND  Input Date  name=Tender[tenderPeriod][startDate]  ${tender_data.data.tenderPeriod.startDate}
-  Run Keyword If   ${number_of_lots} == 0  Додати багато предметів   ${tender_data}
-  ...  ELSE  Додати багато лотів  ${tender_data}
+  ...  Input date  name="Tender[enquiryPeriod][endDate]"  ${tender_data.data.enquiryPeriod.endDate}
+  ...  AND  Input date  name="Tender[tenderPeriod][startDate]"  ${tender_data.data.tenderPeriod.startDate}
+  ...  AND  Input date  name="Tender[tenderPeriod][endDate]"  ${tender_data.data.tenderPeriod.endDate}
+
+#  Run Keyword If   ${number_of_lots} == 0  Додати багато предметів   ${tender_data}
+#  ...  ELSE  Додати багато лотів  ${tender_data}
+  :FOR   ${item_index}   IN RANGE   ${number_of_items}
+  \  Add Item Tender  ${item_index}  ${items[${item_index}]}
+
+
   Run Keyword If  ${meat} > 0  Додати нецінові критерії  ${tender_data}
   Run Keyword If  "${tender_data.data.procurementMethodType}" != "aboveThresholdUA"  Дочекатися І Клікнути  xpath=//input[@data-test-id="fast_forward"]
   Log  ${SUITE_NAME}
@@ -300,18 +332,30 @@ Update plan items info
   ${tender_uaid}=  Get Text  xpath=//*[@data-test-id="tenderID"]
   [Return]  ${tender_uaid}
 
+Add milestone_tender
+  [Arguments]  ${milestones_index}  ${milestones}
+  Дочекатися І Клікнути  xpath=(//button[@class="mk-btn mk-btn_default add_milestone"])[1]
+#  Wait And Select From List By Value  xpath=//select[@name="Tender[milestones][${milestones_index + 1}][title]"]  0
+#  Imput Text  name="Tender[milestones][${milestones_index + 1}][title]"  ${milestones.title}
+  Conv And Select From List By Value  xpath=//*[@name="Tender[milestones][${milestones_index}][title]"]  ${milestones.title}
+  Wait And Select From List By Value  xpath=//*[@name="Tender[milestones][${milestones_index}][code]"]  ${milestones.code}
+  Input Text  xpath=//*[@name="Tender[milestones][${milestones_index}][percentage]"]  ${milestones.percentage}
+  Wait And Select From List By Value   xpath=//*[@name="Tender[milestones][${milestones_index}][duration][type]"]  ${milestones.duration.type}
+  Input Text  xpath=//*[@name="Tender[milestones][${milestones_index}][duration][days]"]  ${milestones.duration.days}
+
+
 Заповнити поля для допорогової закупівлі
   [Arguments]  ${tender_data}
   Log  ${tender_data}
   ${is_funders}=  Run Keyword And Return Status  Dictionary Should Contain Key  ${tender_data.data}  funders
   ${minimalStep}=   add_second_sign_after_point   ${tender_data.data.minimalStep.amount}
-  Wait And Select From List By Value  name=tender_method  open_${tender_data.data.procurementMethodType}
-  Select From List By Value  id=tender-type-select  1
+#  Wait And Select From List By Value  name=tender_method  open_${tender_data.data.procurementMethodType}
+#  Select From List By Value  id=tender-type-select  1
   Run Keyword If  ${number_of_lots} == 0  ConvToStr And Input Text  name=Tender[minimalStep][amount]  ${minimalStep}
   Run Keyword If  ${is_funders}  Run Keywords
   ...  Click Element  id=funders-checkbox
   ...  AND  Wait And Select From List By Label  id=tender-funders  ${tender_data.data.funders[0].name}
-  Input Date  name=Tender[tenderPeriod][endDate]  ${tender_data.data.tenderPeriod.endDate}
+#  Input Date  name=Tender[tenderPeriod][endDate]  ${tender_data.data.tenderPeriod.endDate}
   Select From List By Index  id=contact-point-select  1
 
 
@@ -325,7 +369,7 @@ Update plan items info
   Run Keyword If  "EU" in "${tender_data.data.procurementMethodType}"  Run Keywords
   ...  Input Text   name=Tender[title_en]   ${tender_data.data.title_en}
   ...  AND  Input Text   name=Tender[description_en]   ${tender_data.data.description_en}
-  Input Date  name=Tender[tenderPeriod][endDate]  ${tender_data.data.tenderPeriod.endDate}
+  Input Date  name="Tender[tenderPeriod][endDate]"  ${tender_data.data.tenderPeriod.endDate}
   Select From List By Index  id=contact-point-select  1
 
 
@@ -340,6 +384,7 @@ Update plan items info
   Input Text  name=Tender[procuringEntity][contactPoint][email]  ${tender_data.data.procuringEntity.contactPoint.email}
   Input Text  name=Tender[procuringEntity][contactPoint][url]  ${tender_data.data.procuringEntity.contactPoint.url}
 
+
 Додати багато лотів
   [Arguments]  ${tender_data}
   ${lots}=  Get From Dictionary  ${tender_data.data}  lots
@@ -347,6 +392,7 @@ Update plan items info
   :FOR  ${index}  IN RANGE  ${lots_length}
   \  Run Keyword if  ${index} != 0  Дочекатися І Клікнути  xpath=//button[contains(@class, "add_lot")]
   \  allbiz.Створити лот  allbiz_Owner  ${None}  ${lots[${index}]}  ${tender_data}
+
 
 Створити лот
   [Arguments]  ${username}  ${tender_uaid}  ${lot}   ${data}=${EMPTY}
@@ -365,10 +411,12 @@ Update plan items info
   ...   AND   Input Text   name=Tender[lots][${lot_index}][description_en]    ${lot.description}
   Додати багато предметів   ${data}
 
+
 Input Minimal Step Amount
   [Arguments]  ${minimal_step}  ${lot_index}
   ${minimalStep}=  add_second_sign_after_point  ${minimal_step}
   Input text  name=Tender[lots][${lot_index}][minimalStep][amount]  ${minimalStep}
+
 
 Додати багато предметів
   [Arguments]  ${data}
@@ -383,36 +431,38 @@ Input Minimal Step Amount
 
 
 
-Додати предмет
-  [Arguments]  ${item}
-  Log Many  ${item}
-  ${item_id}=   Get Element Attribute  xpath=(//input[contains(@name, "Tender[items]") and contains(@name, "[quantity]")])[last()]@id
-  ${index}=   Set Variable  ${item_id.split("-")[1]}
-  ${dk_status}=  Run Keyword And Return Status  Dictionary Should Contain Key  ${item}  additionalClassifications
-  ${is_CPV_other}=  Run Keyword And Return Status  Should Be Equal  '${item.classification.id}'  '99999999-9'
-  ${is_MOZ}=  Run Keyword And Return Status  Should Be Equal  '${item.additionalClassifications[0].scheme}'  'INN'
-  Input text  name=Tender[items][${index}][description]  ${item.description}
-  Run Keyword If   '${mode}' == 'openeu'   Input text  name=Tender[items][${index}][description_en]  ${item.description_en}
-  Input text  name=Tender[items][${index}][quantity]  ${item.quantity}
-  Wait And Select From List By Value  name=Tender[items][${index}][unit][code]  ${item.unit.code}
-  Scroll To Element  name=Tender[items][${index}][classification][description]
-  Дочекатися І Клікнути  name=Tender[items][${index}][classification][description]
-  Wait Until Element Is Visible  id=search
-  Input text  id=search_code  ${item.classification.id}
-  Wait Until Page Contains  ${item.classification.id}
-  Дочекатися І Клікнути  xpath=//span[contains(text(),'${item.classification.id}')]
+Add Item Tender
+  [Arguments]  ${item_index}  ${items}
+  Log Many  ${items}
+#  ${item_id}=   Get Element Attribute  xpath=(//input[contains(@name, "Tender[items]") and contains(@name, "[quantity]")])[last()]@id
+#  ${index}=   Set Variable  ${item_id.split("-")[1]}
+  ${quantity}=  Convert to string  ${items.quantity}
+  ${dk_status}=  Run Keyword And Return Status  Dictionary Should Contain Key  ${items}  additionalClassifications
+  ${is_CPV_other}=  Run Keyword And Return Status  Should Be Equal  '${items.classification.id}'  '99999999-9'
+  ${is_MOZ}=  Run Keyword And Return Status  Should Be Equal  '${items.additionalClassifications[0].scheme}'  'INN'
+  Input text  name=Tender[items][${item_index}][description]  ${items.description}
+  Run Keyword If   '${mode}' == 'openeu'   Input text  name=Tender[items][${item_index}][description_en]  ${items.description_en}
+  Input text  name=Tender[items][${item_index}][quantity]  ${quantity}
+  Wait And Select From List By Value  name=Tender[items][${item_index}][unit][code]  ${items.unit.code}
+  Scroll To Element  name=Tender[items][${item_index}][classification][description]
+  Дочекатися І Клікнути  name=Tender[items][${item_index}][classification][description]
+  Wait Element Animation  id=search
+  Input text  id=search_code  ${items.classification.id}
+  Wait Until Page Contains  ${items.classification.id}
+  Дочекатися І Клікнути  xpath=//span[contains(text(),'${items.classification.id}')]
   Дочекатися І Клікнути  id=btn-ok
   Run Keyword And Ignore Error  Wait Until Element Is Visible  xpath=//div[@class="modal-backdrop fade"]
   Wait Until Keyword Succeeds  10 x  1 s  Element Should Not Be Visible  xpath=//div[@class="modal-backdrop fade"]
-  Run Keyword If  ${dk_status} and ${is_CPV_other} or ${is_MOZ}  Вибрати додатковий класифікатор  ${item}  ${index}  ${is_MOZ}
-  Wait Until Element Is Visible  name=Tender[items][${index}][deliveryAddress][countryName]
-  Wait And Select From List By Label  name=Tender[items][${index}][deliveryAddress][countryName]  ${item.deliveryAddress.countryName}
-  Wait And Select From List By Label  name=Tender[items][${index}][deliveryAddress][region]  ${item.deliveryAddress.region}
-  Input text  name=Tender[items][${index}][deliveryAddress][locality]  ${item.deliveryAddress.locality}
-  Input text  name=Tender[items][${index}][deliveryAddress][streetAddress]  ${item.deliveryAddress.streetAddress}
-  Input text  name=Tender[items][${index}][deliveryAddress][postalCode]  ${item.deliveryAddress.postalCode}
-  Input Date  name=Tender[items][${index}][deliveryDate][startDate]  ${item.deliveryDate.endDate}
-  Input Date  name=Tender[items][${index}][deliveryDate][endDate]  ${item.deliveryDate.endDate}
+  Run Keyword If  ${dk_status} and ${is_CPV_other} or ${is_MOZ}  Вибрати додатковий класифікатор  ${items}  ${item_index}  ${is_MOZ}
+  Wait Until Element Is Visible  name=Tender[items][${item_index}][deliveryAddress][countryName]
+  Wait And Select From List By Label  name=Tender[items][${item_index}][deliveryAddress][countryName]  ${items.deliveryAddress.countryName}
+  Wait And Select From List By Label  name=Tender[items][${item_index}][deliveryAddress][region]  ${items.deliveryAddress.region}
+  Input text  name=Tender[items][${item_index}][deliveryAddress][locality]  ${items.deliveryAddress.locality}
+  Input text  name=Tender[items][${item_index}][deliveryAddress][streetAddress]  ${items.deliveryAddress.streetAddress}
+  Input text  name=Tender[items][${item_index}][deliveryAddress][postalCode]  ${items.deliveryAddress.postalCode}
+  Input Date  name="Tender[items][${item_index}][deliveryDate][startDate]"  ${items.deliveryDate.endDate}
+  Input Date  name="Tender[items][${item_index}][deliveryDate][endDate]"  ${items.deliveryDate.endDate}
+
 
 Вибрати додатковий класифікатор
   [Arguments]  ${item}  ${index}  ${is_MOZ}
@@ -498,25 +548,36 @@ Get Last Feature Index
   ...  AND  Wait Until Page Does Not Contain  Файл завантажується...  10
 
 Пошук тендера по ідентифікатору
-  [Arguments]  ${username}  ${tender_uaid}
+  [Arguments]  ${username}  ${tender_uaid}  ${save_key}=tender_data
   Switch browser  ${username}
   Go To  ${host}/tenders/
-  ${status}=  Run Keyword And Return Status  Wait Until Element Is Visible  xpath=//button[@data-dismiss="modal"]  5
-  Run Keyword If  ${status}  Закрити модалку  xpath=//button[@data-dismiss="modal"]
-  Wait Until Element Is Visible  name=TendersSearch[tender_cbd_id]  10
-  Input text  name=TendersSearch[tender_cbd_id]  ${tender_uaid}
-  Wait Until Keyword Succeeds  6x  20s  Run Keywords
-  ...  Run Keyword And Ignore Error  Wait Until Keyword Succeeds  3 x  1 s  Click Element  xpath=//button[@data-dismiss="modal"]
-  ...  AND  Дочекатися І Клікнути  xpath=//button[text()='Шукати']
-  ...  AND  Wait Until Element Is Visible  xpath=//*[contains(@class, "btn-search_cancel")]  10
-  ...  AND  Wait Until Element Is Visible  xpath=//*[contains(text(),'${tender_uaid}')]/ancestor::div[@class="search-result"]/descendant::a[1]  10
-  Click Element  xpath=//*[contains(text(),'${tender_uaid}')]/ancestor::div[@class="search-result"]/descendant::a[1]
-  Run Keyword And Ignore Error  Wait Until Keyword Succeeds  3 x  1 s  Click Element  xpath=//button[@data-dismiss="modal"]
+  ${is_not_visible}=  Run Keyword And Return Status  Element Should Not Be Visible  xpath=//*[@id="action-test-mode-msg"]
+  Run Keyword If  ${is_not_visible} and "${role}" != "viewer"  Run Keywords
+  ...  Click element  xpath=(//*[@class="glyphicon glyphicon-user"])[1]
+  ...  AND  Дочекатися І Клікнути  xpath=//*[@class="switch_t"]
+  ...  AND  Дочекатися І Клікнути  xpath=//*[@class="bg-close"]
+  ...  AND  Wait Until Element Is Not Visible  xpath=//*[@class="switch_t"]
+#  ${status}=  Run Keyword And Return Status  Wait Until Element Is Visible  xpath=//button[@data-dismiss="modal"]  5
+#  Run Keyword If  ${status}  Закрити модалку  xpath=//button[@data-dismiss="modal"]
+  Wait Until Element Is Visible  xpath=//*[@id="search"]  10
+  Дочекатися І Клікнути  xpath=//span[@id="more-filter"]
+  Wait Until Element Is Visible  xpath=//input[@name="TendersSearch[tender_cbd_id]"]
+  Input text  xpath=//input[@name="TendersSearch[tender_cbd_id]"]  ${tender_uaid}
+#  Wait Until Keyword Succeeds  6x  20s  Run Keywords
+#  ...  Run Keyword And Ignore Error  Wait Until Keyword Succeeds  3 x  1 s  Click Element  xpath=//button[@data-dismiss="modal"]
+#  ...  AND  Дочекатися І Клікнути  xpath=//button[text()='Шукати']
+#  ...  AND  Wait Until Element Is Visible  xpath=//*[contains(@class, "btn-search_cancel")]  10
+#  ...  AND  Wait Until Element Is Visible  xpath=//*[contains(text(),'${tender_uaid}')]/ancestor::div[@class="search-result"]/descendant::a[1]  10
+  Дочекатися І Клікнути  xpath=//*[@id="search"]
+  Дочекатися І Клікнути  xpath=//*[contains(text(),'${tender_uaid}')]/ancestor::div[@class="search-result"]/descendant::a[1]
+#  Run Keyword And Ignore Error  Wait Until Keyword Succeeds  3 x  1 s  Click Element  xpath=//button[@data-dismiss="modal"]
   Wait Until Element Is Visible  xpath=//*[@data-test-id="tenderID"]  10
+
 
 Оновити сторінку з тендером
   [Arguments]  ${username}  ${tenderID}
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tenderID}
+
 
 Внести зміни в тендер
   [Arguments]  ${username}  ${tenderID}  ${field_name}  ${field_value}
@@ -524,7 +585,7 @@ Get Last Feature Index
   ...  ELSE  Set Variable  ${field_value}
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tenderID}
   Дочекатися І Клікнути  xpath=//a[contains(text(),'Редагувати')]
-  Run Keyword If  "Date" in "${field_name}"  Input Date  name=Tender[${field_name.replace(".", "][")}]  ${field_value}
+  Run Keyword If  "Date" in "${field_name}"  Input Date  name="Tender[${field_name.replace(".", "][")}]"  ${field_value}
   ...  ELSE  Input text  name=Tender[${field_name}]  ${field_value}
   Дочекатися І Клікнути  xpath=//button[contains(@class,'btn_submit_form')]
   Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
@@ -891,7 +952,7 @@ Feature Count Should Not Be Zero
   ${red}=  Evaluate  "\\033[1;31m"
   Run Keyword If  'title' in '${field_name}'  Execute Javascript  $("[data-test-id|='title']").css("text-transform", "unset")
   Run Keyword If  '${field_name}' == 'status'  Reload Page
-  Run Keyword And Ignore Error  Click Element  xpath=//button[@data-dismiss="modal"]
+#  Run Keyword And Ignore Error  Click Element  xpath=//button[@data-dismiss="modal"]
   Run Keyword If  '${field_name}' == 'qualificationPeriod.endDate'  Wait Until Keyword Succeeds  10 x  60 s  Run Keywords
   ...  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   ...  AND  Page Should Contain Element  xpath=//*[@data-test-id="qualificationPeriod.endDate"]
@@ -906,9 +967,31 @@ Feature Count Should Not Be Zero
   ...  ELSE IF  '${field_name}' == 'procuringEntity.identifier.scheme'  Get Element Attribute  xpath=//*[@data-test-id="procuringEntity.identifier.scheme"]@value
   ...  ELSE IF  '${field_name}' == 'documents[0].title'  Get Text  xpath=//a[contains(@href,"docs-sandbox")]
   ...  ELSE IF  '${field_name}' == 'contracts[0].status'  Отримати статус контракта  ${username}  ${tender_uaid}
+  ...  ELSE IF   "stones" in "${field_name}"  allbiz.Get Info From Tender Milestones  ${field_name}
   ...  ELSE  Get Text  xpath=//*[@data-test-id="${field_name}"]
   ${value}=  adapt_view_tender_data  ${value}  ${field_name}
   [Return]  ${value}
+
+Get Info From Tender Milestones
+   [Arguments]  ${field_name}
+  ${match_res}=  Get Regexp Matches  ${field_name}  \\[(\\d+)\\]  1
+  ${index}=  Convert To Integer  ${match_res[0]}
+  ${field_name}=  Remove String Using Regexp  ${field_name}  \\[(\\d+)\\]
+  log  ${field_name}
+#  ${value}=  Run Keyword If  "title" in "${field_name}"  Get text  xpath=(//*[@data-test-id="milestones.title"])[${index + 1}]
+#  ...  ELSE IF  "code" in "${field_name}"  Get text  xpath=(//*[@data-test-id="milestones.code"])[${index + 1}]
+#  ...  ELSE IF  "percentage" in "${field_name}"  Get text  xpath=(//*[@data-test-id="milestones.percentage"])[${index + 1}]
+#  ...  ELSE IF  "days" in "${field_name}" Get text  xpath=(//*[@data-test-id="milestones.duration.days"])[${index + 1}]
+#  ...  ELSE IF  "type" in "${field_name}"  Get text  xpath=(//*[@data-test-id="milestones.duration.type"])[${index + 1}]
+#  ...  ELSE  Get text  xpath=(//*[@data-test-id="${field_name}"])[${index + 1}]
+  ${value}=  Get text  xpath=(//*[@data-test-id="${field_name}"])[${index + 1}]
+
+  ${value}=  Run Keyword If
+  ...  "days" in "${field_name}"  Convert To Number  ${value}
+  ...  ELSE IF  "percentage" in "${field_name}"  Convert To Number  ${value}
+  ...  ELSE  Set Variable  ${value}
+  [Return]  ${value}
+
 
 Отримати інформацію із предмету
   [Arguments]  ${username}  ${tender_uaid}  ${item_id}  ${field_name}
@@ -1290,7 +1373,8 @@ Conv And Select From List By Value
 Input Date
   [Arguments]  ${elem_locator}  ${date}
   ${date}=  convert_datetime_to_allbiz_format  ${date}
-  Input Text  ${elem_locator}  ${date}
+#  Input Text  ${elem_locator}  ${date}
+  Execute Javascript  document.querySelector('[${elem_locator}]').value="${date}"
 
 Дочекатися вивантаження файлу до ЦБД
   Reload Page

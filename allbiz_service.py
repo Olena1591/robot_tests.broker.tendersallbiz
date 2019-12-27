@@ -15,7 +15,7 @@ def convert_time(date):
 
 
 def convert_time_item(date):
-    date = datetime.strptime(date, "%d/%m/%Y %H:%M")
+    date = datetime.strptime(date, "%d/%m/%Y")
     res_date = date.strftime('%Y-%m-%dT%H:%M:%S')
     return "{}+{}".format(res_date, "02:00")
 
@@ -79,7 +79,20 @@ def convert_string_from_dict_allbiz(string):
         u'ящик': u'BX',
         u'open_belowThreshold': u'belowThreshold',
         u'Код ДК 021-2015 (CPV)': u'ДК021',
-        u'Запланований': u'scheduled'
+        u'Запланований': u'scheduled',
+        u'(робочі)': u'working',
+        u'(банківські)': u'banking',
+        u'(календарні)': u'calendar',
+        u'Аванс': u'prepayment',
+        u'Пiсляоплата': u'postpayment',
+        u'виконання робіт': u'executionOfWorks',
+        u'поставка товару': u'deliveryOfGoods',
+        u'надання послуг': u'submittingServices',
+        u'підписання договору': u'signingTheContract',
+        u'дата подання заявки': u'ubmissionDateOfApplications',
+        u'дата виставлення рахунку': u'dateOfInvoicing',
+        u'дата закінчення звітного періоду': u'endDateOfTheReportingPeriod',
+        u'інша подія': u'anotherEvent',
     }.get(string, string)
 
 
