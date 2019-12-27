@@ -78,6 +78,7 @@ def convert_string_from_dict_allbiz(string):
         u'Переможець': u'active',
         u'ящик': u'BX',
         u'open_belowThreshold': u'belowThreshold',
+        u'limited_reporting': u'reporting',
         u'Код ДК 021-2015 (CPV)': u'ДК021',
         u'Запланований': u'scheduled',
         u'(робочі)': u'working',
@@ -89,10 +90,14 @@ def convert_string_from_dict_allbiz(string):
         u'поставка товару': u'deliveryOfGoods',
         u'надання послуг': u'submittingServices',
         u'підписання договору': u'signingTheContract',
-        u'дата подання заявки': u'ubmissionDateOfApplications',
+        u'дата подання заявки': u'submissionDateOfApplications',
         u'дата виставлення рахунку': u'dateOfInvoicing',
         u'дата закінчення звітного періоду': u'endDateOfTheReportingPeriod',
         u'інша подія': u'anotherEvent',
+        u'Послуги': u'services',
+        u'Товари': u'goods',
+        u'Роботи': u'works',
+        u'Класифікацiя предмета закупівлi за ДК 021:2015': u'ДК021',
     }.get(string, string)
 
 
@@ -133,7 +138,7 @@ def adapt_view_tender_data(value, field_name):
     elif 'unit.name' in field_name:
         value = value.split(' ')[1]
     elif 'quantity' in field_name:
-        value = float(value.split(' ')[0])
+        value = float(value.replace(",", "."))
     elif 'questions' in field_name and '.date' in field_name:
         value = convert_time(value.split(' - ')[0])
     elif 'Date' in field_name:

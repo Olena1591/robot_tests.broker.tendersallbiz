@@ -86,7 +86,8 @@ Login
   Click Element  xpath=//a[@href="${host}/tenders"]
   Дочекатися І Клікнути  xpath=//a[@href="${host}/plan"]
   Дочекатися І Клікнути  xpath=//a[@href="${host}/buyer/plan/create"]
-  Conv And Select From List By Value  name=procurementMethod  open_belowThreshold
+    Run Keyword If  "below" in "${tender_data.data.tender.procurementMethodType}"  Conv And Select From List By Value  name=procurementMethod  open_belowThreshold
+  ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "reporting"  Wait And Select From List By Value  name=procurementMethod   limited_reporting
   Input text  name=Plan[budget][description]  ${tender_data.data.budget.description}
   Input text  name=Plan[budget][amount]  ${budget_amount}
   Conv And Select From List By Value  name=Plan[budget][currency]  UAH
@@ -1399,7 +1400,7 @@ Input Date
   Sleep  2
 
 Дочекатися посилання на аукціон
-  ${auction_url}=  Get Element Attribute  xpath=(//a[contains(@href, "auction-sandbox.openprocurement.org/")])[1]@href
+  ${auction_url}=  Get Element Attribute  xpath=//a[contains(text(),'Перейти в аукціон')]@href
   Should Not Be Equal  ${auction_url}  javascript:void(0)
   [Return]  ${auction_url}
 
