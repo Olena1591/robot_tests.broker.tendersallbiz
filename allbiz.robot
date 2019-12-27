@@ -41,7 +41,7 @@ ${locator.plan.tender.procurementMethodType}=  xpath=//*[@data-test-id="procurem
   [Arguments]  ${username}
   ${chromeOptions}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
 #  ${prefs} =    Create Dictionary    download.default_directory=${downloadDir}
-  Call Method    ${chromeOptions}    add_argument    --headless
+#  Call Method    ${chromeOptions}    add_argument    --headless
 
 
   Create Webdriver    ${USERS.users['${username}'].browser}  alias=${username}   chrome_options=${chromeOptions}
@@ -164,10 +164,11 @@ Add item plan
   Дочекатися І Клікнути  xpath=//span[@id="more-filter"]
   Wait Until Element Is Visible  xpath=//input[@id="plan-id"]
   Input text  xpath=//input[@name="PlansSearch[planID]"]  ${planID}
-  Дочекатися І Клікнути  xpath=//button[@id="search"]
-  Wait Until Keyword Succeeds  6x  20s   Page Should Contain Element  xpath=//div[@class="search-result_article"]
-  Дочекатися І Клікнути  xpath=//*[contains(text(),'${planID}')]/ancestor::div[contains(@class,"row")]/descendant::a[1]
-  Wait Until Element Is Visible  xpath=(//div[@class="col-xs-12 col-sm-6 col-md-8 item-bl_val"])[1]  20
+  Wait Until Keyword Succeeds  20 x  10 s  Run Keywords
+  ...  Дочекатися І Клікнути  xpath=//button[@id="search"]
+  ...  AND  Wait Until Keyword Succeeds  5x  1s   Page Should Contain Element  xpath=//div[@class="search-result_article"]
+  ...  AND  Дочекатися І Клікнути  xpath=//*[contains(text(),'${planID}')]/ancestor::div[contains(@class,"row")]/descendant::a[1]
+  ...  AND  Wait Until Element Is Visible  xpath=(//div[@class="col-xs-12 col-sm-6 col-md-8 item-bl_val"])[1]  20
 
 
 Отримати інформацію із плану
@@ -266,7 +267,7 @@ Update plan items info
 ###############################################################################################################
 
 Створити тендер
-  [Arguments]  ${username}  ${tender_data}  ${plan_id}  ${plan_access_token}
+  [Arguments]  ${username}  ${tender_data}  ${plan_id}
   ${items}=  Get From Dictionary  ${tender_data.data}  items
   ${number_of_items}=  Get length  ${items}
   ${amount}=   add_second_sign_after_point   ${tender_data.data.value.amount}
@@ -292,11 +293,11 @@ Update plan items info
   Run Keyword If  "below" in "${tender_data.data.procurementMethodType}"  Заповнити поля для допорогової закупівлі  ${tender_data}
   ...  ELSE IF  "aboveThreshold" in "${tender_data.data.procurementMethodType}"  Заповнити поля для понадпорогів  ${tender_data}
   ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "negotiation"  Заповнити поля для переговорної процедури  ${tender_data}
-  ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "reporting"  Wait And Select From List By Value  name=tender_method  limited_reporting
+#  ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "reporting"  Wait And Select From List By Value  name=tender_method  limited_reporting
   Conv And Select From List By Value  name=Tender[value][valueAddedTaxIncluded]  ${valueAddedTaxIncluded}
 
 
-  Conv And Select From List By Value  xpath=(//select[@id="guarantee-exist"])[1]  1
+  Run Keyword If  "below" in "${tender_data.data.procurementMethodType}"  Conv And Select From List By Value  xpath=(//select[@id="guarantee-exist"])[1]  1
 #  Input text  xpath=//*[@id="value-amount"]  ${tender_data.data.value.amount}
   Run Keyword If  ${number_of_lots} == 0  Run Keywords
   ...  ConvToStr And Input Text  name=Tender[value][amount]  ${amount}
@@ -319,6 +320,7 @@ Update plan items info
 #  Run Keyword If   ${number_of_lots} == 0  Додати багато предметів   ${tender_data}
 #  ...  ELSE  Додати багато лотів  ${tender_data}
   :FOR   ${item_index}   IN RANGE   ${number_of_items}
+  \  Run Keyword If  ${item_index} != 0  Дочекатися І Клікнути  xpath=(//button[@class="mk-btn mk-btn_default add_item"])[2]
   \  Add Item Tender  ${item_index}  ${items[${item_index}]}
 
 
@@ -441,6 +443,7 @@ Add Item Tender
   ${dk_status}=  Run Keyword And Return Status  Dictionary Should Contain Key  ${items}  additionalClassifications
   ${is_CPV_other}=  Run Keyword And Return Status  Should Be Equal  '${items.classification.id}'  '99999999-9'
   ${is_MOZ}=  Run Keyword And Return Status  Should Be Equal  '${items.additionalClassifications[0].scheme}'  'INN'
+
   Input text  name=Tender[items][${item_index}][description]  ${items.description}
   Run Keyword If   '${mode}' == 'openeu'   Input text  name=Tender[items][${item_index}][description_en]  ${items.description_en}
   Input text  name=Tender[items][${item_index}][quantity]  ${quantity}
@@ -463,6 +466,9 @@ Add Item Tender
   Input text  name=Tender[items][${item_index}][deliveryAddress][postalCode]  ${items.deliveryAddress.postalCode}
   Input Date  name="Tender[items][${item_index}][deliveryDate][startDate]"  ${items.deliveryDate.endDate}
   Input Date  name="Tender[items][${item_index}][deliveryDate][endDate]"  ${items.deliveryDate.endDate}
+#  Run Keyword If  ${item_index} != 0  Run Keywords
+#  ...  Дочекатися І Клікнути  xpath=(//button[@class="mk-btn mk-btn_default add_item"])[2]
+#  ...  AND  Wait Until Page Contains Element  name=Tender[items][${item_index}][description]
 
 
 Вибрати додатковий класифікатор
@@ -569,10 +575,15 @@ Get Last Feature Index
 #  ...  AND  Дочекатися І Клікнути  xpath=//button[text()='Шукати']
 #  ...  AND  Wait Until Element Is Visible  xpath=//*[contains(@class, "btn-search_cancel")]  10
 #  ...  AND  Wait Until Element Is Visible  xpath=//*[contains(text(),'${tender_uaid}')]/ancestor::div[@class="search-result"]/descendant::a[1]  10
-  Дочекатися І Клікнути  xpath=//*[@id="search"]
-  Дочекатися І Клікнути  xpath=//*[contains(text(),'${tender_uaid}')]/ancestor::div[@class="search-result"]/descendant::a[1]
+#  Дочекатися І Клікнути  xpath=//*[@id="search"]
+  Wait Until Keyword Succeeds  20 x  10 s  Run Keywords
+  ...  Дочекатися І Клікнути  xpath=//button[@id="search"]
+  ...  AND  Wait Until Keyword Succeeds  5x  1s   Page Should Contain Element  xpath=//div[@class="search-result_article"]
+  ...  AND  Дочекатися І Клікнути  xpath=//*[contains(text(),'${tender_uaid}')]/ancestor::div[@class="search-result"]/descendant::a[1]
+  ...  AND  Wait Until Element Is Visible  xpath=//*[@data-test-id="tenderID"]  10
+#  Дочекатися І Клікнути  xpath=//*[contains(text(),'${tender_uaid}')]/ancestor::div[@class="search-result"]/descendant::a[1]
 #  Run Keyword And Ignore Error  Wait Until Keyword Succeeds  3 x  1 s  Click Element  xpath=//button[@data-dismiss="modal"]
-  Wait Until Element Is Visible  xpath=//*[@data-test-id="tenderID"]  10
+#  Wait Until Element Is Visible  xpath=//*[@data-test-id="tenderID"]  10
 
 
 Оновити сторінку з тендером
@@ -960,7 +971,7 @@ Feature Count Should Not Be Zero
   ${value}=  Run Keyword If  'unit.code' in '${field_name}'  Log To Console   ${red}\n\t\t\t Це поле не виводиться на allbiz
   ...  ELSE IF  'qualifications' in '${field_name}'  Отримати інформацію із кваліфікації  ${username}  ${tender_uaid}  ${field_name}
   ...  ELSE IF  'awards' in '${field_name}'  Отримати інформацію із аварду  ${username}  ${tender_uaid}  ${field_name}
-  ...  ELSE IF  'unit' in '${field_name}'  Get Text  xpath=//*[@data-test-id="items.quantity"]
+  ...  ELSE IF  'unit' in '${field_name}'  Get Text  xpath=//*[@data-test-id="unit.name"]
   ...  ELSE IF  'deliveryLocation' in '${field_name}'  Log To Console  ${red}\n\t\t\t Це поле не виводиться на allbiz
   ...  ELSE IF  'items' in '${field_name}'  Get Text  xpath=//*[@data-test-id="${field_name.replace('[0]', '')}"]
   ...  ELSE IF  '${field_name}' == 'cause'  Get Element Attribute  xpath=//*[@data-test-id="${field_name}"]@data-test-cause
