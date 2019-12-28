@@ -89,6 +89,7 @@ Login
     Run Keyword If  "below" in "${tender_data.data.tender.procurementMethodType}"  Conv And Select From List By Value  name=procurementMethod  open_belowThreshold
   ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "reporting"  Wait And Select From List By Value  name=procurementMethod   limited_reporting
   ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "aboveThresholdUA"  Wait And Select From List By Value  name=procurementMethod   open_aboveThresholdUA
+  ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "negotiation"  Wait And Select From List By Value  name=procurementMethod  limited_negotiation
   Input text  name=Plan[budget][description]  ${tender_data.data.budget.description}
   Input text  name=Plan[budget][amount]  ${budget_amount}
   Conv And Select From List By Value  name=Plan[budget][currency]  UAH
@@ -287,10 +288,13 @@ Update plan items info
 #  Дочекатися І Клікнути  xpath=//a[@href="${host}/tenders/index"]
   allbiz.Пошук плану по ідентифікатору  ${username}  ${plan_uaid}
   Дочекатися І Клікнути  xpath=//*[@id="create_auction_modal_btn"]
+  Wait Until Element Is Visible  xpath=(//*[@class="modal-content"])[2]
   Run Keyword If  ${number_of_lots} > 0  Wait And Select From List By Value  name=tender_type  2
   ...  ELSE  Wait And Select From List By Value  name=tender_type  1
   Click Element  xpath=(//button[@class="mk-btn mk-btn_accept"])[2]
-
+  Wait Until Keyword Succeeds  10 x  1 s  Element Should Not Be Visible  xpath=(//*[@class="modal-content"])[2]
+  Run Keyword If  "aboveThreshold" in "${tender_data.data.procurementMethodType}"  Conv And Select From List By Value  xpath=(//select[@id="guarantee-exist"])[3]  1
+  ...  ELSE  Conv And Select From List By Value  xpath=(//select[@id="guarantee-exist"])[1]  1
   Run Keyword If  "below" in "${tender_data.data.procurementMethodType}"  Заповнити поля для допорогової закупівлі  ${tender_data}
   ...  ELSE IF  "aboveThreshold" in "${tender_data.data.procurementMethodType}"  Заповнити поля для понадпорогів  ${tender_data}
   ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "negotiation"  Заповнити поля для переговорної процедури  ${tender_data}
@@ -298,7 +302,8 @@ Update plan items info
   Conv And Select From List By Value  name=Tender[value][valueAddedTaxIncluded]  ${valueAddedTaxIncluded}
 
 
-  Run Keyword If  "below" in "${tender_data.data.procurementMethodType}"  Conv And Select From List By Value  xpath=(//select[@id="guarantee-exist"])[1]  1
+  Run Keyword If  "below" in "${tender_data.data.procurementMethodType}"  Input date  name="Tender[enquiryPeriod][endDate]"  ${tender_data.data.enquiryPeriod.endDate}
+#  Conv And Select From List By Value  xpath=(//select[@id="guarantee-exist"])[1]  1
 #  Input text  xpath=//*[@id="value-amount"]  ${tender_data.data.value.amount}
   Run Keyword If  ${number_of_lots} == 0  Run Keywords
   ...  ConvToStr And Input Text  name=Tender[value][amount]  ${amount}
@@ -313,11 +318,11 @@ Update plan items info
   \  Add milestone_tender  ${milestones_index}  ${milestones[${milestones_index}]}  ${tender_data.data.procurementMethodType}
   Input text  name=Tender[title]  ${tender_data.data.title}
   Input text  name=Tender[description]  ${tender_data.data.description}
-  Run Keyword If  "${tender_data.data.procurementMethodType}" == "belowThreshold"  Run Keywords
-  ...  Input date  name="Tender[enquiryPeriod][endDate]"  ${tender_data.data.enquiryPeriod.endDate}
-  ...  AND  Input date  name="Tender[tenderPeriod][startDate]"  ${tender_data.data.tenderPeriod.startDate}
-  ...  AND  Input date  name="Tender[tenderPeriod][endDate]"  ${tender_data.data.tenderPeriod.endDate}
-
+#  Run Keyword If  "${tender_data.data.procurementMethodType}" == "belowThreshold"  Run Keywords
+#  Input date  name="Tender[enquiryPeriod][endDate]"  ${tender_data.data.enquiryPeriod.endDate}
+  Input date  name="Tender[tenderPeriod][startDate]"  ${tender_data.data.tenderPeriod.startDate}
+  Input date  name="Tender[tenderPeriod][endDate]"  ${tender_data.data.tenderPeriod.endDate}
+  Run Keyword If   "${number_of_lots}" != 0  Додати багато лотів  ${tender_data}
 #  Run Keyword If   ${number_of_lots} == 0  Додати багато предметів   ${tender_data}
 #  ...  ELSE  Додати багато лотів  ${tender_data}
   :FOR   ${item_index}   IN RANGE   ${number_of_items}
@@ -374,8 +379,8 @@ Add milestone_tender
   Run Keyword If  "EU" in "${tender_data.data.procurementMethodType}"  Run Keywords
   ...  Input Text   name=Tender[title_en]   ${tender_data.data.title_en}
   ...  AND  Input Text   name=Tender[description_en]   ${tender_data.data.description_en}
-  Input Date  name="Tender[tenderPeriod][endDate]"  ${tender_data.data.tenderPeriod.endDate}
-  Select From List By Index  id=contact-point-select  1
+#  Input Date  name="Tender[tenderPeriod][endDate]"  ${tender_data.data.tenderPeriod.endDate}
+#  Select From List By Index  id=contact-point-select  1
 
 
 Заповнити поля для переговорної процедури
