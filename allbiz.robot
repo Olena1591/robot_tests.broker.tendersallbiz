@@ -419,7 +419,7 @@ Add milestone_tender
   Run Keyword If   '${mode}' == 'openeu'   Run Keywords
   ...   Input Text   name=Tender[lots][${lot_index}][title_en]   ${lot.title_en}
   ...   AND   Input Text   name=Tender[lots][${lot_index}][description_en]    ${lot.description}
-  Додати багато предметів   ${data}
+#  Додати багато предметів   ${data}
 
 
 Input Minimal Step Amount
