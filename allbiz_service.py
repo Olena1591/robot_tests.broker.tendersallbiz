@@ -135,8 +135,8 @@ def adapt_view_tender_data(value, field_name):
         value = value.split(' ')[-1]
     elif 'minimalStep.amount' in field_name:
         value = float("".join(value.split(" ")[:-4]))
-    elif 'unit.name' in field_name:
-        value = value.split(' ')[1]
+    # elif 'unit.name' in field_name:
+    #     value = value.split(' ')[1]
     elif 'quantity' in field_name:
         value = float(value.replace(",", "."))
     elif 'questions' in field_name and '.date' in field_name:
