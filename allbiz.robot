@@ -212,7 +212,7 @@ Get Info From Plan Items
   ...  ELSE  Input text  xpath=//*[@data-test-id="${field_name}"]  ${value}
   Дочекатися І Клікнути  xpath=//button[@name="publish"]
 #  Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
-  Wait Until Keyword Succeeds  10 x  1 s  Page Should Contain Element  xpath=//div[contains(@class, "alert-success")]
+  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//div[contains(@class, "alert-success")]
 
 Update plan budget.period
   [Arguments]  ${username}  ${planID}  ${field_name}  ${value}
