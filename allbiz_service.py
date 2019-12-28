@@ -79,6 +79,7 @@ def convert_string_from_dict_allbiz(string):
         u'ящик': u'BX',
         u'open_belowThreshold': u'belowThreshold',
         u'limited_reporting': u'reporting',
+        u'open_aboveThresholdUA': u'aboveThresholdUA',
         u'Код ДК 021-2015 (CPV)': u'ДК021',
         u'Запланований': u'scheduled',
         u'(робочі)': u'working',

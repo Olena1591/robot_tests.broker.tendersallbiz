@@ -88,6 +88,7 @@ Login
   Дочекатися І Клікнути  xpath=//a[@href="${host}/buyer/plan/create"]
     Run Keyword If  "below" in "${tender_data.data.tender.procurementMethodType}"  Conv And Select From List By Value  name=procurementMethod  open_belowThreshold
   ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "reporting"  Wait And Select From List By Value  name=procurementMethod   limited_reporting
+  ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "aboveThresholdUA"  Wait And Select From List By Value  name=procurementMethod   open_aboveThresholdUA
   Input text  name=Plan[budget][description]  ${tender_data.data.budget.description}
   Input text  name=Plan[budget][amount]  ${budget_amount}
   Conv And Select From List By Value  name=Plan[budget][currency]  UAH
@@ -212,7 +213,7 @@ Get Info From Plan Items
   ...  ELSE  Input text  xpath=//*[@data-test-id="${field_name}"]  ${value}
   Дочекатися І Клікнути  xpath=//button[@name="publish"]
 #  Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
-  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//div[contains(@class, "alert-success")]
+#  Wait Until Keyword Succeeds  20 x  1 s  Page Should Contain Element  xpath=//div[contains(@class, "alert-success")]
 
 Update plan budget.period
   [Arguments]  ${username}  ${planID}  ${field_name}  ${value}
@@ -309,7 +310,7 @@ Update plan items info
 #  ...  ConvToStr And Input Text  name=Tender[value][amount]  ${amount}
 #  ...  AND  Run Keyword If  "${tender_data.data.procurementMethodType}" not in "reporting negotiation"  Select From List By Value  id=guarantee-exist  0
   :FOR   ${milestones_index}   IN RANGE   ${number_of_milestones}
-  \  Add milestone_tender  ${milestones_index}  ${milestones[${milestones_index}]}
+  \  Add milestone_tender  ${milestones_index}  ${milestones[${milestones_index}]}  ${tender_data.data.procurementMethodType}
   Input text  name=Tender[title]  ${tender_data.data.title}
   Input text  name=Tender[description]  ${tender_data.data.description}
   Run Keyword If  "${tender_data.data.procurementMethodType}" == "belowThreshold"  Run Keywords
@@ -336,8 +337,9 @@ Update plan items info
   [Return]  ${tender_uaid}
 
 Add milestone_tender
-  [Arguments]  ${milestones_index}  ${milestones}
-  Дочекатися І Клікнути  xpath=(//button[@class="mk-btn mk-btn_default add_milestone"])[1]
+  [Arguments]  ${milestones_index}  ${milestones}  ${procurementMethodType}
+  Run Keyword If  "aboveThresholdUA" in "${procurementMethodType}"  Дочекатися І Клікнути  xpath=(//button[@class="mk-btn mk-btn_default add_milestone"])[3]
+  ...  ELSE  Дочекатися І Клікнути  xpath=(//button[@class="mk-btn mk-btn_default add_milestone"])[1]
 #  Wait And Select From List By Value  xpath=//select[@name="Tender[milestones][${milestones_index + 1}][title]"]  0
 #  Imput Text  name="Tender[milestones][${milestones_index + 1}][title]"  ${milestones.title}
   Conv And Select From List By Value  xpath=//*[@name="Tender[milestones][${milestones_index}][title]"]  ${milestones.title}
@@ -366,8 +368,8 @@ Add milestone_tender
   [Arguments]  ${tender_data}
   Log  ${tender_data}
   ${minimalStep}=   add_second_sign_after_point   ${tender_data.data.minimalStep.amount}
-  Wait And Select From List By Value  name=tender_method  open_${tender_data.data.procurementMethodType}
-  Select From List By Value  id=tender-type-select  2
+#  Wait And Select From List By Value  name=tender_method  open_${tender_data.data.procurementMethodType}
+#  Select From List By Value  id=tender-type-select  2
   Run Keyword If  ${number_of_lots} == 0  ConvToStr And Input Text  name=Tender[minimalStep][amount]  ${minimalStep}
   Run Keyword If  "EU" in "${tender_data.data.procurementMethodType}"  Run Keywords
   ...  Input Text   name=Tender[title_en]   ${tender_data.data.title_en}
