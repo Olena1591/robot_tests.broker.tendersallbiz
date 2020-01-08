@@ -350,7 +350,9 @@ Add milestone_tender
   [Arguments]  ${milestones_index}  ${milestones}  ${procurementMethodType}
 #  Run Keyword If  "aboveThresholdUA" in "${procurementMethodType}"  Дочекатися І Клікнути  xpath=(//button[@class="mk-btn mk-btn_default add_milestone"])[3]
 #  ...  ELSE  Дочекатися І Клікнути  xpath=(//button[@class="mk-btn mk-btn_default add_milestone"])[1]
-  Дочекатися І Клікнути  xpath=//button[@data-test-id="add_milestone"]
+  Scroll To Element  xpath=//button[@data-test-id="add_milestone"]
+  Sleep  1000
+  Click element  xpath=//button[@data-test-id="add_milestone"]
 #  Wait And Select From List By Value  xpath=//select[@name="Tender[milestones][${milestones_index + 1}][title]"]  0
 #  Imput Text  name="Tender[milestones][${milestones_index + 1}][title]"  ${milestones.title}
   Conv And Select From List By Value  xpath=//*[@name="Tender[milestones][${milestones_index}][title]"]  ${milestones.title}
