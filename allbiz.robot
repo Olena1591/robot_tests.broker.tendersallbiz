@@ -340,14 +340,16 @@ Update plan items info
   Get Element Attribute  xpath=//input[@name="accelerator"]@value
   Select From List By Index  id=contact-point-select  1
   Click Element  xpath=//button[contains(@class,'btn_submit_form')]
+  Sleep  10
+  Log source
   Wait Until Element Is Visible  xpath=//*[@data-test-id="tenderID"]  20
   ${tender_uaid}=  Get Text  xpath=//*[@data-test-id="tenderID"]
   [Return]  ${tender_uaid}
 
 Add milestone_tender
   [Arguments]  ${milestones_index}  ${milestones}  ${procurementMethodType}
-  Run Keyword If  "aboveThresholdUA" in "${procurementMethodType}"  Дочекатися І Клікнути  xpath=(//button[@class="mk-btn mk-btn_default add_milestone"])[3]
-  ...  ELSE  Дочекатися І Клікнути  xpath=(//button[@class="mk-btn mk-btn_default add_milestone"])[1]
+#  Run Keyword If  "aboveThresholdUA" in "${procurementMethodType}"  Дочекатися І Клікнути  xpath=(//button[@class="mk-btn mk-btn_default add_milestone"])[3]
+#  ...  ELSE  Дочекатися І Клікнути  xpath=(//button[@class="mk-btn mk-btn_default add_milestone"])[1]
   Дочекатися І Клікнути  xpath=//button[@data-test-id="add_milestone"]
 #  Wait And Select From List By Value  xpath=//select[@name="Tender[milestones][${milestones_index + 1}][title]"]  0
 #  Imput Text  name="Tender[milestones][${milestones_index + 1}][title]"  ${milestones.title}
