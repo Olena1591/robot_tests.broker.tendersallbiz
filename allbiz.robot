@@ -90,6 +90,7 @@ Login
   ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "reporting"  Wait And Select From List By Value  name=procurementMethod   limited_reporting
   ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "aboveThresholdUA"  Wait And Select From List By Value  name=procurementMethod   open_aboveThresholdUA
   ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "negotiation"  Wait And Select From List By Value  name=procurementMethod  limited_negotiation
+  ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "aboveThresholdEU"  Wait And Select From List By Value name=procurementMethod  open_aboveThresholdEU
   Input text  name=Plan[budget][description]  ${tender_data.data.budget.description}
   Input text  name=Plan[budget][amount]  ${budget_amount}
   Conv And Select From List By Value  name=Plan[budget][currency]  UAH
@@ -386,8 +387,19 @@ Add milestone_tender
 Заповнити поля для переговорної процедури
   [Arguments]  ${tender_data}
   Log  ${tender_data}
-  Wait And Select From List By Value  name=tender_method  limited_${tender_data.data.procurementMethodType}
+#  Wait And Select From List By Value  name=tender_method  limited_${tender_data.data.procurementMethodType}
   Input Text  name=Tender[causeDescription]  ${tender_data.data.causeDescription}
+
+
+
+
+
+
+
+
+
+
+
   Дочекатися І Клікнути  xpath=//input[@name="Tender[cause]" and @value="${tender_data.data.cause}"]/..
   Input Text  name=Tender[procuringEntity][contactPoint][name]  ${tender_data.data.procuringEntity.contactPoint.name}
   Input Text  name=Tender[procuringEntity][contactPoint][telephone]  ${tender_data.data.procuringEntity.contactPoint.telephone}
@@ -515,7 +527,7 @@ Add Item Tender
   Run Keyword If   '${mode}' == 'openeu'  Run Keywords
   ...  Input text   xpath=//input[@name="Tender[features][${feature_index}][title_en]"]  ${feature.title_en}
   ...  AND  Input text   name=Tender[features][${feature_index}][description_en]   ${feature.description}
-  Дочекатися І Клікнути  xpath=//select[@name="Tender[features][${feature_index}][relatedItem]"]/descendant::option[contains(text(),"${relatedItem}")]
+  Дочекатися І Клікнути  xpath=//select[@name="Tender[features][${feature_index + 1}][relatedItem]"]/descendant::option[contains(text(),"${relatedItem}")]
   :FOR   ${index}   IN RANGE   ${enum_length}
   \   Run Keyword if   ${index} != 0   Дочекатися І Клікнути   xpath=//input[@name="Tender[features][${feature_index}][title]"]/ancestor::div[@class="feature"]/descendant::button[contains(@class,"add_feature_enum")]
   \   Додати опцію   ${feature.enum[${index}]}   ${index}   ${feature_index}
