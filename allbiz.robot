@@ -91,8 +91,8 @@ Login
   ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "aboveThresholdUA"  Wait And Select From List By Value  name=procurementMethod   open_aboveThresholdUA
   ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "negotiation"  Wait And Select From List By Value  name=procurementMethod  limited_negotiation
   ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "aboveThresholdEU"  Wait And Select From List By Value  name=procurementMethod  open_aboveThresholdEU
-#  ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == ""  Wait And Select From List By Value  name=procurementMethod  open_competitiveDialogueUA
-#  ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == ""  Wait And Select From List By Value  name=procurementMethod  open_competitiveDialogueEU
+  ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "competitiveDialogueUA"  Wait And Select From List By Value  name=procurementMethod  open_competitiveDialogueUA
+  ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "competitiveDialogueEU"  Wait And Select From List By Value  name=procurementMethod  open_competitiveDialogueEU
   Input text  name=Plan[budget][description]  ${tender_data.data.budget.description}
   Input text  name=Plan[budget][amount]  ${budget_amount}
   Conv And Select From List By Value  name=Plan[budget][currency]  UAH
