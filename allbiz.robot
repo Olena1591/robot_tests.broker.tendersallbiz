@@ -41,7 +41,7 @@ ${locator.plan.tender.procurementMethodType}=  xpath=//*[@data-test-id="procurem
   [Arguments]  ${username}
   ${chromeOptions}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
 #  ${prefs} =    Create Dictionary    download.default_directory=${downloadDir}
-  Call Method    ${chromeOptions}    add_argument    --headless
+#  Call Method    ${chromeOptions}    add_argument    --headless
 
 
   Create Webdriver    ${USERS.users['${username}'].browser}  alias=${username}   chrome_options=${chromeOptions}
@@ -284,7 +284,8 @@ Update plan items info
 #  ${number_of_milestones}= Get length  ${milestones}
   ${valueAddedTaxIncluded}=  Set Variable If  ${tender_data.data.value.valueAddedTaxIncluded}  1  0
   ${milestones}=  Get From Dictionary  ${tender_data.data}  milestones
-
+  ${index_strategy}=  Set Variable If  ${tender_data.data.has_key('lots')}  last()  1
+  Set Suite Variable  ${index_strategy}
   Switch Browser  ${username}
   Wait Until Element Is Not Visible  xpath=//div[@class="modal-backdrop fade"]  10
 #  Дочекатися І Клікнути  xpath=//a[@href="${host}/tenders"]
@@ -296,8 +297,9 @@ Update plan items info
   ...  ELSE  Wait And Select From List By Value  name=tender_type  1
   Click Element  xpath=(//button[@class="mk-btn mk-btn_accept"])[2]
   Wait Until Keyword Succeeds  10 x  1 s  Element Should Not Be Visible  xpath=(//*[@class="modal-content"])[2]
-  Run Keyword If  "aboveThreshold" in "${tender_data.data.procurementMethodType}"  Conv And Select From List By Value  xpath=(//select[@id="guarantee-exist"])[3]  1
-  ...  ELSE  Conv And Select From List By Value  xpath=(//select[@id="guarantee-exist"])[1]  1
+#  Run Keyword If  "aboveThreshold" in "${tender_data.data.procurementMethodType}"  Conv And Select From List By Value  xpath=(//select[@id="guarantee-exist"])[3]  1
+#  ...  ELSE  Conv And Select From List By Value  xpath=(//select[@id="guarantee-exist"])[1]  1
+  Conv And Select From List By Value  xpath=(//*[@data-test-id="guarantee-exist"])[${index_strategy}]  1
   Run Keyword If  "below" in "${tender_data.data.procurementMethodType}"  Заповнити поля для допорогової закупівлі  ${tender_data}
   ...  ELSE IF  "aboveThreshold" in "${tender_data.data.procurementMethodType}"  Заповнити поля для понадпорогів  ${tender_data}
   ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "negotiation"  Заповнити поля для переговорної процедури  ${tender_data}
@@ -350,9 +352,7 @@ Add milestone_tender
   [Arguments]  ${milestones_index}  ${milestones}  ${procurementMethodType}
 #  Run Keyword If  "aboveThresholdUA" in "${procurementMethodType}"  Дочекатися І Клікнути  xpath=(//button[@class="mk-btn mk-btn_default add_milestone"])[3]
 #  ...  ELSE  Дочекатися І Клікнути  xpath=(//button[@class="mk-btn mk-btn_default add_milestone"])[1]
-  Scroll To Element  xpath=//button[@data-test-id="add_milestone"]
-  Sleep  1000
-  Click element  xpath=//button[@data-test-id="add_milestone"]
+  Дочекатися І Клікнути  xpath=(//button[@data-test-id="add_milestone"])[${index_strategy}]
 #  Wait And Select From List By Value  xpath=//select[@name="Tender[milestones][${milestones_index + 1}][title]"]  0
 #  Imput Text  name="Tender[milestones][${milestones_index + 1}][title]"  ${milestones.title}
   Conv And Select From List By Value  xpath=//*[@name="Tender[milestones][${milestones_index}][title]"]  ${milestones.title}
