@@ -91,6 +91,8 @@ Login
   ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "aboveThresholdUA"  Wait And Select From List By Value  name=procurementMethod   open_aboveThresholdUA
   ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "negotiation"  Wait And Select From List By Value  name=procurementMethod  limited_negotiation
   ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "aboveThresholdEU"  Wait And Select From List By Value  name=procurementMethod  open_aboveThresholdEU
+#  ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == ""  Wait And Select From List By Value  name=procurementMethod  open_competitiveDialogueUA
+#  ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == ""  Wait And Select From List By Value  name=procurementMethod  open_competitiveDialogueEU
   Input text  name=Plan[budget][description]  ${tender_data.data.budget.description}
   Input text  name=Plan[budget][amount]  ${budget_amount}
   Conv And Select From List By Value  name=Plan[budget][currency]  UAH
@@ -346,6 +348,7 @@ Add milestone_tender
   [Arguments]  ${milestones_index}  ${milestones}  ${procurementMethodType}
   Run Keyword If  "aboveThresholdUA" in "${procurementMethodType}"  Дочекатися І Клікнути  xpath=(//button[@class="mk-btn mk-btn_default add_milestone"])[3]
   ...  ELSE  Дочекатися І Клікнути  xpath=(//button[@class="mk-btn mk-btn_default add_milestone"])[1]
+  Дочекатися І Клікнути  xpath=//button[@data-test-id="add_milestone"]
 #  Wait And Select From List By Value  xpath=//select[@name="Tender[milestones][${milestones_index + 1}][title]"]  0
 #  Imput Text  name="Tender[milestones][${milestones_index + 1}][title]"  ${milestones.title}
   Conv And Select From List By Value  xpath=//*[@name="Tender[milestones][${milestones_index}][title]"]  ${milestones.title}
@@ -389,22 +392,17 @@ Add milestone_tender
   Log  ${tender_data}
 #  Wait And Select From List By Value  name=tender_method  limited_${tender_data.data.procurementMethodType}
   Input Text  name=Tender[causeDescription]  ${tender_data.data.causeDescription}
-
-
-
-
-
-
-
-
-
-
-
   Дочекатися І Клікнути  xpath=//input[@name="Tender[cause]" and @value="${tender_data.data.cause}"]/..
   Input Text  name=Tender[procuringEntity][contactPoint][name]  ${tender_data.data.procuringEntity.contactPoint.name}
   Input Text  name=Tender[procuringEntity][contactPoint][telephone]  ${tender_data.data.procuringEntity.contactPoint.telephone}
   Input Text  name=Tender[procuringEntity][contactPoint][email]  ${tender_data.data.procuringEntity.contactPoint.email}
   Input Text  name=Tender[procuringEntity][contactPoint][url]  ${tender_data.data.procuringEntity.contactPoint.url}
+
+
+Заповнити поля для конкурентного діалогу
+  [Arguments]  ${tender_data}
+  Log  ${tender_data}
+
 
 
 Додати багато лотів
