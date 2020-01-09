@@ -552,7 +552,7 @@ Add Item Tender
 #  \  Return From Keyword If  "${feature_title_value}" == ""  ${element_id.split("-")[1]}
 
 Get Last Feature Index
-  ${elem_id}=  Get Element Attribute  xpath=(//input[contains(@id, "feature") and contains(@id, "title") and not (contains(@id, "__empty_feature__")) and not (contains(@id, "title_en"))])[last()]
+  ${elem_id}=  Get Element Attribute  xpath=(//*[contains(@id, "feature") and contains(@id, "title") and not (contains(@id, "empty_feature"))])[last()]@id
   [Return]  ${elem_id.split("-")[1]}
 
 Додати опцію
