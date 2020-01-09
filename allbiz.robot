@@ -46,7 +46,7 @@ ${locator.plan.tender.procurementMethodType}=  xpath=//*[@data-test-id="procurem
 
   Create Webdriver    ${USERS.users['${username}'].browser}  alias=${username}   chrome_options=${chromeOptions}
 #  Open Browser  ${USERS.users['${username}'].homepage}  ${USERS.users['${username}'].browser}  alias=${username}  desired_capabilities= ${chromeOptions}
-  Set Window Size  1024  768
+  Set Window Size  1024  10000
   Go To  ${USERS.users['${username}'].homepage}
   Run Keyword If  '${username}' != 'allbiz_Viewer'  Run Keywords
   ...  Login  ${username}
