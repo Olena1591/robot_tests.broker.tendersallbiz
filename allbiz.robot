@@ -406,6 +406,7 @@ Add milestone_tender
   [Arguments]  ${tender_data}
   Log  ${tender_data}
   Input Text  xpath=//*[@name="Tender[title_en]"]  ${tender_data.data.title_en}
+  Input Text  ${tender_data.data.lots.title_en}
 
 
 
@@ -433,6 +434,8 @@ Add milestone_tender
   Run Keyword If   '${mode}' == 'openeu'   Run Keywords
   ...   Input Text   name=Tender[lots][${lot_index}][title_en]   ${lot.title_en}
   ...   AND   Input Text   name=Tender[lots][${lot_index}][description_en]    ${lot.description}
+  Run Keyword If   '${mode}' == 'competitiveDialogueEU'   Run Keywords
+  ...   Input Text   name=Tender[lots][${lot_index}][title_en]   ${lots.title_en}
 #  Додати багато предметів   ${data}
 
 
@@ -467,6 +470,7 @@ Add Item Tender
 
   Input text  name=Tender[items][${item_index}][description]  ${items.description}
   Run Keyword If   '${mode}' == 'openeu'   Input text  name=Tender[items][${item_index}][description_en]  ${items.description_en}
+  ... ELSE IF  '${mode}' == 'competitiveDialogueEU'  Input Text  name=Tender[items][${item_index}][description_en]  ${items.description_en}
   Input text  name=Tender[items][${item_index}][quantity]  ${quantity}
   Wait And Select From List By Value  name=Tender[items][${item_index}][unit][code]  ${items.unit.code}
   Scroll To Element  name=Tender[items][${item_index}][classification][description]
@@ -529,6 +533,7 @@ Add Item Tender
   Run Keyword If   '${mode}' == 'openeu'  Run Keywords
   ...  Input text   xpath=//input[@name="Tender[features][${feature_index}][title_en]"]  ${feature.title_en}
   ...  AND  Input text   name=Tender[features][${feature_index}][description_en]   ${feature.description}
+  Run Keyword If   '${mode}' == 'competitiveDialogueEU'   Input text  name="Tender[features][${feature_index}][title_en]"  ${feature.title_en}
   Дочекатися І Клікнути  xpath=//select[@name="Tender[features][${feature_index}][relatedItem]"]/descendant::option[contains(text(),"${relatedItem}")]
   :FOR   ${index}   IN RANGE   ${enum_length}
   \   Run Keyword if   ${index} != 0   Дочекатися І Клікнути   xpath=//input[@name="Tender[features][${feature_index}][title]"]/ancestor::div[@class="feature"]/descendant::button[contains(@class,"add_feature_enum")]
