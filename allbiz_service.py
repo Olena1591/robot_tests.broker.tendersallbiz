@@ -100,6 +100,7 @@ def convert_string_from_dict_allbiz(string):
         u'Роботи': u'works',
         u'Класифікацiя предмета закупівлi за ДК 021:2015': u'ДК021',
         u'Не визначено': u'Не відображене в інших розділах',
+        u'Конкурентний діалог': u'competitiveDialogueUA',
     }.get(string, string)
 
 

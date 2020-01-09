@@ -303,6 +303,7 @@ Update plan items info
   Run Keyword If  "below" in "${tender_data.data.procurementMethodType}"  Заповнити поля для допорогової закупівлі  ${tender_data}
   ...  ELSE IF  "aboveThreshold" in "${tender_data.data.procurementMethodType}"  Заповнити поля для понадпорогів  ${tender_data}
   ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "negotiation"  Заповнити поля для переговорної процедури  ${tender_data}
+  ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "competitiveDialogueEU"  Заповнити поля для конкурентного діалогу  ${tender_data}
 #  ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "reporting"  Wait And Select From List By Value  name=tender_method  limited_reporting
   Conv And Select From List By Value  name=Tender[value][valueAddedTaxIncluded]  ${valueAddedTaxIncluded}
 
@@ -406,6 +407,7 @@ Add milestone_tender
 Заповнити поля для конкурентного діалогу
   [Arguments]  ${tender_data}
   Log  ${tender_data}
+  Input Text  xpath=//*[@name="Tender[title_en]"]  ${tender_data.data.title_en}
 
 
 
@@ -535,19 +537,23 @@ Add Item Tender
   \   Додати опцію   ${feature.enum[${index}]}   ${index}   ${feature_index}
 
 
-Index Should Not Be Zero
-  [Arguments]  ${feature_index}
-  ${element_id}=  Get Element Attribute  xpath=(//input[@class="feature_title" and not (contains(@name, "__EMPTY_FEATURE__"))])[${feature_index}]@id
-  Should Not Be Equal As Integers  ${element_id.split("-")[1]}  0
+#Index Should Not Be Zero
+#  [Arguments]  ${feature_index}
+#  ${element_id}=  Get Element Attribute  xpath=(//input[@class="feature_title" and not (contains(@name, "__EMPTY_FEATURE__"))])[${feature_index}]@id
+#  Should Not Be Equal As Integers  ${element_id.split("-")[1]}  0
+
+#Get Last Feature Index
+#  ${features_length}=  Get Matching Xpath Count  (//input[@class="feature_title" and not (contains(@name, "__EMPTY_FEATURE__"))])
+#  ${features_length}=  Convert To Integer  ${features_length}
+#  :FOR  ${f_index}  IN RANGE  ${features_length}
+#  \  ${element_id}=  Get Element Attribute  xpath=(//input[@class="feature_title" and not (contains(@name, "__EMPTY_FEATURE__"))])[${f_index + 1}]@id
+#  \  ${feature_title_value}=  Get Element Attribute  xpath=(//input[@class="feature_title" and not (contains(@name, "__EMPTY_FEATURE__"))])[${f_index + 1}]@value
+#  \  Run Keyword If  "${feature_title_value}" == "" and "${element_id.split("-")[1]}" == "0"  Wait Until Keyword Succeeds  10 x  2 s  Index Should Not Be Zero  ${f_index + 1}
+#  \  Return From Keyword If  "${feature_title_value}" == ""  ${element_id.split("-")[1]}
 
 Get Last Feature Index
-  ${features_length}=  Get Matching Xpath Count  (//input[@class="feature_title" and not (contains(@name, "__EMPTY_FEATURE__"))])
-  ${features_length}=  Convert To Integer  ${features_length}
-  :FOR  ${f_index}  IN RANGE  ${features_length}
-  \  ${element_id}=  Get Element Attribute  xpath=(//input[@class="feature_title" and not (contains(@name, "__EMPTY_FEATURE__"))])[${f_index + 1}]@id
-  \  ${feature_title_value}=  Get Element Attribute  xpath=(//input[@class="feature_title" and not (contains(@name, "__EMPTY_FEATURE__"))])[${f_index + 1}]@value
-  \  Run Keyword If  "${feature_title_value}" == "" and "${element_id.split("-")[1]}" == "0"  Wait Until Keyword Succeeds  10 x  2 s  Index Should Not Be Zero  ${f_index + 1}
-  \  Return From Keyword If  "${feature_title_value}" == ""  ${element_id.split("-")[1]}
+  ${elem_id}=  Get Element Attribute  xpath=(//input[contains(@id, "feature") and contains(@id, "title") and not (contains(@id, "__empty_feature__")) and not (contains(@id, "title_en"))])[last()]
+  [Return]  ${elem_id.split("-")[1]}
 
 Додати опцію
   [Arguments]  ${enum}  ${index}  ${feature_index}
