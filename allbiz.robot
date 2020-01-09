@@ -343,8 +343,6 @@ Update plan items info
   Get Element Attribute  xpath=//input[@name="accelerator"]@value
   Select From List By Index  id=contact-point-select  1
   Click Element  xpath=//button[contains(@class,'btn_submit_form')]
-  Sleep  10
-  Log source
   Wait Until Element Is Visible  xpath=//*[@data-test-id="tenderID"]  20
   ${tender_uaid}=  Get Text  xpath=//*[@data-test-id="tenderID"]
   [Return]  ${tender_uaid}
@@ -678,6 +676,7 @@ Get Last Feature Index
   [Arguments]  ${username}  ${tender_uaid}  ${feature}
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//a[contains(text(),'Редагувати')]
+  Sleep  2
   Дочекатися І Клікнути   xpath=(//div[contains(@class,"features_wrapper")]/descendant::button[contains(@class, "add_feature")])[last()]
   Додати показник   ${feature}  ${EMPTY}
   Дочекатися І Клікнути  xpath=//button[contains(@class,'btn_submit_form')]
