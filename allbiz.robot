@@ -406,7 +406,6 @@ Add milestone_tender
   [Arguments]  ${tender_data}
   Log  ${tender_data}
   Input Text  xpath=//*[@name="Tender[title_en]"]  ${tender_data.data.title_en}
-  Input Text  ${tender_data.data.lots.title_en}
 
 
 
