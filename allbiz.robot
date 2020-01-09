@@ -41,7 +41,7 @@ ${locator.plan.tender.procurementMethodType}=  xpath=//*[@data-test-id="procurem
   [Arguments]  ${username}
   ${chromeOptions}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
 #  ${prefs} =    Create Dictionary    download.default_directory=${downloadDir}
-  Call Method    ${chromeOptions}    add_argument    --headless
+#  Call Method    ${chromeOptions}    add_argument    --headless
 
 
   Create Webdriver    ${USERS.users['${username}'].browser}  alias=${username}   chrome_options=${chromeOptions}
@@ -343,6 +343,7 @@ Update plan items info
   Get Element Attribute  xpath=//input[@name="accelerator"]@value
   Select From List By Index  id=contact-point-select  1
   Click Element  xpath=//button[contains(@class,'btn_submit_form')]
+  Sleep  1000
   Wait Until Element Is Visible  xpath=//*[@data-test-id="tenderID"]  20
   ${tender_uaid}=  Get Text  xpath=//*[@data-test-id="tenderID"]
   [Return]  ${tender_uaid}
@@ -433,8 +434,7 @@ Add milestone_tender
   Run Keyword If   '${mode}' == 'openeu'   Run Keywords
   ...   Input Text   name=Tender[lots][${lot_index}][title_en]   ${lot.title_en}
   ...   AND   Input Text   name=Tender[lots][${lot_index}][description_en]    ${lot.description}
-  Run Keyword If   '${mode}' == 'competitiveDialogueEU'   Run Keywords
-  ...   Input Text   name=Tender[lots][${lot_index}][title_en]   ${lots.title_en}
+  ...  ELSE IF  '${mode}' == 'open_competitive_dialogue'  Input Text  name=Tender[lots][${lot_index}][title_en]  ${lot.title_en}
 #  Додати багато предметів   ${data}
 
 
@@ -469,7 +469,7 @@ Add Item Tender
 
   Input text  name=Tender[items][${item_index}][description]  ${items.description}
   Run Keyword If   '${mode}' == 'openeu'   Input text  name=Tender[items][${item_index}][description_en]  ${items.description_en}
-  ...  ELSE IF  '${mode}' == 'competitiveDialogueEU'  Input Text  name=Tender[items][${item_index}][description_en]  ${items.description_en}
+  ...  ELSE IF  '${mode}' == 'open_competitive_dialogue'  Input Text  name=Tender[items][${item_index}][description_en]  ${items.description_en}
   Input text  name=Tender[items][${item_index}][quantity]  ${quantity}
   Wait And Select From List By Value  name=Tender[items][${item_index}][unit][code]  ${items.unit.code}
   Scroll To Element  name=Tender[items][${item_index}][classification][description]
