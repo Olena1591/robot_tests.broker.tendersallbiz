@@ -101,7 +101,7 @@ def convert_string_from_dict_allbiz(string):
         u'Класифікацiя предмета закупівлi за ДК 021:2015': u'ДК021',
         u'Не визначено': u'Не відображене в інших розділах',
         u'Конкурентний діалог': u'competitiveDialogueUA',
-        u'active.tendering': u'active.auction',
+        u'Конкурентний діалог з публікацією англ. мовою': u'competitiveDialogueEU',
     }.get(string, string)
 
 
