@@ -1004,7 +1004,7 @@ Feature Count Should Not Be Zero
   ${value}=  Run Keyword If  'unit.code' in '${field_name}'  Log To Console   ${red}\n\t\t\t Це поле не виводиться на allbiz
   ...  ELSE IF  'qualifications' in '${field_name}'  Отримати інформацію із кваліфікації  ${username}  ${tender_uaid}  ${field_name}
   ...  ELSE IF  'awards' in '${field_name}'  Отримати інформацію із аварду  ${username}  ${tender_uaid}  ${field_name}
-  ...  ELSE IF  'funders' in '${field_name}' Get info from funders  ${username}  ${tender_uaid}  ${field_name}
+  ...  ELSE IF  'funders' in '${field_name}'  Get info from funders  ${username}  ${tender_uaid}  ${field_name}
   ...  ELSE IF  'unit' in '${field_name}'  Get Text  xpath=//*[@data-test-id="unit.name"]
   ...  ELSE IF  'deliveryLocation' in '${field_name}'  Log To Console  ${red}\n\t\t\t Це поле не виводиться на allbiz
   ...  ELSE IF  'items' in '${field_name}'  Get Text  xpath=//*[@data-test-id="${field_name.replace('[0]', '')}"]
@@ -1044,7 +1044,7 @@ Get info from funders
 #  ${value}=  Run Keyword If
 #  ...  'name' in ${field_name}  Get Text  xpath=//*[@data-test-id="funders.name"]
 #  ...  ELSE IF  'countryName' in ${field_name}  Get Text
-  ${value}=  Get Text  xpath=//*[@data-test-id="${field_name}"]
+  ${value}=  Get Text  xpath=//*[@data-test-id="${field_name.replace('[0]', '')}"]
   [Return]  ${value}
 
 Отримати інформацію із предмету
