@@ -341,6 +341,7 @@ Update plan items info
   Run Keyword If  "${SUITE_NAME}" == "Tests Files.Complaints"  Execute Javascript  $('input[name="accelerator"]').val('${custom_acceleration}')
   Get Element Attribute  xpath=//input[@name="accelerator"]@value
   Select From List By Index  id=contact-point-select  1
+  Click Element  xpath=//input[@name="fast_forward"]
   Wait Until Keyword Succeeds  5 x  1s  Run Keywords
   ...  Click Element  xpath=//button[contains(@class,'btn_submit_form')]
   ...  AND  Wait Until Element Is Visible  xpath=//*[@data-test-id="tenderID"]  20
@@ -681,9 +682,10 @@ Get Last Feature Index
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//a[contains(text(),'Редагувати')]
   Click Element  id=funders-checkbox
-  Wait And Select From List By Label  id=tender-funders  ${funders_data[0].name}
+  Wait And Select From List By Label  id=tender-funders  ${funders_data.name}
   Дочекатися І Клікнути  xpath=//button[contains(@class,'btn_submit_form')]
   Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
+
 
 Додати неціновий показник на тендер
   [Arguments]  ${username}  ${tender_uaid}  ${feature}
