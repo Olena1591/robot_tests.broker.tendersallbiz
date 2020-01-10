@@ -105,6 +105,7 @@ Login
   Wait Until Page Contains  ${tender_data.data.classification.id}
   Click element  xpath=//div[@id="${tender_data.data.classification.id}"]
   Click element  xpath=//button[@id="btn-ok"]
+  Wait until element is not visible  xpath=//div[@id="mbody"]
   Wait until element is visible  xpath=//button[@class="mk-btn mk-btn_default add_plan_breakdown"]
 
 #  Conv And Select From List By Value  name=Plan[additionalClassifications][0][dkType]  ${tender_data.data.additionalClassifications}
@@ -357,6 +358,7 @@ Add milestone_tender
 #  Imput Text  name="Tender[milestones][${milestones_index + 1}][title]"  ${milestones.title}
   Conv And Select From List By Value  xpath=//*[@name="Tender[milestones][${milestones_index}][title]"]  ${milestones.title}
   Wait And Select From List By Value  xpath=//*[@name="Tender[milestones][${milestones_index}][code]"]  ${milestones.code}
+  Run Keyword If  "anotherEvent" in "${milestones.title}"  Input Text  xpath=//*[@name="Tender[milestones][${milestones_index}][description]"]  ${milestones.description}
   Input Text  xpath=//*[@name="Tender[milestones][${milestones_index}][percentage]"]  ${milestones.percentage}
   Wait And Select From List By Value   xpath=//*[@name="Tender[milestones][${milestones_index}][duration][type]"]  ${milestones.duration.type}
   Input Text  xpath=//*[@name="Tender[milestones][${milestones_index}][duration][days]"]  ${milestones.duration.days}
