@@ -681,7 +681,7 @@ Get Last Feature Index
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//a[contains(text(),'Редагувати')]
   Click Element  id=funders-checkbox
-  Wait And Select From List By Label  id=tender-funders  ${tender_data.data.funders[0].name}
+  Wait And Select From List By Label  id=tender-funders  ${funders[0].name}
   Дочекатися І Клікнути  xpath=//button[contains(@class,'btn_submit_form')]
   Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
 
@@ -1354,21 +1354,53 @@ Get info from funders
   [Arguments]  ${username}  ${tender_uaid}  ${qualification_num}
   ${document}=  get_upload_file_path
   ${qualification_num}=  Set Variable If  "${qualification_num}" == "-1"  1  ${qualification_num}  # Needed in cause of getting -1 for second qualifyer from Quinta`s code
-  allbiz.Завантажити документ у кваліфікацію  ${username}  ${document}  ${tender_uaid}  ${qualification_num}
-  Wait And Select From List By Value  xpath=//select[@id="document-type-0"]  awardNotice
+#  allbiz.Завантажити документ у кваліфікацію  ${username}  ${document}  ${tender_uaid}  ${qualification_num}
+#  Wait And Select From List By Value  xpath=//select[@id="document-type-0"]  awardNotice
   ${qualification_num}=  Convert To Integer  ${qualification_num}
-  Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-qualification") and contains(@class,"modal in")]/descendant::input[contains(@id,"qualified")]/..
-  Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-qualification") and contains(@class,"modal in")]/descendant::input[contains(@id,"eligible")]/..
-  Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-qualification") and contains(@class,"modal in")]/descendant::button[@name="send_prequalification"]
-  Wait Until Keyword Succeeds  10 x  1 s  Run Keywords
-  ...  Page Should Contain  Зверніть увагу
-  ...  AND  Wait Element Animation  xpath=//*[@class="modal-dialog"]/descendant::*[contains(text(),"Накласти ЕЦП")]
-  Накласти ЄЦП
+
+#  Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-qualification") and contains(@class,"modal in")]/descendant::input[contains(@id,"qualified")]/..
+#   Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-qualification") and contains(@class,"modal in")]/descendant::input[contains(@id,"eligible")]/..
+#  Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-qualification") and contains(@class,"modal in")]/descendant::button[@name="send_prequalification"]
+#  Wait Until Keyword Succeeds  10 x  1 s  Run Keywords
+#  ...  Page Should Contain  Зверніть увагу
+#  ...  AND  Wait Element Animation  xpath=//*[@class="modal-dialog"]/descendant::*[contains(text(),"Накласти ЕЦП")]
+##  Накласти ЄЦП
+
+  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Дочекатися І Клікнути  xpath=//*[contains(@href,"tender/euprequalification/")]
+  Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-qualification") and contains(@class,"mk-btn mk-btn_accept")][${qualification_num} + 1]
+  Wait Until Keyword Succeeds
+#  Дочекатися І Клікнути  xpath=//*[@name="Qualifications[${qualification_num} + 1][action]"]
+  Select From list By Index  xpath=(//*[@name="Qualifications[${qualification_num} + 1][action]"])[1]  1
+  Click Element  xpath=//*[@name="Qualifications[${qualification_num} + 1][qualified]"]
+  Click Element  xpath=//*[name="Qualifications[${qualification_num} + 1][eligible]"]
+  Click Element  xpzth=(//*[@class="mk-btn mk-btn_accept btn-submitform_qualification"])[1]
+  Wait Until Keyword Succeeds  5x  1s   Page Should Contain Element  xpath=//*[@name="cancel_prequalification"]
+
+Відхилити кваліфікацію
+  [Arguments]  ${username}  ${tender_uaid}  ${qualification_num}
+  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Дочекатися І Клікнути  xpath=//*[contains(@href,"tender/euprequalification/")]
+  Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-qualification") and contains(@class,"mk-btn mk-btn_accept")][${qualification_num} + 1]
+  Wait Until Keyword Succeeds
+  Select From list By Index  xpath=(//*[@name="Qualifications[${qualification_num} + 1][action]"])[1]  2
+  Click Element  xpath=(//*[@name="Qualifications[cause][]"])[4]
+  Click Element  xpath=(//*[@name="Qualifications[cause][]"])[5]
+  Click Elemrnt  xpath=(//*[@name="Qualifications[cause][]"])[6]
+  Дочекатися І Клікнути  xpath=(/*[@name="send_prequalification"])[4]
+
+
 
 Скасувати кваліфікацію
   [Arguments]  ${username}  ${tender_uaid}  ${qualification_num}
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
+  ${qualification_num}=  Convert To Integer  ${qualification_num}
   Дочекатися І Клікнути  name=cancel_prequalification
+
+
+
+
+
 
 Затвердити остаточне рішення кваліфікації
   [Arguments]  ${username}  ${tender_uaid}
