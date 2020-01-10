@@ -266,8 +266,6 @@ Update plan items info
   Wait Until Keyword Succeeds  10 x  1 s  Page Should Contain Element  xpath=//div[contains(@class, "alert-success")]
 
 
-
-
 ###############################################################################################################
 ######################################    СТВОРЕННЯ ТЕНДЕРУ    ################################################
 ###############################################################################################################
@@ -329,9 +327,9 @@ Update plan items info
 #  Input date  name="Tender[enquiryPeriod][endDate]"  ${tender_data.data.enquiryPeriod.endDate}
   Input date  name="Tender[tenderPeriod][startDate]"  ${tender_data.data.tenderPeriod.startDate}
   Input date  name="Tender[tenderPeriod][endDate]"  ${tender_data.data.tenderPeriod.endDate}
-  Run Keyword If   "${number_of_lots}" != 0  Додати багато лотів  ${tender_data}
-  Run Keyword If   ${number_of_lots} == 0  Додати багато предметів   ${tender_data}
-  ...  ELSE  Додати багато лотів  ${tender_data}
+  Run Keyword If   ${number_of_lots} != 0  Додати багато лотів  ${tender_data}
+#  Run Keyword If   ${number_of_lots} == 0  Додати багато предметів   ${tender_data}
+#  ...  ELSE  Додати багато лотів  ${tender_data}
   :FOR   ${item_index}   IN RANGE   ${number_of_items}
   \  Run Keyword If  ${item_index} != 0  Дочекатися І Клікнути  xpath=(//button[@class="mk-btn mk-btn_default add_item"])[2]
   \  Add Item Tender  ${item_index}  ${items[${item_index}]}
@@ -678,6 +676,15 @@ Get Last Feature Index
   Дочекатися І Клікнути  xpath=//button[contains(@class,'btn_submit_form')]
   Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
 
+Додати донора
+  [Arguments]  ${username}  ${tender_uaid}  ${funders_data}
+  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Дочекатися І Клікнути  xpath=//a[contains(text(),'Редагувати')]
+  Click Element  id=funders-checkbox
+  Wait And Select From List By Label  id=tender-funders  ${tender_data.data.funders[0].name}
+  Дочекатися І Клікнути  xpath=//button[contains(@class,'btn_submit_form')]
+  Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
+
 Додати неціновий показник на тендер
   [Arguments]  ${username}  ${tender_uaid}  ${feature}
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
@@ -777,6 +784,15 @@ Feature Count Should Not Be Zero
   Sleep  3
   Дочекатися І Клікнути  xpath=//*[contains(@value, "${feature_id}")]/ancestor::div[@class="feature"]/descendant::button[contains(@class,"delete_feature")]
   Confirm Action
+  Дочекатися І Клікнути  xpath=//button[contains(@class,'btn_submit_form')]
+  Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
+
+Видалити донора
+  [Arguments]  ${username}  ${tender_uaid}  ${funders_index}
+  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Дочекатися І Клікнути  xpath=//a[contains(text(),'Редагувати')]
+  Sleep  3
+  Дочекатися І Клікнути  xpath=//*[@id="funders-checkbox"]
   Дочекатися І Клікнути  xpath=//button[contains(@class,'btn_submit_form')]
   Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
 
