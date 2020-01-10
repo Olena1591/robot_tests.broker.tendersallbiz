@@ -374,7 +374,7 @@ Add milestone_tender
   Run Keyword If  ${number_of_lots} == 0  ConvToStr And Input Text  name=Tender[minimalStep][amount]  ${minimalStep}
   Run Keyword If  ${is_funders}  Run Keywords
   ...  Click Element  id=funders-checkbox
-  ...  AND  Wait And Select From List By Label  id=tender-funders  ${tender_data.data.funders[0].name}
+  ...  AND  Wait And Select From List By Label  id=tender-funders  ${tender_data.data.funders.name}
 #  Input Date  name=Tender[tenderPeriod][endDate]  ${tender_data.data.tenderPeriod.endDate}
   Select From List By Index  id=contact-point-select  1
 
