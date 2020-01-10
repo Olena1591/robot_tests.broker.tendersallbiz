@@ -330,8 +330,8 @@ Update plan items info
   Input date  name="Tender[tenderPeriod][startDate]"  ${tender_data.data.tenderPeriod.startDate}
   Input date  name="Tender[tenderPeriod][endDate]"  ${tender_data.data.tenderPeriod.endDate}
   Run Keyword If   "${number_of_lots}" != 0  Додати багато лотів  ${tender_data}
-#  Run Keyword If   ${number_of_lots} == 0  Додати багато предметів   ${tender_data}
-#  ...  ELSE  Додати багато лотів  ${tender_data}
+  Run Keyword If   ${number_of_lots} == 0  Додати багато предметів   ${tender_data}
+  ...  ELSE  Додати багато лотів  ${tender_data}
   :FOR   ${item_index}   IN RANGE   ${number_of_items}
   \  Run Keyword If  ${item_index} != 0  Дочекатися І Клікнути  xpath=(//button[@class="mk-btn mk-btn_default add_item"])[2]
   \  Add Item Tender  ${item_index}  ${items[${item_index}]}
@@ -374,7 +374,7 @@ Add milestone_tender
   Run Keyword If  ${number_of_lots} == 0  ConvToStr And Input Text  name=Tender[minimalStep][amount]  ${minimalStep}
   Run Keyword If  ${is_funders}  Run Keywords
   ...  Click Element  id=funders-checkbox
-  ...  AND  Wait And Select From List By Label  id=tender-funders  ${tender_data.data.funders.name}
+  ...  AND  Wait And Select From List By Label  id=tender-funders  ${tender_data.data.funders[0].name}
 #  Input Date  name=Tender[tenderPeriod][endDate]  ${tender_data.data.tenderPeriod.endDate}
   Select From List By Index  id=contact-point-select  1
 
@@ -1004,6 +1004,7 @@ Feature Count Should Not Be Zero
   ${value}=  Run Keyword If  'unit.code' in '${field_name}'  Log To Console   ${red}\n\t\t\t Це поле не виводиться на allbiz
   ...  ELSE IF  'qualifications' in '${field_name}'  Отримати інформацію із кваліфікації  ${username}  ${tender_uaid}  ${field_name}
   ...  ELSE IF  'awards' in '${field_name}'  Отримати інформацію із аварду  ${username}  ${tender_uaid}  ${field_name}
+  ...  ELSE IF  'funders' in '${field_name}' Get info from funders  ${username}  ${tender_uaid}  ${field_name}
   ...  ELSE IF  'unit' in '${field_name}'  Get Text  xpath=//*[@data-test-id="unit.name"]
   ...  ELSE IF  'deliveryLocation' in '${field_name}'  Log To Console  ${red}\n\t\t\t Це поле не виводиться на allbiz
   ...  ELSE IF  'items' in '${field_name}'  Get Text  xpath=//*[@data-test-id="${field_name.replace('[0]', '')}"]
@@ -1037,6 +1038,14 @@ Get Info From Tender Milestones
   ...  ELSE  Set Variable  ${value}
   [Return]  ${value}
 
+
+Get info from funders
+  [Arguments]  ${username}  ${tender_uaid}  ${field_name}
+#  ${value}=  Run Keyword If
+#  ...  'name' in ${field_name}  Get Text  xpath=//*[@data-test-id="funders.name"]
+#  ...  ELSE IF  'countryName' in ${field_name}  Get Text
+  ${value}=  Get Text  xpath=//*[@data-test-id="${field_name}"]
+  [Return]  ${value}
 
 Отримати інформацію із предмету
   [Arguments]  ${username}  ${tender_uaid}  ${item_id}  ${field_name}
