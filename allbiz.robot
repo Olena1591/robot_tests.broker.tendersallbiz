@@ -681,7 +681,7 @@ Get Last Feature Index
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//a[contains(text(),'Редагувати')]
   Click Element  id=funders-checkbox
-  Wait And Select From List By Label  id=tender-funders  ${funders[0].name}
+  Wait And Select From List By Label  id=tender-funders  ${funders_data[0].name}
   Дочекатися І Клікнути  xpath=//button[contains(@class,'btn_submit_form')]
   Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
 
