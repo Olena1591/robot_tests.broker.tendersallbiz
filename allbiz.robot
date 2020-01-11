@@ -95,8 +95,8 @@ Login
   ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "competitiveDialogueEU"  Wait And Select From List By Value  name=procurementMethod  open_competitiveDialogueEU
   ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "esco"  Wait And Select From List By Value  name=procurementMethod  open_esco
   Input text  name=Plan[budget][description]  ${tender_data.data.budget.description}
-  Input text  name=Plan[budget][amount]  ${budget_amount}
-  Conv And Select From List By Value  name=Plan[budget][currency]  UAH
+  Run Keyword If  "${tender_data.data.tender.procurementMethodType}" != "esco"  Input text  name=Plan[budget][amount]  ${budget_amount}
+  Run Keyword If  "${tender_data.data.tender.procurementMethodType}" != "esco"  Conv And Select From List By Value  name=Plan[budget][currency]  UAH
   Execute Javascript   document.querySelector('[name="Plan[tender][tenderPeriod][startDate]"]').value="${tenderPeriod.startDate}"
   Input Date  name="Plan[budget][period][startDate]"  ${tender_data.data.budget.period.startDate}
   Input Date  name="Plan[budget][period][endDate]"  ${tender_data.data.budget.period.endDate}
@@ -124,6 +124,7 @@ Login
   Wait until element is visible  xpath=//div[@data-test-id="planID"]  20
   ${planID}=  Get text  xpath=//div[@data-test-id="planID"]
   [Return]  ${planID}
+
 
 Add breakdown
   [Arguments]  ${breakdown_index}  ${breakdown}
@@ -275,21 +276,35 @@ Update plan items info
   [Arguments]  ${username}  ${tender_data}  ${plan_id}
   ${items}=  Get From Dictionary  ${tender_data.data}  items
   ${number_of_items}=  Get length  ${items}
-  ${amount}=   add_second_sign_after_point   ${tender_data.data.value.amount}
   ${meat}=  Evaluate  ${tender_meat} + ${lot_meat} + ${item_meat}
   ${file_path}=  Get Variable Value  ${ARTIFACT_FILE}  artifact_plan.yaml
   ${ARTIFACT}=  load_data_from  ${file_path}
   ${plan_uaid}=  Set Variable  ${ARTIFACT.tender_uaid}
 #  ${milestones}=  Get From Dictionary  ${tender_data.data}  milestones
-#  ${number_of_milestones}= Get length  ${milestones}
-  ${valueAddedTaxIncluded}=  Set Variable If  ${tender_data.data.value.valueAddedTaxIncluded}  1  0
-  ${milestones}=  Get From Dictionary  ${tender_data.data}  milestones
   ${index_strategy}=  Set Variable If  ${tender_data.data.has_key('lots')}  last()  1
   Set Suite Variable  ${index_strategy}
-  Switch Browser  ${username}
-  Wait Until Element Is Not Visible  xpath=//div[@class="modal-backdrop fade"]  10
+
+
+
+
+#  Run Keyword If  "esco" in "${tender_data.data.procurementMethodType}"  Fill ESCO filds  ${tender_data}
+#  ...  ELSE  Fill tender filds  ${tender_data}
+#  ${amount}=   add_second_sign_after_point   ${tender_data.data.value.amount}
+#  ${valueAddedTaxIncluded}=  Set Variable If  ${tender_data.data.value.valueAddedTaxIncluded}  1  0
+
+#  ${milestones}=  Get From Dictionary  ${tender_data.data}  milestones
+#  ${number_of_milestones}= Get length  ${milestones}
+#  ${valueAddedTaxIncluded}=  Set Variable If  ${tender_data.data.value.valueAddedTaxIncluded}  1  0
+#  ${milestones}=  Get From Dictionary  ${tender_data.data}  milestones
+#  ${index_strategy}=  Set Variable If  ${tender_data.data.has_key('lots')}  last()  1
+#  Set Suite Variable  ${index_strategy}
+
+#  Switch Browser  ${username}
+#  Wait Until Element Is Not Visible  xpath=//div[@class="modal-backdrop fade"]  10
 #  Дочекатися І Клікнути  xpath=//a[@href="${host}/tenders"]
 #  Дочекатися І Клікнути  xpath=//a[@href="${host}/tenders/index"]
+  Switch Browser  ${username}
+  Wait Until Element Is Not Visible  xpath=//div[@class="modal-backdrop fade"]  10
   allbiz.Пошук плану по ідентифікатору  ${username}  ${plan_uaid}
   Дочекатися І Клікнути  xpath=//*[@id="create_auction_modal_btn"]
   Wait Until Element Is Visible  xpath=(//*[@class="modal-content"])[2]
@@ -299,13 +314,17 @@ Update plan items info
   Wait Until Keyword Succeeds  10 x  1 s  Element Should Not Be Visible  xpath=(//*[@class="modal-content"])[2]
 #  Run Keyword If  "aboveThreshold" in "${tender_data.data.procurementMethodType}"  Conv And Select From List By Value  xpath=(//select[@id="guarantee-exist"])[3]  1
 #  ...  ELSE  Conv And Select From List By Value  xpath=(//select[@id="guarantee-exist"])[1]  1
-  Conv And Select From List By Value  xpath=(//*[@data-test-id="guarantee-exist"])[${index_strategy}]  1
+#  Conv And Select From List By Value  xpath=(//*[@data-test-id="guarantee-exist"])[${index_strategy}]  1
+
+  Run Keyword If  "esco" in "${tender_data.data.procurementMethodType}"  Fill ESCO filds  ${tender_data}
+  ...  ELSE  Fill tender filds  ${tender_data}
+
   Run Keyword If  "below" in "${tender_data.data.procurementMethodType}"  Заповнити поля для допорогової закупівлі  ${tender_data}
   ...  ELSE IF  "aboveThreshold" in "${tender_data.data.procurementMethodType}"  Заповнити поля для понадпорогів  ${tender_data}
   ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "negotiation"  Заповнити поля для переговорної процедури  ${tender_data}
   ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "competitiveDialogueEU"  Заповнити поля для конкурентного діалогу  ${tender_data}
 #  ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "reporting"  Wait And Select From List By Value  name=tender_method  limited_reporting
-  Conv And Select From List By Value  name=Tender[value][valueAddedTaxIncluded]  ${valueAddedTaxIncluded}
+#  Conv And Select From List By Value  name=Tender[value][valueAddedTaxIncluded]  ${valueAddedTaxIncluded}
 
 
   Run Keyword If  "below" in "${tender_data.data.procurementMethodType}"  Input date  name="Tender[enquiryPeriod][endDate]"  ${tender_data.data.enquiryPeriod.endDate}
@@ -315,13 +334,13 @@ Update plan items info
   ...  ConvToStr And Input Text  name=Tender[value][amount]  ${amount}
   ...  AND  Run Keyword If  "${tender_data.data.procurementMethodType}" not in "reporting negotiation"  Select From List By Value  id=guarantee-exist  0
 #  Conv And Select From List By Value  name=Tender[value][valueAddedTaxIncluded]  ${tender_data.data.value.valueAddedTaxIncluded}
-  Wait And Select From List By Value  name=Tender[value][currency]  ${tender_data.data.value.currency}
+#  Wait And Select From List By Value  name=Tender[value][currency]  ${tender_data.data.value.currency}
   Conv And Select From List By Value   xpath=//*[@id="tender-mainprocurementcategory"]  ${tender_data.data.mainProcurementCategory}
 #  Run Keyword If  ${number_of_lots} == 0  Run Keywords
 #  ...  ConvToStr And Input Text  name=Tender[value][amount]  ${amount}
 #  ...  AND  Run Keyword If  "${tender_data.data.procurementMethodType}" not in "reporting negotiation"  Select From List By Value  id=guarantee-exist  0
-  :FOR   ${milestones_index}   IN RANGE   ${number_of_milestones}
-  \  Add milestone_tender  ${milestones_index}  ${milestones[${milestones_index}]}  ${tender_data.data.procurementMethodType}
+#  :FOR   ${milestones_index}   IN RANGE   ${number_of_milestones}
+#  \  Add milestone_tender  ${milestones_index}  ${milestones[${milestones_index}]}  ${tender_data.data.procurementMethodType}
   Input text  name=Tender[title]  ${tender_data.data.title}
   Input text  name=Tender[description]  ${tender_data.data.description}
 #  Run Keyword If  "${tender_data.data.procurementMethodType}" == "belowThreshold"  Run Keywords
@@ -348,6 +367,48 @@ Update plan items info
   ...  AND  Wait Until Element Is Visible  xpath=//*[@data-test-id="tenderID"]  20
   ${tender_uaid}=  Get Text  xpath=//*[@data-test-id="tenderID"]
   [Return]  ${tender_uaid}
+
+
+Fill tender filds
+  [Arguments]  ${tender_data}
+  ${amount}=   add_second_sign_after_point   ${tender_data.data.value.amount}
+  ${milestones}=  Get From Dictionary  ${tender_data.data}  milestones
+  ${valueAddedTaxIncluded}=  Set Variable If  ${tender_data.data.value.valueAddedTaxIncluded}  1  0
+  Conv And Select From List By Value  name=Tender[value][valueAddedTaxIncluded]  ${valueAddedTaxIncluded}
+  Conv And Select From List By Value  xpath=(//*[@data-test-id="guarantee-exist"])[${index_strategy}]  1
+  Wait And Select From List By Value  name=Tender[value][currency]  ${tender_data.data.value.currency}
+
+  :FOR   ${milestones_index}   IN RANGE   ${number_of_milestones}
+  \  Add milestone_tender  ${milestones_index}  ${milestones[${milestones_index}]}  ${tender_data.data.procurementMethodType}
+
+
+
+Fill ESCO filds
+  [Arguments]  ${tender_data}
+
+#  ${NBUdiscountRate}=  Convert To String  ${tender_data.data.NBUdiscountRate}
+#  ${minimalStepPercentage}=  Convert To String  ${tender_data.data.minimalStepPercentage}
+  ${NBUdiscountRate}=  Set Variable  ${tender_data.data.NBUdiscountRate * 100}
+  ${minimalStepPercentage}=  Set Variable  ${tender_data.data.minimalStepPercentage * 100}
+
+  ConvToStr And Input Text  xpath=//*[@id="tender-nbudiscountrate"]  ${NBUdiscountRate}
+  Wait And Select From List By Value  xpath=//select[@id="tender-fundingkind"]  ${tender_data.data.fundingKind}
+  Run Keyword If  ${number_of_lots} == 0  Wait Until Element Is Visible  xpath=//*[@id="tender-minimalsteppercentage"]
+  ...  AND  ConvToStr And Input Text  xpath=//*[@id="tender-minimalsteppercentage"]  ${tender_data.data.minimalStepPercentage}
+  ...  ELSE  Додати багато лотів  ${tender_data}
+
+  Input Text  xpath=//*[@id="tender-title_en"]  ${tender_data.data.description_en}
+
+
+
+
+
+
+
+
+
+
+
 
 Add milestone_tender
   [Arguments]  ${milestones_index}  ${milestones}  ${procurementMethodType}
@@ -424,20 +485,38 @@ Add milestone_tender
 Створити лот
   [Arguments]  ${username}  ${tender_uaid}  ${lot}   ${data}=${EMPTY}
   ${lot}=  Set Variable If  '${tender_uaid}' != '${None}'  ${lot.data}  ${lot}
-  ${amount}=  add_second_sign_after_point  ${lot.value.amount}
+#  ${amount}=  add_second_sign_after_point  ${lot.value.amount}
   ${lot_id}=  Get Element Attribute  xpath=(//input[contains(@name, "Tender[lots]") and contains(@name, "[value][amount]")])[last()]@id
   ${lot_index}=  Convert To Integer  ${lot_id.split("-")[1]}
   ${is_guarantee}=  Run Keyword And Return Status  Element Should Be Visible  xpath=(//*[@id="guarantee-exist"])[${lot_index + 3}]
+  ${type_procedure}=  Get Text  xpath=//*[contains(text(),"Процедура закупiвлi") ]/following-sibling::div
+  Run Keyword If  '${mode}' == 'open_esco'  Fill ESCO lot filds  ${lot}  ${lot_index}
+  ...  ELSE  Fill lot filds  ${lot}  ${lot_index}
   Input text   name=Tender[lots][${lot_index}][title]                 ${lot.title}
   Input text   name=Tender[lots][${lot_index}][description]           ${lot.description}
   Run keyword If  ${is_guarantee}  Select From List By Value  xpath=(//*[@id="guarantee-exist"])[${lot_index + 3}]  0
-  Input text   name=Tender[lots][${lot_index}][value][amount]         ${amount}
+#  Input text   name=Tender[lots][${lot_index}][value][amount]  ${amount}
   Run Keyword If  "Negotiation" not in "${SUITE_NAME}"  Input Minimal Step Amount  ${lot.minimalStep.amount}  ${lot_index}
   Run Keyword If   '${mode}' == 'openeu'   Run Keywords
   ...   Input Text   name=Tender[lots][${lot_index}][title_en]   ${lot.title_en}
   ...   AND   Input Text   name=Tender[lots][${lot_index}][description_en]    ${lot.description}
-  ...  ELSE IF  '${mode}' == 'open_competitive_dialogue'  Input Text  name=Tender[lots][${lot_index}][title_en]  ${lot.title_en}
+  ...  ELSE IF  '${type_procedure}' == 'Конкурентний діалог з публікацією англ. мовою'  Input Text  name=Tender[lots][${lot_index}][title_en]  ${lot.title_en}
 #  Додати багато предметів   ${data}
+
+
+Fill ESCO lot filds
+  [Arguments]  ${lot}  ${lot_index}
+  ${minimalStepPercentage}=  Set Variable  ${lot.minimalStepPercentage * 100}
+  ${yearlyPaymentsPercentageRange}=  Set Variable  ${lot.yearlyPaymentsPercentageRange * 100}
+  ConvToStr And Input Text  name="Tender[lots][${lot_index}][minimalStepPercentage]"  ${minimalStepPercentage}
+  ConvToStr And Input Text  name="Tender[lots][${lot_index}][yearlyPaymentsPercentageRange]"  ${yearlyPaymentsPercentageRange}
+
+
+Fill lot filds
+  [Arguments]  ${lot}  ${lot_index}
+  ${amount}=  add_second_sign_after_point  ${lot.value.amount}
+  Input text   name=Tender[lots][${lot_index}][value][amount]  ${amount}
+
 
 
 Input Minimal Step Amount
@@ -1361,14 +1440,6 @@ Get info from funders
 #  Wait And Select From List By Value  xpath=//select[@id="document-type-0"]  awardNotice
   ${qualification_num}=  Convert To Integer  ${qualification_num}
 
-#  Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-qualification") and contains(@class,"modal in")]/descendant::input[contains(@id,"qualified")]/..
-#   Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-qualification") and contains(@class,"modal in")]/descendant::input[contains(@id,"eligible")]/..
-#  Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-qualification") and contains(@class,"modal in")]/descendant::button[@name="send_prequalification"]
-#  Wait Until Keyword Succeeds  10 x  1 s  Run Keywords
-#  ...  Page Should Contain  Зверніть увагу
-#  ...  AND  Wait Element Animation  xpath=//*[@class="modal-dialog"]/descendant::*[contains(text(),"Накласти ЕЦП")]
-##  Накласти ЄЦП
-
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//*[contains(@href,"tender/euprequalification/")]
   Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-qualification") and contains(@class,"mk-btn mk-btn_accept")][${qualification_num} + 1]
@@ -1401,6 +1472,11 @@ Get info from funders
   Дочекатися І Клікнути  name=cancel_prequalification
 
 
+Скасування рішення кваліфікаційної комісії
+  [Arguments]  ${username}  ${tender_uaid}  ${award_num}
+
+
+
 
 
 
@@ -1408,6 +1484,8 @@ Get info from funders
 Затвердити остаточне рішення кваліфікації
   [Arguments]  ${username}  ${tender_uaid}
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
+#  Run Keyword If  '${MODE}' != 'belowThreshold'  Run Keywords
+#  Run Keyword If  '${MODE}' == 'open_competitive_dialogue'  Дочекатися І Клікнути  xpath=//
   Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/euprequalification")]
   Дочекатися І Клікнути  xpath=//button[@name="prequalification_next_status"]
   Wait Until Page Contains  Оскарження прекваліфікації
