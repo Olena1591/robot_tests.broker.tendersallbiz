@@ -395,6 +395,7 @@ Fill ESCO filds
   Wait And Select From List By Value  xpath=//select[@id="tender-fundingkind"]  ${tender_data.data.fundingKind}
   Run Keyword If  ${number_of_lots} == 0  Wait Until Element Is Visible  xpath=//*[@id="tender-minimalsteppercentage"]
   ...  AND  ConvToStr And Input Text  xpath=//*[@id="tender-minimalsteppercentage"]  ${tender_data.data.minimalStepPercentage}
+  ...  AND  ConvToStr And Input Text  xpath=//*[@id="tender-yearlypaymentspercentagerange"]  ${tender_data.data.yearlyPaymentsPercentageRange}
   ...  ELSE  Додати багато лотів  ${tender_data}
 
   Input Text  xpath=//*[@id="tender-title_en"]  ${tender_data.data.description_en}
@@ -508,8 +509,8 @@ Fill ESCO lot filds
   [Arguments]  ${lot}  ${lot_index}
   ${minimalStepPercentage}=  Set Variable  ${lot.minimalStepPercentage * 100}
   ${yearlyPaymentsPercentageRange}=  Set Variable  ${lot.yearlyPaymentsPercentageRange * 100}
-  ConvToStr And Input Text  name="Tender[lots][${lot_index}][minimalStepPercentage]"  ${minimalStepPercentage}
-  ConvToStr And Input Text  name="Tender[lots][${lot_index}][yearlyPaymentsPercentageRange]"  ${yearlyPaymentsPercentageRange}
+  ConvToStr And Input Text  xpath=//*[@name="Tender[lots][${lot_index}][minimalStepPercentage]"]  ${minimalStepPercentage}
+  ConvToStr And Input Text  xpath=//*[@name="Tender[lots][${lot_index}][yearlyPaymentsPercentageRange]"]  ${yearlyPaymentsPercentageRange}
 
 
 Fill lot filds
