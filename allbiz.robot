@@ -93,6 +93,7 @@ Login
   ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "aboveThresholdEU"  Wait And Select From List By Value  name=procurementMethod  open_aboveThresholdEU
   ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "competitiveDialogueUA"  Wait And Select From List By Value  name=procurementMethod  open_competitiveDialogueUA
   ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "competitiveDialogueEU"  Wait And Select From List By Value  name=procurementMethod  open_competitiveDialogueEU
+  ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "esco"  Wait And Select From List By Value  name=procurementMethod  open_esco
   Input text  name=Plan[budget][description]  ${tender_data.data.budget.description}
   Input text  name=Plan[budget][amount]  ${budget_amount}
   Conv And Select From List By Value  name=Plan[budget][currency]  UAH
@@ -1371,11 +1372,11 @@ Get info from funders
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//*[contains(@href,"tender/euprequalification/")]
   Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-qualification") and contains(@class,"mk-btn mk-btn_accept")][${qualification_num} + 1]
-  Wait Until Keyword Succeeds
+  Wait Until Keyword Succeeds  5x  1s   Page Should Contain Element  xpath=//*[@name="Qualifications[${qualification_num}][action]"]
 #  Дочекатися І Клікнути  xpath=//*[@name="Qualifications[${qualification_num} + 1][action]"]
-  Select From list By Index  xpath=(//*[@name="Qualifications[${qualification_num} + 1][action]"])[1]  1
-  Click Element  xpath=//*[@name="Qualifications[${qualification_num} + 1][qualified]"]
-  Click Element  xpath=//*[name="Qualifications[${qualification_num} + 1][eligible]"]
+  Select From list By Index  xpath=//*[@name="Qualifications[${qualification_num}][action]"]  1
+  Click Element  xpath=//*[@name="Qualifications[${qualification_num}][qualified]"]
+  Click Element  xpath=//*[name="Qualifications[${qualification_num}][eligible]"]
   Click Element  xpzth=(//*[@class="mk-btn mk-btn_accept btn-submitform_qualification"])[1]
   Wait Until Keyword Succeeds  5x  1s   Page Should Contain Element  xpath=//*[@name="cancel_prequalification"]
 
@@ -1383,9 +1384,9 @@ Get info from funders
   [Arguments]  ${username}  ${tender_uaid}  ${qualification_num}
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//*[contains(@href,"tender/euprequalification/")]
-  Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-qualification") and contains(@class,"mk-btn mk-btn_accept")][${qualification_num} + 1]
-  Wait Until Keyword Succeeds
-  Select From list By Index  xpath=(//*[@name="Qualifications[${qualification_num} + 1][action]"])[1]  2
+  Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-qualification") and contains(@class,"mk-btn mk-btn_accept")][${qualification_num}]
+  Wait Until Keyword Succeeds  5x  1s   Page Should Contain Element  xpath=//*[@name="Qualifications[${qualification_num}][action]"]
+  Select From list By Index  xpath=//*[@name="Qualifications[${qualification_num}][action]"]  2
   Click Element  xpath=(//*[@name="Qualifications[cause][]"])[4]
   Click Element  xpath=(//*[@name="Qualifications[cause][]"])[5]
   Click Elemrnt  xpath=(//*[@name="Qualifications[cause][]"])[6]
