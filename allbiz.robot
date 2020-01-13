@@ -361,7 +361,7 @@ Update plan items info
   Run Keyword If  "${SUITE_NAME}" == "Tests Files.Complaints"  Execute Javascript  $('input[name="accelerator"]').val('${custom_acceleration}')
   Get Element Attribute  xpath=//input[@name="accelerator"]@value
   Select From List By Index  id=contact-point-select  1
-  Click Element  xpath=//input[@name="fast_forward"]
+  Дочекатися І Клікнути  xpath=//input[@name="fast_forward"]
   Wait Until Keyword Succeeds  5 x  1s  Run Keywords
   ...  Click Element  xpath=//button[contains(@class,'btn_submit_form')]
   ...  AND  Wait Until Element Is Visible  xpath=//*[@data-test-id="tenderID"]  20
@@ -396,6 +396,7 @@ Fill ESCO filds
   Run Keyword If  ${number_of_lots} == 0  Wait Until Element Is Visible  xpath=//*[@id="tender-minimalsteppercentage"]
   ...  AND  ConvToStr And Input Text  xpath=//*[@id="tender-minimalsteppercentage"]  ${tender_data.data.minimalStepPercentage}
   ...  AND  ConvToStr And Input Text  xpath=//*[@id="tender-yearlypaymentspercentagerange"]  ${tender_data.data.yearlyPaymentsPercentageRange}
+  ...  AND  Input Text  xpath=//*[@id="tender-title_en"]  ${tender_data.data.title_en}
   ...  ELSE  Додати багато лотів  ${tender_data}
 
   Input Text  xpath=//*[@id="tender-title_en"]  ${tender_data.data.description_en}
@@ -497,7 +498,7 @@ Add milestone_tender
   Input text   name=Tender[lots][${lot_index}][description]           ${lot.description}
   Run keyword If  ${is_guarantee}  Select From List By Value  xpath=(//*[@id="guarantee-exist"])[${lot_index + 3}]  0
 #  Input text   name=Tender[lots][${lot_index}][value][amount]  ${amount}
-  Run Keyword If  "Negotiation" not in "${SUITE_NAME}"  Input Minimal Step Amount  ${lot.minimalStep.amount}  ${lot_index}
+#  Run Keyword If  "Negotiation" not in "${SUITE_NAME}"  Input Minimal Step Amount  ${lot.minimalStep.amount}  ${lot_index}
   Run Keyword If   '${mode}' == 'openeu'   Run Keywords
   ...   Input Text   name=Tender[lots][${lot_index}][title_en]   ${lot.title_en}
   ...   AND   Input Text   name=Tender[lots][${lot_index}][description_en]    ${lot.description}
@@ -511,6 +512,7 @@ Fill ESCO lot filds
   ${yearlyPaymentsPercentageRange}=  Set Variable  ${lot.yearlyPaymentsPercentageRange * 100}
   ConvToStr And Input Text  xpath=//*[@name="Tender[lots][${lot_index}][minimalStepPercentage]"]  ${minimalStepPercentage}
   ConvToStr And Input Text  xpath=//*[@name="Tender[lots][${lot_index}][yearlyPaymentsPercentageRange]"]  ${yearlyPaymentsPercentageRange}
+  Input Text  xpath=//*[@name="Tender[lots][${lot_index}][title_en]"]  ${lot.title_en}
 
 
 Fill lot filds
@@ -552,8 +554,9 @@ Add Item Tender
   Input text  name=Tender[items][${item_index}][description]  ${items.description}
   Run Keyword If   '${mode}' == 'openeu'   Input text  name=Tender[items][${item_index}][description_en]  ${items.description_en}
   ...  ELSE IF  '${mode}' == 'open_competitive_dialogue'  Input Text  name=Tender[items][${item_index}][description_en]  ${items.description_en}
-  Input text  name=Tender[items][${item_index}][quantity]  ${quantity}
-  Wait And Select From List By Value  name=Tender[items][${item_index}][unit][code]  ${items.unit.code}
+  ...  ELSE IF  '${mode}' == 'open_esco'  Input text  name=Tender[items][${item_index}][description_en]  ${items.description_en}
+  Run Keyword If  '${mode}' != 'open_esco'  Input text  name=Tender[items][${item_index}][quantity]  ${quantity}
+  Run Keyword If  '${mode}' != 'open_esco'  Wait And Select From List By Value  name=Tender[items][${item_index}][unit][code]  ${items.unit.code}
   Scroll To Element  name=Tender[items][${item_index}][classification][description]
   Дочекатися І Клікнути  name=Tender[items][${item_index}][classification][description]
   Wait Element Animation  id=search
@@ -570,8 +573,8 @@ Add Item Tender
   Input text  name=Tender[items][${item_index}][deliveryAddress][locality]  ${items.deliveryAddress.locality}
   Input text  name=Tender[items][${item_index}][deliveryAddress][streetAddress]  ${items.deliveryAddress.streetAddress}
   Input text  name=Tender[items][${item_index}][deliveryAddress][postalCode]  ${items.deliveryAddress.postalCode}
-  Input Date  name="Tender[items][${item_index}][deliveryDate][startDate]"  ${items.deliveryDate.endDate}
-  Input Date  name="Tender[items][${item_index}][deliveryDate][endDate]"  ${items.deliveryDate.endDate}
+  Run Keyword If  '${mode}' != 'open_esco'  Input Date  name="Tender[items][${item_index}][deliveryDate][startDate]"  ${items.deliveryDate.endDate}
+  Run Keyword If  '${mode}' != 'open_esco'  Input Date  name="Tender[items][${item_index}][deliveryDate][endDate]"  ${items.deliveryDate.endDate}
 #  Run Keyword If  ${item_index} != 0  Run Keywords
 #  ...  Дочекатися І Клікнути  xpath=(//button[@class="mk-btn mk-btn_default add_item"])[2]
 #  ...  AND  Wait Until Page Contains Element  name=Tender[items][${item_index}][description]
@@ -614,6 +617,7 @@ Add Item Tender
   Run Keyword If   '${mode}' == 'openeu'  Run Keywords
   ...  Input text   xpath=//input[@name="Tender[features][${feature_index}][title_en]"]  ${feature.title_en}
   ...  AND  Input text   name=Tender[features][${feature_index}][description_en]   ${feature.description}
+  ...  ELSE IF  '${mode}' == 'open_esco'  Input text  name=Tender[features][${feature_index}][title_en]  ${feature.title_en}
   Run Keyword If   '${mode}' == 'competitiveDialogueEU'   Input text  name="Tender[features][${feature_index}][title_en]"  ${feature.title_en}
   Дочекатися І Клікнути  xpath=//select[@name="Tender[features][${feature_index}][relatedItem]"]/descendant::option[contains(text(),"${relatedItem}")]
   :FOR   ${index}   IN RANGE   ${enum_length}
@@ -645,6 +649,7 @@ Get Last Feature Index
   Scroll To Element  name=Tender[features][${feature_index}][enum][${index}][title]
   Input Text   name=Tender[features][${feature_index}][enum][${index}][title]   ${enum.title}
   Run Keyword If   '${mode}' == 'openeu'  Input Text   name=Tender[features][${feature_index}][enum][${index}][title_en]   ${enum.title}
+  ...  ELSE IF  '${mode}' == 'open_esco'  Input Text  name=Tender[features][${feature_index}][enum][${index}][title_en]  ${enum.title}
   Input Text   name=Tender[features][${feature_index}][enum][${index}][value]   ${enum_value}
 
 Завантажити документ
