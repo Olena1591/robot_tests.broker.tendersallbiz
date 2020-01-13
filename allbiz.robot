@@ -1468,8 +1468,8 @@ Get info from funders
   Wait Until Keyword Succeeds  5x  1s   Page Should Contain Element  xpath=//*[@name="Qualifications[${qualification_num}][action]"]
 #  Дочекатися І Клікнути  xpath=//*[@name="Qualifications[${qualification_num} + 1][action]"]
   Select From list By Index  xpath=//*[@name="Qualifications[${qualification_num}][action]"]  0
-  Click Element  xpath=//*[@name="Qualifications[${qualification_num}][qualified]"]
-  Click Element  xpath=//*[name="Qualifications[${qualification_num}][eligible]"]
+  Click Element  xpath=//*[@name="Qualifications[${qualification_num}][qualified]"]/ancestor::div[contains(@class,"field-wrapper ")]
+  Click Element  xpath=//*[@name="Qualifications[${qualification_num}][eligible]"]/ancestor::div[contains(@class,"field-wrapper ")]
   Click Element  xpzth=(//*[@class="mk-btn mk-btn_accept btn-submitform_qualification"])[1]
   Wait Until Keyword Succeeds  5x  1s   Page Should Contain Element  xpath=//*[@name="cancel_prequalification"]
 
