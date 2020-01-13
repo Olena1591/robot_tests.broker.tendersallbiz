@@ -1451,7 +1451,7 @@ Get info from funders
   Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-qualification") and contains(@class,"mk-btn mk-btn_accept")][${qualification_num} + 1]
   Wait Until Keyword Succeeds  5x  1s   Page Should Contain Element  xpath=//*[@name="Qualifications[${qualification_num}][action]"]
 #  Дочекатися І Клікнути  xpath=//*[@name="Qualifications[${qualification_num} + 1][action]"]
-  Select From list By Index  xpath=//*[@name="Qualifications[${qualification_num}][action]"]  1
+  Select From list By Index  xpath=//*[@name="Qualifications[${qualification_num}][action]"]  0
   Click Element  xpath=//*[@name="Qualifications[${qualification_num}][qualified]"]
   Click Element  xpath=//*[name="Qualifications[${qualification_num}][eligible]"]
   Click Element  xpzth=(//*[@class="mk-btn mk-btn_accept btn-submitform_qualification"])[1]
