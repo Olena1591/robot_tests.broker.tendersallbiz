@@ -41,7 +41,7 @@ ${locator.plan.tender.procurementMethodType}=  xpath=//*[@data-test-id="procurem
   [Arguments]  ${username}
   ${chromeOptions}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
 #  ${prefs} =    Create Dictionary    download.default_directory=${downloadDir}
-  Call Method    ${chromeOptions}    add_argument    --headless
+#  Call Method    ${chromeOptions}    add_argument    --headless
 
 
   Create Webdriver    ${USERS.users['${username}'].browser}  alias=${username}   chrome_options=${chromeOptions}
@@ -363,7 +363,7 @@ Update plan items info
   Run Keyword If  "${SUITE_NAME}" == "Tests Files.Complaints"  Execute Javascript  $('input[name="accelerator"]').val('${custom_acceleration}')
   Get Element Attribute  xpath=//input[@name="accelerator"]@value
   Select From List By Index  id=contact-point-select  1
-  Дочекатися І Клікнути  xpath=//input[@name="fast_forward"]
+  Select Checkbox  xpath=//input[@name="fast_forward"]
   Sleep  1000
   Wait Until Keyword Succeeds  5 x  1s  Run Keywords
   ...  Click Element  xpath=//button[contains(@class,'btn_submit_form')]
@@ -441,7 +441,7 @@ Add milestone_tender
 #  Select From List By Value  id=tender-type-select  1
   Run Keyword If  ${number_of_lots} == 0  ConvToStr And Input Text  name=Tender[minimalStep][amount]  ${minimalStep}
   Run Keyword If  ${is_funders}  Run Keywords
-  ...  Click Element  id=funders-checkbox
+  ...  Дочекатися І Клікнути  id=funders-checkbox
   ...  AND  Wait And Select From List By Label  id=tender-funders  ${tender_data.data.funders[0].name}
 #  Input Date  name=Tender[tenderPeriod][endDate]  ${tender_data.data.tenderPeriod.endDate}
 #  Select From List By Index  id=contact-point-select  1
