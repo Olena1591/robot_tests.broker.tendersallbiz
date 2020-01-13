@@ -519,7 +519,7 @@ Fill lot filds
   [Arguments]  ${lot}  ${lot_index}
   ${amount}=  add_second_sign_after_point  ${lot.value.amount}
   Input text   name=Tender[lots][${lot_index}][value][amount]  ${amount}
-
+  Run Keyword If  "Negotiation" not in "${SUITE_NAME}"  Input Minimal Step Amount  ${lot.minimalStep.amount}  ${lot_index}
 
 
 Input Minimal Step Amount
