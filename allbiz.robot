@@ -1472,7 +1472,7 @@ Get info from funders
   Select From list By Index  xpath=//*[@name="Qualifications[${qualification_num}][action]"]  0
   Click Element  xpath=//*[@name="Qualifications[${qualification_num}][qualified]"]/ancestor::div[contains(@class,"field-wrapper ")]
   Click Element  xpath=//*[@name="Qualifications[${qualification_num}][eligible]"]/ancestor::div[contains(@class,"field-wrapper ")]
-  Click Element  xpzth=(//*[@class="mk-btn mk-btn_accept btn-submitform_qualification"])[1]
+  Click Element  xpath=(//*[@class="mk-btn mk-btn_accept btn-submitform_qualification"])[1]
   Wait Until Keyword Succeeds  5x  1s   Page Should Contain Element  xpath=//*[@name="cancel_prequalification"]
 
 Відхилити кваліфікацію
