@@ -364,6 +364,7 @@ Update plan items info
   Get Element Attribute  xpath=//input[@name="accelerator"]@value
   Select From List By Index  id=contact-point-select  1
   Дочекатися І Клікнути  xpath=//input[@name="fast_forward"]
+  Sleep  1000
   Wait Until Keyword Succeeds  5 x  1s  Run Keywords
   ...  Click Element  xpath=//button[contains(@class,'btn_submit_form')]
   ...  AND  Wait Until Element Is Visible  xpath=//*[@data-test-id="tenderID"]  20
