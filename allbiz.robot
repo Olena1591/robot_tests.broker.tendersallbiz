@@ -441,7 +441,7 @@ Add milestone_tender
   ...  Click Element  id=funders-checkbox
   ...  AND  Wait And Select From List By Label  id=tender-funders  ${tender_data.data.funders[0].name}
 #  Input Date  name=Tender[tenderPeriod][endDate]  ${tender_data.data.tenderPeriod.endDate}
-  Select From List By Index  id=contact-point-select  1
+#  Select From List By Index  id=contact-point-select  1
 
 
 Заповнити поля для понадпорогів
@@ -477,10 +477,11 @@ Add milestone_tender
 
 #Заповнити поля для рамкової угоди
 #  [Arguments]  ${tender_data}
+#  Input Text  xpath=//*[@id="tender-maxawardscount"]  ${tender_data.data.maxAwardsCount}
 #  Click Element  xpats=//*[@class="durationPicker-ui"]
 #  Wait Until Element Is Visible  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]
 #  Дочекатися і клікнути  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]
-#  Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]
+#  Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]  ${tender_data.data.agreementDuration}
 #  Wait Element Animation  xpats=//[@class="durationPicker-select clear"]
 #  Input Text  xpath=//*[@id="tender-title_en"]
 
