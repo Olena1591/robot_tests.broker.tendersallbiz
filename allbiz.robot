@@ -94,6 +94,7 @@ Login
   ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "competitiveDialogueUA"  Wait And Select From List By Value  name=procurementMethod  open_competitiveDialogueUA
   ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "competitiveDialogueEU"  Wait And Select From List By Value  name=procurementMethod  open_competitiveDialogueEU
   ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "esco"  Wait And Select From List By Value  name=procurementMethod  open_esco
+  ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "closeFrameworkAgreementUA"  Wait And Select From List By Value  name=procurementMethod  pen_closeFrameworkAgreementUA
   Input text  name=Plan[budget][description]  ${tender_data.data.budget.description}
   Run Keyword If  "${tender_data.data.tender.procurementMethodType}" != "esco"  Input text  name=Plan[budget][amount]  ${budget_amount}
   Run Keyword If  "${tender_data.data.tender.procurementMethodType}" != "esco"  Conv And Select From List By Value  name=Plan[budget][currency]  UAH
@@ -323,6 +324,7 @@ Update plan items info
   ...  ELSE IF  "aboveThreshold" in "${tender_data.data.procurementMethodType}"  Заповнити поля для понадпорогів  ${tender_data}
   ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "negotiation"  Заповнити поля для переговорної процедури  ${tender_data}
   ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "competitiveDialogueEU"  Заповнити поля для конкурентного діалогу  ${tender_data}
+#  ...  ELSE IF  "${tender_data.data.procurementMethodType}" ==  ""  Заповнити поля для рамкової угоди  ${tender_data}
 #  ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "reporting"  Wait And Select From List By Value  name=tender_method  limited_reporting
 #  Conv And Select From List By Value  name=Tender[value][valueAddedTaxIncluded]  ${valueAddedTaxIncluded}
 
@@ -473,7 +475,14 @@ Add milestone_tender
   Log  ${tender_data}
   Input Text  xpath=//*[@name="Tender[title_en]"]  ${tender_data.data.title_en}
 
-
+#Заповнити поля для рамкової угоди
+#  [Arguments]  ${tender_data}
+#  Click Element  xpats=//*[@class="durationPicker-ui"]
+#  Wait Until Element Is Visible  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]
+#  Дочекатися і клікнути  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]
+#  Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]
+#  Wait Element Animation  xpats=//[@class="durationPicker-select clear"]
+#  Input Text  xpath=//*[@id="tender-title_en"]
 
 Додати багато лотів
   [Arguments]  ${tender_data}
