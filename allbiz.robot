@@ -522,6 +522,7 @@ Fill lot filds
 #  Run Keyword If  "Negotiation" not in "${SUITE_NAME}"  Input Minimal Step Amount  ${lot.minimalStep.amount}  ${lot_index}
   Input Minimal Step Amount  ${lot.minimalStep.amount}  ${lot_index}
 
+
 Input Minimal Step Amount
   [Arguments]  ${minimal_step}  ${lot_index}
   ${minimalStep}=  add_second_sign_after_point  ${minimal_step}
@@ -550,9 +551,10 @@ Add Item Tender
   ${dk_status}=  Run Keyword And Return Status  Dictionary Should Contain Key  ${items}  additionalClassifications
   ${is_CPV_other}=  Run Keyword And Return Status  Should Be Equal  '${items.classification.id}'  '99999999-9'
   ${is_MOZ}=  Run Keyword And Return Status  Should Be Equal  '${items.additionalClassifications[0].scheme}'  'INN'
+  ${type_procedure}=  Get Text  xpath=//*[contains(text(),"Процедура закупiвлi") ]/following-sibling::div
 
   Input text  name=Tender[items][${item_index}][description]  ${items.description}
-  Run Keyword If   '${mode}' == 'openeu'   Input text  name=Tender[items][${item_index}][description_en]  ${items.description_en}
+  Run Keyword If   '${type_procedure}' == 'Конкурентний діалог з публікацією англ. мовою'   Input text  name=Tender[items][${item_index}][description_en]  ${items.description_en}
   ...  ELSE IF  '${mode}' == 'open_competitive_dialogue'  Input Text  name=Tender[items][${item_index}][description_en]  ${items.description_en}
   ...  ELSE IF  '${mode}' == 'open_esco'  Input text  name=Tender[items][${item_index}][description_en]  ${items.description_en}
   Run Keyword If  '${mode}' != 'open_esco'  Input text  name=Tender[items][${item_index}][quantity]  ${quantity}
