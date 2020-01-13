@@ -567,6 +567,7 @@ Add Item Tender
   Run Keyword If   '${type_procedure}' == 'Конкурентний діалог з публікацією англ. мовою'   Input text  name=Tender[items][${item_index}][description_en]  ${items.description_en}
 #  ...  ELSE IF  '${mode}' == 'open_competitive_dialogue'  Input Text  name=Tender[items][${item_index}][description_en]  ${items.description_en}
   ...  ELSE IF  '${mode}' == 'open_esco'  Input text  name=Tender[items][${item_index}][description_en]  ${items.description_en}
+  ...  ELSE IF  '${mode}' == 'openeu'  Input text  name=Tender[items][${item_index}][description_en]  ${items.description_en}
   Run Keyword If  '${mode}' != 'open_esco'  Input text  name=Tender[items][${item_index}][quantity]  ${quantity}
   Run Keyword If  '${mode}' != 'open_esco'  Wait And Select From List By Value  name=Tender[items][${item_index}][unit][code]  ${items.unit.code}
   Scroll To Element  name=Tender[items][${item_index}][classification][description]
