@@ -332,9 +332,9 @@ Update plan items info
   Run Keyword If  "below" in "${tender_data.data.procurementMethodType}"  Input date  name="Tender[enquiryPeriod][endDate]"  ${tender_data.data.enquiryPeriod.endDate}
 #  Conv And Select From List By Value  xpath=(//select[@id="guarantee-exist"])[1]  1
 #  Input text  xpath=//*[@id="value-amount"]  ${tender_data.data.value.amount}
-  Run Keyword If  ${number_of_lots} == 0  Run Keywords
-  ...  ConvToStr And Input Text  name=Tender[value][amount]  ${amount}
-  ...  AND  Run Keyword If  "${tender_data.data.procurementMethodType}" not in "reporting negotiation"  Select From List By Value  id=guarantee-exist  0
+#  Run Keyword If  ${number_of_lots} == 0  Run Keywords
+#  ...  ConvToStr And Input Text  name=Tender[value][amount]  ${amount}
+#  ...  AND  Run Keyword If  "${tender_data.data.procurementMethodType}" not in "reporting negotiation"  Select From List By Value  id=guarantee-exist  0
 #  Conv And Select From List By Value  name=Tender[value][valueAddedTaxIncluded]  ${tender_data.data.value.valueAddedTaxIncluded}
 #  Wait And Select From List By Value  name=Tender[value][currency]  ${tender_data.data.value.currency}
   Conv And Select From List By Value   xpath=//*[@id="tender-mainprocurementcategory"]  ${tender_data.data.mainProcurementCategory}
@@ -382,7 +382,9 @@ Fill tender filds
 
   :FOR   ${milestones_index}   IN RANGE   ${number_of_milestones}
   \  Add milestone_tender  ${milestones_index}  ${milestones[${milestones_index}]}  ${tender_data.data.procurementMethodType}
-
+  Run Keyword If  ${number_of_lots} == 0  Run Keywords
+  ...  ConvToStr And Input Text  name=Tender[value][amount]  ${amount}
+  ...  AND  Run Keyword If  "${tender_data.data.procurementMethodType}" not in "reporting negotiation"  Select From List By Value  id=guarantee-exist  0
 
 
 Fill ESCO filds
