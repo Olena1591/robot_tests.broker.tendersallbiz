@@ -329,7 +329,7 @@ Update plan items info
   ...  ELSE IF  "aboveThreshold" in "${tender_data.data.procurementMethodType}"  Заповнити поля для понадпорогів  ${tender_data}
   ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "negotiation"  Заповнити поля для переговорної процедури  ${tender_data}
   ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "competitiveDialogueEU"  Заповнити поля для конкурентного діалогу  ${tender_data}
-#  ...  ELSE IF  "${tender_data.data.procurementMethodType}" ==  ""  Заповнити поля для рамкової угоди  ${tender_data}
+#  ...  ELSE IF  "${tender_data.data.procurementMethodType}" ==  "closeFrameworkAgreementUA"  Заповнити поля для рамкової угоди  ${tender_data}
 #  ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "reporting"  Wait And Select From List By Value  name=tender_method  limited_reporting
 #  Conv And Select From List By Value  name=Tender[value][valueAddedTaxIncluded]  ${valueAddedTaxIncluded}
 
@@ -480,7 +480,7 @@ Add milestone_tender
 #  Дочекатися і клікнути  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]
 #  Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]  ${tender_data.data.agreementDuration}
 #  Wait Element Animation  xpats=//[@class="durationPicker-select clear"]
-#  Input Text  xpath=//*[@id="tender-title_en"]
+#  Input Text  xpath=//*[@id="tender-title_en"]  ${tender_data.data.title_en}
 
 Додати багато лотів
   [Arguments]  ${tender_data}
@@ -510,6 +510,7 @@ Add milestone_tender
   ...   Input Text   name=Tender[lots][${lot_index}][title_en]   ${lot.title_en}
   ...   AND   Input Text   name=Tender[lots][${lot_index}][description_en]    ${lot.description}
   ...  ELSE IF  '${type_procedure}' == 'Конкурентний діалог з публікацією англ. мовою'  Input Text  name=Tender[lots][${lot_index}][title_en]  ${lot.title_en}
+  ...  ELSE IF  '${mode}' == 'open_framework'  name=Tender[lots][${lot_index}][title_en]  ${lot.title_en}
 #  Додати багато предметів   ${data}
 
 
@@ -565,6 +566,7 @@ Add Item Tender
 #  ...  ELSE IF  '${mode}' == 'open_competitive_dialogue'  Input Text  name=Tender[items][${item_index}][description_en]  ${items.description_en}
   ...  ELSE IF  '${mode}' == 'open_esco'  Input text  name=Tender[items][${item_index}][description_en]  ${items.description_en}
   ...  ELSE IF  '${mode}' == 'openeu'  Input text  name=Tender[items][${item_index}][description_en]  ${items.description_en}
+  ...  ELSE IF  '${mode}' == 'open_framework'  Input text  name=Tender[items][${item_index}][description_en]  ${items.description_en}
   Run Keyword If  '${mode}' != 'open_esco'  Input text  name=Tender[items][${item_index}][quantity]  ${quantity}
   Run Keyword If  '${mode}' != 'open_esco'  Wait And Select From List By Value  name=Tender[items][${item_index}][unit][code]  ${items.unit.code}
   Scroll To Element  name=Tender[items][${item_index}][classification][description]
@@ -628,6 +630,8 @@ Add Item Tender
   ...  Input text   xpath=//input[@name="Tender[features][${feature_index}][title_en]"]  ${feature.title_en}
   ...  AND  Input text   name=Tender[features][${feature_index}][description_en]   ${feature.description}
   ...  ELSE IF  '${mode}' == 'open_esco'  Input text  name=Tender[features][${feature_index}][title_en]  ${feature.title_en}
+  ...  ELSE IF  '${mode}' == 'open_framework'  Input text  name=Tender[features][${feature_index}][title_en]  ${feature.title_en}
+
   Run Keyword If   '${mode}' == 'competitiveDialogueEU'   Input text  name="Tender[features][${feature_index}][title_en]"  ${feature.title_en}
   Дочекатися І Клікнути  xpath=//select[@name="Tender[features][${feature_index}][relatedItem]"]/descendant::option[contains(text(),"${relatedItem}")]
   :FOR   ${index}   IN RANGE   ${enum_length}
