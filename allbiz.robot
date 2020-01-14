@@ -79,8 +79,12 @@ Login
   ${tenderPeriod.startDate}=  convert_date_plan_tender_to_allbiz_format  ${tender_data.data.tender.tenderPeriod.startDate}
 
 
-  ${tender_data.data.budget.period.startDate}=  Set Variable if  "closeFrameworkAgreementUA" in "${tender_data.data.tender.procurementMethodType}"  convert_date_plan_to_allbiz_format  ${tender_data.data.budget.period.startDate}  ${tender_data.data.budget.period.startDate}
-  ${tender_data.data.budget.period.endDate}=  Set Variable if  "closeFrameworkAgreementUA" in "${tender_data.data.tender.procurementMethodType}"  convert_date_plan_to_allbiz_format  ${tender_data.data.budget.period.endDate}  ${tender_data.data.budget.period.endDate}
+#  ${tender_data.data.budget.period.startDate}=  Set Variable if  "closeFrameworkAgreementUA" in "${tender_data.data.tender.procurementMethodType}"  convert_date_plan_to_allbiz_format  ${tender_data.data.budget.period.startDate}  ${tender_data.data.budget.period.startDate}
+#  ${tender_data.data.budget.period.endDate}=  Set Variable if  "closeFrameworkAgreementUA" in "${tender_data.data.tender.procurementMethodType}"  convert_date_plan_to_allbiz_format  ${tender_data.data.budget.period.endDate}  ${tender_data.data.budget.period.endDate}
+  ${tender_data.data.budget.period.startDate}=  Run Keyword If  "closeFrameworkAgreementUA" in "${tender_data.data.tender.procurementMethodType}"  convert_date_plan_to_allbiz_format  ${tender_data.data.budget.period.startDate}
+  ...  ELSE  Set Variable  ${tender_data.data.budget.period.startDate}
+  ${tender_data.data.budget.period.endDate}=  Run Keyword If  "closeFrameworkAgreementUA" in "${tender_data.data.tender.procurementMethodType}"  convert_date_plan_to_allbiz_format  ${tender_data.data.budget.period.endDate}
+  ...  ELSE  Set Variable  ${tender_data.data.budget.period.endDate}
 
   ${is_visible}=  Run Keyword And Return Status  Element Should Be Visible  xpath=//*[@id="action-test-mode-msg"]
   Run Keyword If  ${is_visible} and "${role}" != "tender_owner"  Run Keywords
@@ -410,16 +414,6 @@ Fill ESCO filds
   Input Text  xpath=//*[@id="tender-title_en"]  ${tender_data.data.description_en}
 
 
-
-
-
-
-
-
-
-
-
-
 Add milestone_tender
   [Arguments]  ${milestones_index}  ${milestones}  ${procurementMethodType}
 #  Run Keyword If  "aboveThresholdUA" in "${procurementMethodType}"  Дочекатися І Клікнути  xpath=(//button[@class="mk-btn mk-btn_default add_milestone"])[3]
@@ -727,6 +721,11 @@ Get Last Feature Index
 Оновити сторінку з тендером
   [Arguments]  ${username}  ${tenderID}
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tenderID}
+
+allbiz.Перевести тендер на статус очікування обробки мостом
+  [Arguments]  ${username}  ${tender_uaid}
+
+
 
 
 Внести зміни в тендер
