@@ -170,7 +170,6 @@ Add item plan
   ...  AND  Дочекатися І Клікнути  xpath=//*[@class="switch_t"]
   ...  AND  Дочекатися І Клікнути  xpath=//*[@class="bg-close"]
   ...  AND  Wait Until Element Is Not Visible  xpath=//*[@class="switch_t"]
-  Дочекатися І Клікнути
   Дочекатися І Клікнути  xpath=//span[@id="more-filter"]
   Wait Until Element Is Visible  xpath=//input[@id="plan-id"]
   Input text  xpath=//input[@name="PlansSearch[planID]"]  ${planID}
@@ -180,6 +179,7 @@ Add item plan
   ...  AND  Дочекатися І Клікнути  xpath=//*[contains(text(),'${planID}')]/ancestor::div[contains(@class,"row")]/descendant::a[1]
   ...  AND  Wait Until Element Is Visible  xpath=(//div[@class="col-xs-12 col-sm-6 col-md-8 item-bl_val"])[1]  20
   Дочекатися І Клікнути  xpath=//*[contains(@href,"test-tenders.all.biz/plan/json/")]
+
 
 Отримати інформацію із плану
   [Arguments]  ${username}  ${planID}  ${field_name}
