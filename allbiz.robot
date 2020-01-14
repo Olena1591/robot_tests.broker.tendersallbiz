@@ -41,7 +41,7 @@ ${locator.plan.tender.procurementMethodType}=  xpath=//*[@data-test-id="procurem
   [Arguments]  ${username}
   ${chromeOptions}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
 #  ${prefs} =    Create Dictionary    download.default_directory=${downloadDir}
-#  Call Method    ${chromeOptions}    add_argument    --headless
+  Call Method    ${chromeOptions}    add_argument    --headless
 
 
   Create Webdriver    ${USERS.users['${username}'].browser}  alias=${username}   chrome_options=${chromeOptions}
@@ -311,6 +311,7 @@ Update plan items info
   allbiz.Пошук плану по ідентифікатору  ${username}  ${plan_uaid}
   Дочекатися І Клікнути  xpath=//*[@id="create_auction_modal_btn"]
   Wait Until Element Is Visible  xpath=(//*[@class="modal-content"])[2]
+  Execute Javascript  document.querySelector('[name="fast_forward"]').setAttribute("checked", 'checked');
   Run Keyword If  ${number_of_lots} > 0  Wait And Select From List By Value  name=tender_type  2
   ...  ELSE  Wait And Select From List By Value  name=tender_type  1
   Click Element  xpath=(//button[@class="mk-btn mk-btn_accept"])[2]
@@ -366,8 +367,6 @@ Update plan items info
   Get Element Attribute  xpath=//input[@name="accelerator"]@value
   Select From List By Index  id=contact-point-select  1
 #  Select Checkbox  xpath=//input[@name="fast_forward"]
-  Execute Javascript  document.querySelector('[name="fast_forward"]').setAttribute("checked", 'checked');
-  Sleep  2
   Wait Until Keyword Succeeds  5 x  1s  Run Keywords
   ...  Click Element  xpath=//button[contains(@class,'btn_submit_form')]
   ...  AND  Wait Until Element Is Visible  xpath=//*[@data-test-id="tenderID"]  20
@@ -1014,7 +1013,10 @@ Feature Count Should Not Be Zero
   ...  AND  Page Should Contain  ${complaintID}
   Run Keyword If  "переможця" in "${TEST_NAME}"  Input Text  xpath=//*[contains(text(),"${complaintID}")]/../descendant::textarea[contains(@name,"resolution")]  ${answer_data.data.resolution}
   ...  ELSE  Input Text  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::textarea  ${answer_data.data.resolution}
-  Дочекатися І Клікнути  xpath=//*[contains(text(),"${complaintID}")]/../descendant::input[@value="${answer_data.data.resolutionType}"]/..
+  Run Keyword If  "resolved" in ${answer_data.data.resolutionType}  Дочекатися І Клікнути  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::input[@value="resolved"]
+  ...  ELSE IF  "declined"  in ${answer_data.data.resolutionType}  Дочекатися І Клікнути  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::input[@value=="declined"]
+  ...  ELSE IF  "invalid"  in ${answer_data.data.resolutionType}  Дочекатися І Клікнути  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::input[@value=="invalid"]
+
   Дочекатися І Клікнути  name=answer_complaint_submit
   Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
 
