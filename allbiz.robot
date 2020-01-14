@@ -41,7 +41,7 @@ ${locator.plan.tender.procurementMethodType}=  xpath=//*[@data-test-id="procurem
   [Arguments]  ${username}
   ${chromeOptions}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
 #  ${prefs} =    Create Dictionary    download.default_directory=${downloadDir}
-  Call Method    ${chromeOptions}    add_argument    --headless
+#  Call Method    ${chromeOptions}    add_argument    --headless
 
 
   Create Webdriver    ${USERS.users['${username}'].browser}  alias=${username}   chrome_options=${chromeOptions}
@@ -77,10 +77,6 @@ Login
   ${number_of_items}=  Get length  ${items}
   ${budget_amount}=  add_second_sign_after_point  ${tender_data.data.budget.amount}
   ${tenderPeriod.startDate}=  convert_date_plan_tender_to_allbiz_format  ${tender_data.data.tender.tenderPeriod.startDate}
-
-
-#  ${tender_data.data.budget.period.startDate}=  Set Variable if  "closeFrameworkAgreementUA" in "${tender_data.data.tender.procurementMethodType}"  convert_date_plan_to_allbiz_format  ${tender_data.data.budget.period.startDate}  ${tender_data.data.budget.period.startDate}
-#  ${tender_data.data.budget.period.endDate}=  Set Variable if  "closeFrameworkAgreementUA" in "${tender_data.data.tender.procurementMethodType}"  convert_date_plan_to_allbiz_format  ${tender_data.data.budget.period.endDate}  ${tender_data.data.budget.period.endDate}
   ${tender_data.data.budget.period.startDate}=  Run Keyword If  "closeFrameworkAgreementUA" in "${tender_data.data.tender.procurementMethodType}"  convert_date_plan_to_allbiz_format  ${tender_data.data.budget.period.startDate}
   ...  ELSE  Set Variable  ${tender_data.data.budget.period.startDate}
   ${tender_data.data.budget.period.endDate}=  Run Keyword If  "closeFrameworkAgreementUA" in "${tender_data.data.tender.procurementMethodType}"  convert_date_plan_to_allbiz_format  ${tender_data.data.budget.period.endDate}
@@ -1468,7 +1464,7 @@ Get info from funders
 
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//*[contains(@href,"tender/euprequalification/")]
-  Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-qualification") and contains(@class,"mk-btn mk-btn_accept")][${qualification_num} + 1]
+  Дочекатися І Клікнути  xpath=//*[@name="Qualifications[${qualification_num}][qualified]"]/ancestor::div[@class="col-xs-12"]/descendant::button[@class="mk-btn mk-btn_accept"]
   Wait Until Keyword Succeeds  5x  1s   Page Should Contain Element  xpath=//*[@name="Qualifications[${qualification_num}][action]"]
 #  Дочекатися І Клікнути  xpath=//*[@name="Qualifications[${qualification_num} + 1][action]"]
   Select From list By Index  xpath=//*[@name="Qualifications[${qualification_num}][action]"]  0
