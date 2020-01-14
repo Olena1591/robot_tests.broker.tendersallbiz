@@ -77,6 +77,11 @@ Login
   ${number_of_items}=  Get length  ${items}
   ${budget_amount}=  add_second_sign_after_point  ${tender_data.data.budget.amount}
   ${tenderPeriod.startDate}=  convert_date_plan_tender_to_allbiz_format  ${tender_data.data.tender.tenderPeriod.startDate}
+
+
+  ${tender_data.data.budget.period.startDate}=  Set Variable if  "closeFrameworkAgreementUA" in "${tender_data.data.tender.procurementMethodType}"  convert_date_plan_to_allbiz_format  ${tender_data.data.budget.period.startDate}  ${tender_data.data.budget.period.startDate}
+  ${tender_data.data.budget.period.endDate}=  Set Variable if  "closeFrameworkAgreementUA" in "${tender_data.data.tender.procurementMethodType}"  convert_date_plan_to_allbiz_format  ${tender_data.data.budget.period.endDate}  ${tender_data.data.budget.period.endDate}
+
   ${is_visible}=  Run Keyword And Return Status  Element Should Be Visible  xpath=//*[@id="action-test-mode-msg"]
   Run Keyword If  ${is_visible} and "${role}" != "tender_owner"  Run Keywords
   ...  Click element  xpath=(//*[@class="glyphicon glyphicon-user"])[1]
@@ -117,10 +122,6 @@ Login
   \  Add item plan  ${item_index}  ${items[${item_index}]}
   Wait until element is not visible  xpath=//div[@id="mbody"]
   Дочекатися І Клікнути  xpath=//button[@class="mk-btn mk-btn_accept"]
-#  Дочекатися І Клікнути  xpath=(//*[@class="close"])[3]
-#  Дочекатися І Клікнути  xpath=(//*[@class="close"])[1]
-#  Дочекатися І Клікнути  xpath=(//*[@class="close"])[2]
-#  Wait until element is not visible  xpath=//*[contains(@class, "alert fade in")]
   Накласти ЄЦП
   Wait until element is visible  xpath=//div[@data-test-id="planID"]  20
   ${planID}=  Get text  xpath=//div[@data-test-id="planID"]
