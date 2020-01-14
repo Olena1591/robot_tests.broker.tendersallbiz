@@ -40,7 +40,7 @@ def convert_date_plan_tender_to_allbiz_format(isodate):
     day_string = iso_dt.strftime("%m/%Y")
     return day_string
 
-def convert_date_plan_to_allbiz_format(isodate):
+def convert_date_plan_to_allbiz_format_year(isodate):
     iso_dt = parse_date(isodate)
     day_string = iso_dt.strftime("%Y")
     return day_string

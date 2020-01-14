@@ -77,9 +77,9 @@ Login
   ${number_of_items}=  Get length  ${items}
   ${budget_amount}=  add_second_sign_after_point  ${tender_data.data.budget.amount}
   ${tenderPeriod.startDate}=  convert_date_plan_tender_to_allbiz_format  ${tender_data.data.tender.tenderPeriod.startDate}
-  ${tender_data.data.budget.period.startDate}=  Run Keyword If  "closeFrameworkAgreementUA" in "${tender_data.data.tender.procurementMethodType}"  convert_date_plan_to_allbiz_format  ${tender_data.data.budget.period.startDate}
+  ${budget.period.startDate}=  Run Keyword If  "closeFrameworkAgreementUA" in "${tender_data.data.tender.procurementMethodType}"  convert_date_plan_to_allbiz_format_year  ${tender_data.data.budget.period.startDate}
   ...  ELSE  Set Variable  ${tender_data.data.budget.period.startDate}
-  ${tender_data.data.budget.period.endDate}=  Run Keyword If  "closeFrameworkAgreementUA" in "${tender_data.data.tender.procurementMethodType}"  convert_date_plan_to_allbiz_format  ${tender_data.data.budget.period.endDate}
+  ${budget.period.endDate}=  Run Keyword If  "closeFrameworkAgreementUA" in "${tender_data.data.tender.procurementMethodType}"  convert_date_plan_to_allbiz_format_year  ${tender_data.data.budget.period.endDate}
   ...  ELSE  Set Variable  ${tender_data.data.budget.period.endDate}
 
   ${is_visible}=  Run Keyword And Return Status  Element Should Be Visible  xpath=//*[@id="action-test-mode-msg"]
@@ -104,8 +104,10 @@ Login
   Run Keyword If  "${tender_data.data.tender.procurementMethodType}" != "esco"  Input text  name=Plan[budget][amount]  ${budget_amount}
   Run Keyword If  "${tender_data.data.tender.procurementMethodType}" != "esco"  Conv And Select From List By Value  name=Plan[budget][currency]  UAH
   Execute Javascript   document.querySelector('[name="Plan[tender][tenderPeriod][startDate]"]').value="${tenderPeriod.startDate}"
-  Input Date  name="Plan[budget][period][startDate]"  ${tender_data.data.budget.period.startDate}
-  Input Date  name="Plan[budget][period][endDate]"  ${tender_data.data.budget.period.endDate}
+#  Input Date  name="Plan[budget][period][startDate]"  ${budget.period.startDate}
+  Execute Javascript  document.querySelector('[name="Plan[budget][period][startDate]"]').value="${budget.period.startDate}"
+#  Input Date  name="Plan[budget][period][endDate]"  ${budget.period.endDate}
+  Execute Javascript  document.querySelector('[name="Plan[budget][period][endDate]"]').value="${budget.period.endDate}"
   Click Element  xpath=//label[@for="classification-cpv-description"]
   Wait Element Animation  id=search_code
   Input Text  id=search_code  ${tender_data.data.classification.id}
@@ -1013,9 +1015,9 @@ Feature Count Should Not Be Zero
   ...  AND  Page Should Contain  ${complaintID}
   Run Keyword If  "переможця" in "${TEST_NAME}"  Input Text  xpath=//*[contains(text(),"${complaintID}")]/../descendant::textarea[contains(@name,"resolution")]  ${answer_data.data.resolution}
   ...  ELSE  Input Text  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::textarea  ${answer_data.data.resolution}
-  Run Keyword If  "resolved" in ${answer_data.data.resolutionType}  Дочекатися І Клікнути  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::input[@value="resolved"]
-  ...  ELSE IF  "declined"  in ${answer_data.data.resolutionType}  Дочекатися І Клікнути  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::input[@value=="declined"]
-  ...  ELSE IF  "invalid"  in ${answer_data.data.resolutionType}  Дочекатися І Клікнути  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::input[@value=="invalid"]
+  Run Keyword If  "resolved" in "${answer_data.data.resolutionType}"  Дочекатися І Клікнути  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::input[@value="resolved"]
+  ...  ELSE IF  "declined"  in "${answer_data.data.resolutionType}"  Дочекатися І Клікнути  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::input[@value=="declined"]
+  ...  ELSE IF  "invalid"  in "${answer_data.data.resolutionType}"  Дочекатися І Клікнути  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::input[@value=="invalid"]
 
   Дочекатися І Клікнути  name=answer_complaint_submit
   Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
