@@ -41,7 +41,7 @@ ${locator.plan.tender.procurementMethodType}=  xpath=//*[@data-test-id="procurem
   [Arguments]  ${username}
   ${chromeOptions}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
 #  ${prefs} =    Create Dictionary    download.default_directory=${downloadDir}
-  Call Method    ${chromeOptions}    add_argument    --headless
+#  Call Method    ${chromeOptions}    add_argument    --headless
 
 
   Create Webdriver    ${USERS.users['${username}'].browser}  alias=${username}   chrome_options=${chromeOptions}
@@ -311,7 +311,6 @@ Update plan items info
   allbiz.Пошук плану по ідентифікатору  ${username}  ${plan_uaid}
   Дочекатися І Клікнути  xpath=//*[@id="create_auction_modal_btn"]
   Wait Until Element Is Visible  xpath=(//*[@class="modal-content"])[2]
-  Execute Javascript  document.querySelector('[name="fast_forward"]').setAttribute("checked", 'checked');
   Run Keyword If  ${number_of_lots} > 0  Wait And Select From List By Value  name=tender_type  2
   ...  ELSE  Wait And Select From List By Value  name=tender_type  1
   Click Element  xpath=(//button[@class="mk-btn mk-btn_accept"])[2]
@@ -319,6 +318,7 @@ Update plan items info
 #  Run Keyword If  "aboveThreshold" in "${tender_data.data.procurementMethodType}"  Conv And Select From List By Value  xpath=(//select[@id="guarantee-exist"])[3]  1
 #  ...  ELSE  Conv And Select From List By Value  xpath=(//select[@id="guarantee-exist"])[1]  1
 #  Conv And Select From List By Value  xpath=(//*[@data-test-id="guarantee-exist"])[${index_strategy}]  1
+  Execute Javascript  document.querySelector('[name="fast_forward"]').setAttribute("checked", 'checked');
 
   Run Keyword If  "esco" in "${tender_data.data.procurementMethodType}"  Fill ESCO filds  ${tender_data}
   ...  ELSE  Fill tender filds  ${tender_data}
@@ -1467,6 +1467,7 @@ Get info from funders
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//*[contains(@href,"tender/euprequalification/")]
   Дочекатися І Клікнути  xpath=//*[@name="Qualifications[${qualification_num}][qualified]"]/ancestor::div[@class="col-xs-12"]/descendant::button[@class="mk-btn mk-btn_accept"]
+  Sleep  1000
   Wait Until Keyword Succeeds  5x  1s   Page Should Contain Element  xpath=//*[@name="Qualifications[${qualification_num}][action]"]
 #  Дочекатися І Клікнути  xpath=//*[@name="Qualifications[${qualification_num} + 1][action]"]
   Select From list By Index  xpath=//*[@name="Qualifications[${qualification_num}][action]"]  0
