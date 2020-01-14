@@ -365,6 +365,7 @@ Update plan items info
   Select From List By Index  id=contact-point-select  1
 #  Select Checkbox  xpath=//input[@name="fast_forward"]
   Execute Javascript  document.querySelector('[name="fast_forward"]').setAttribute("checked", 'checked');
+  Sleep  2
   Wait Until Keyword Succeeds  5 x  1s  Run Keywords
   ...  Click Element  xpath=//button[contains(@class,'btn_submit_form')]
   ...  AND  Wait Until Element Is Visible  xpath=//*[@data-test-id="tenderID"]  20
