@@ -170,6 +170,7 @@ Add item plan
   ...  AND  Дочекатися І Клікнути  xpath=//*[@class="switch_t"]
   ...  AND  Дочекатися І Клікнути  xpath=//*[@class="bg-close"]
   ...  AND  Wait Until Element Is Not Visible  xpath=//*[@class="switch_t"]
+  Дочекатися І Клікнути
   Дочекатися І Клікнути  xpath=//span[@id="more-filter"]
   Wait Until Element Is Visible  xpath=//input[@id="plan-id"]
   Input text  xpath=//input[@name="PlansSearch[planID]"]  ${planID}
@@ -178,7 +179,7 @@ Add item plan
   ...  AND  Wait Until Keyword Succeeds  5x  1s   Page Should Contain Element  xpath=//div[@class="search-result_article"]
   ...  AND  Дочекатися І Клікнути  xpath=//*[contains(text(),'${planID}')]/ancestor::div[contains(@class,"row")]/descendant::a[1]
   ...  AND  Wait Until Element Is Visible  xpath=(//div[@class="col-xs-12 col-sm-6 col-md-8 item-bl_val"])[1]  20
-
+  Дочекатися І Клікнути  xpath=//*[contains(@href,"test-tenders.all.biz/plan/json/")]
 
 Отримати інформацію із плану
   [Arguments]  ${username}  ${planID}  ${field_name}
@@ -718,7 +719,7 @@ Get Last Feature Index
 #  Дочекатися І Клікнути  xpath=//*[contains(text(),'${tender_uaid}')]/ancestor::div[@class="search-result"]/descendant::a[1]
 #  Run Keyword And Ignore Error  Wait Until Keyword Succeeds  3 x  1 s  Click Element  xpath=//button[@data-dismiss="modal"]
 #  Wait Until Element Is Visible  xpath=//*[@data-test-id="tenderID"]  10
-#  Дочекатися І Клікнути
+  Дочекатися І Клікнути  xpath=//*[contains(@href,"test-tenders.all.biz/tender/json/")]
 
 
 
