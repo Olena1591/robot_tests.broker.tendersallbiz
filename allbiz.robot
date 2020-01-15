@@ -41,7 +41,7 @@ ${locator.plan.tender.procurementMethodType}=  xpath=//*[@data-test-id="procurem
   [Arguments]  ${username}
   ${chromeOptions}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
 #  ${prefs} =    Create Dictionary    download.default_directory=${downloadDir}
-#  Call Method    ${chromeOptions}    add_argument    --headless
+  Call Method    ${chromeOptions}    add_argument    --headless
 
 
   Create Webdriver    ${USERS.users['${username}'].browser}  alias=${username}   chrome_options=${chromeOptions}
@@ -277,6 +277,13 @@ Update plan items info
 ######################################    СТВОРЕННЯ ТЕНДЕРУ    ################################################
 ###############################################################################################################
 
+
+#Check It
+#  [Arguments]  ${check}
+#  Execute Javascript  document.querySelector('[name="fast_forward"]').setAttribute("checked", 'checked');
+#  ${current_check}=  Get Element Attribute  document.querySelector('[name="fast_forward"]').checked;
+#  Should Be Equal  ${check}  ${current_check}
+
 Створити тендер
   [Arguments]  ${username}  ${tender_data}  ${plan_id}
   ${items}=  Get From Dictionary  ${tender_data.data}  items
@@ -322,19 +329,21 @@ Update plan items info
 #  Conv And Select From List By Value  xpath=(//*[@data-test-id="guarantee-exist"])[${index_strategy}]  1
   Execute Javascript  document.querySelector('[name="fast_forward"]').setAttribute("checked", 'checked');
 
+#  Wait Until Keyword Succeeds  10 x  1 s  Check It  document.querySelector('[name="fast_forward"]').setAttribute("checked", 'checked');
+
   Run Keyword If  "esco" in "${tender_data.data.procurementMethodType}"  Fill ESCO filds  ${tender_data}
   ...  ELSE  Fill tender filds  ${tender_data}
 
-  Run Keyword If  "below" in "${tender_data.data.procurementMethodType}"  Заповнити поля для допорогової закупівлі  ${tender_data}
-  ...  ELSE IF  "aboveThreshold" in "${tender_data.data.procurementMethodType}"  Заповнити поля для понадпорогів  ${tender_data}
+  Run Keyword If  "${tender_data.data.procurementMethodType}" == "below"  Заповнити поля для допорогової закупівлі  ${tender_data}
+  ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "aboveThreshold"  Заповнити поля для понадпорогів  ${tender_data}
   ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "negotiation"  Заповнити поля для переговорної процедури  ${tender_data}
   ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "competitiveDialogueEU"  Заповнити поля для конкурентного діалогу  ${tender_data}
-  ...  ELSE IF  "${tender_data.data.procurementMethodType}" ==  "closeFrameworkAgreementUA"  Заповнити поля для рамкової угоди  ${tender_data}
+  ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "closeFrameworkAgreementUA"  Заповнити поля для рамкової угоди  ${tender_data}
 #  ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "reporting"  Wait And Select From List By Value  name=tender_method  limited_reporting
 #  Conv And Select From List By Value  name=Tender[value][valueAddedTaxIncluded]  ${valueAddedTaxIncluded}
 
 
-  Run Keyword If  "below" in "${tender_data.data.procurementMethodType}"  Input date  name="Tender[enquiryPeriod][endDate]"  ${tender_data.data.enquiryPeriod.endDate}
+#  Run Keyword If  "below" in "${tender_data.data.procurementMethodType}"  Input date  name="Tender[enquiryPeriod][endDate]"  ${tender_data.data.enquiryPeriod.endDate}
 #  Conv And Select From List By Value  xpath=(//select[@id="guarantee-exist"])[1]  1
 #  Input text  xpath=//*[@id="value-amount"]  ${tender_data.data.value.amount}
 #  Run Keyword If  ${number_of_lots} == 0  Run Keywords
@@ -433,6 +442,7 @@ Add milestone_tender
   ${minimalStep}=   add_second_sign_after_point   ${tender_data.data.minimalStep.amount}
 #  Wait And Select From List By Value  name=tender_method  open_${tender_data.data.procurementMethodType}
 #  Select From List By Value  id=tender-type-select  1
+  Input date  name="Tender[enquiryPeriod][endDate]"  ${tender_data.data.enquiryPeriod.endDate}
   Run Keyword If  ${number_of_lots} == 0  ConvToStr And Input Text  name=Tender[minimalStep][amount]  ${minimalStep}
   Run Keyword If  ${is_funders}  Run Keywords
   ...  Дочекатися І Клікнути  id=funders-checkbox
@@ -685,10 +695,16 @@ Get Last Feature Index
   ...  Reload Page
   ...  AND  Wait Until Page Does Not Contain  Файл завантажується...  10
 
+Go To And Assert
+  [Arguments]  ${url}
+  Go To  ${url}
+  ${current_url}=  Get Location
+  Should Be Equal  ${url}  ${current_url}
+
 Пошук тендера по ідентифікатору
   [Arguments]  ${username}  ${tender_uaid}  ${save_key}=tender_data
   Switch browser  ${username}
-  Go To  ${host}/tenders/
+  Wait Until Keyword Succeeds  10 x  1 s  Go To And Assert  ${host}/tenders/
   ${is_not_visible}=  Run Keyword And Return Status  Element Should Not Be Visible  xpath=//*[@id="action-test-mode-msg"]
   Run Keyword If  ${is_not_visible} and "${role}" != "viewer"  Run Keywords
   ...  Click element  xpath=(//*[@class="glyphicon glyphicon-user"])[1]
@@ -1392,10 +1408,11 @@ Get info from funders
   ${status}=  Run Keyword And Return Status  Page Should Not Contain  Замовником внесено зміни в умови
   ${update}=  Run Keyword And Return Status  Page Should Contain  Недійсна
   Run Keyword If  ${status}  ConvToStr And Input Text  xpath=//input[contains(@name,'[value][amount]')]  ${fieldvalue}
-  ...  ELSE  Подати Пропозицію Без Накладення ЕЦП
-  Run Keyword If  ${update}  Select Checkbox  xpath=//*[@class="competitiveCheckbox"]
+  ...  ELSE IF  ${update}  Select Checkbox  xpath=//*[@class="competitiveCheckbox"]
   ...  AND  Дочекатися І Клікнути  xpath=//button[@id="submit_bid"]
   ...  ELSE  Подати Пропозицію Без Накладення ЕЦП
+#  Run Keyword If  ${update}  Select Checkbox  xpath=//*[@class="competitiveCheckbox"]
+#  ...  AND  Дочекатися І Клікнути  xpath=//button[@id="submit_bid"]
   Подати Пропозицію Без Накладення ЕЦП
   Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  xpath=//div[contains(@class, 'alert-success')]
 
