@@ -704,7 +704,7 @@ Go To And Assert
 Пошук тендера по ідентифікатору
   [Arguments]  ${username}  ${tender_uaid}  ${save_key}=tender_data
   Switch browser  ${username}
-  Wait Until Keyword Succeeds  10 x  1 s  Go To And Assert  ${host}/tenders/
+  Wait Until Keyword Succeeds  10 x  1 s  Go To And Assert  ${host}/tenders/index
   ${is_not_visible}=  Run Keyword And Return Status  Element Should Not Be Visible  xpath=//*[@id="action-test-mode-msg"]
   Run Keyword If  ${is_not_visible} and "${role}" != "viewer"  Run Keywords
   ...  Click element  xpath=(//*[@class="glyphicon glyphicon-user"])[1]
