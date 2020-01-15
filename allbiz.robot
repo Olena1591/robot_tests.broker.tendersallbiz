@@ -1371,7 +1371,7 @@ Get info from funders
   Run Keyword If  ${meat} > 0  Вибрати нецінові показники в пропозиції  ${bid}
   Run Keyword If  ${selfeligible_status}  Дочекатися І Клікнути  xpath=//input[@id="bid-selfeligible"]/..
   Run Keyword If  ${selfqualified_status}  Дочекатися І Клікнути  xpath=//input[@id="bid-selfqualified"]/..
-  Подати Пропозицію Без Накладення ЕЦП
+#  Подати Пропозицію Без Накладення ЕЦП
   Wait Until Element Is Visible  xpath=//div[contains(@class, 'alert-success')]
 
 Подати Пропозицію Без Накладення ЕЦП
