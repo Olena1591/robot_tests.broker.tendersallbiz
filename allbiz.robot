@@ -1395,6 +1395,7 @@ Get info from funders
   ...  ELSE  Подати Пропозицію Без Накладення ЕЦП
   Run Keyword If  ${update}  Select Checkbox  xpath=//*[@class="competitiveCheckbox"]
   ...  AND  Дочекатися І Клікнути  xpath=//button[@id="submit_bid"]
+  ...  ELSE  Подати Пропозицію Без Накладення ЕЦП
   Подати Пропозицію Без Накладення ЕЦП
   Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  xpath=//div[contains(@class, 'alert-success')]
 
