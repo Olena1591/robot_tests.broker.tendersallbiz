@@ -157,9 +157,9 @@ def adapt_view_tender_data(value, field_name):
     elif 'Date' in field_name:
         value = convert_time(value)
     elif 'NBUdiscountRate' in field_name:
-        value = value / 100
+        value = float(value[0:5]) / 100
     elif 'minimalStepPercentage' in field_name:
-        value = float(value) / 100
+        value = float(value[0:5]) / 100
     return convert_string_from_dict_allbiz(value)
 
 
