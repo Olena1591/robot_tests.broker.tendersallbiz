@@ -1020,8 +1020,8 @@ Feature Count Should Not Be Zero
   Run Keyword If  "переможця" in "${TEST_NAME}"  Input Text  xpath=//*[contains(text(),"${complaintID}")]/../descendant::textarea[contains(@name,"resolution")]  ${answer_data.data.resolution}
   ...  ELSE  Input Text  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::textarea  ${answer_data.data.resolution}
   Run Keyword If  "resolved" in "${answer_data.data.resolutionType}"  Дочекатися І Клікнути  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::input[@value="resolved"]
-  ...  ELSE IF  "declined"  in "${answer_data.data.resolutionType}"  Дочекатися І Клікнути  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::input[@value=="declined"]
-  ...  ELSE IF  "invalid"  in "${answer_data.data.resolutionType}"  Дочекатися І Клікнути  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::input[@value=="invalid"]
+  ...  ELSE IF  "declined"  in "${answer_data.data.resolutionType}"  Дочекатися І Клікнути  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::input[@value="declined"]
+  ...  ELSE IF  "invalid"  in "${answer_data.data.resolutionType}"  Дочекатися І Клікнути  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::input[@value="invalid"]
 
   Дочекатися І Клікнути  name=answer_complaint_submit
   Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
@@ -1473,7 +1473,6 @@ Get info from funders
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//*[contains(@href,"tender/euprequalification/")]
   Дочекатися І Клікнути  xpath=//*[@name="Qualifications[${qualification_num}][qualified]"]/ancestor::div[@class="col-xs-12"]/descendant::button[@class="mk-btn mk-btn_accept"]
-  Sleep  1000
   Wait Until Keyword Succeeds  5x  1s   Page Should Contain Element  xpath=//*[@name="Qualifications[${qualification_num}][action]"]
 #  Дочекатися І Клікнути  xpath=//*[@name="Qualifications[${qualification_num} + 1][action]"]
   Select From list By Index  xpath=//*[@name="Qualifications[${qualification_num}][action]"]  0
