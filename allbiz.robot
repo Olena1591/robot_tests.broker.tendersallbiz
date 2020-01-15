@@ -510,7 +510,7 @@ Add milestone_tender
   ...   Input Text   name=Tender[lots][${lot_index}][title_en]   ${lot.title_en}
   ...   AND   Input Text   name=Tender[lots][${lot_index}][description_en]    ${lot.description}
   ...  ELSE IF  '${type_procedure}' == 'Конкурентний діалог з публікацією англ. мовою'  Input Text  name=Tender[lots][${lot_index}][title_en]  ${lot.title_en}
-  ...  ELSE IF  '${mode}' == 'open_framework'  name=Tender[lots][${lot_index}][title_en]  ${lot.title_en}
+  ...  ELSE IF  '${mode}' == 'open_framework'  Input Text  name=Tender[lots][${lot_index}][title_en]  ${lot.title_en}
 #  Додати багато предметів   ${data}
 
 
