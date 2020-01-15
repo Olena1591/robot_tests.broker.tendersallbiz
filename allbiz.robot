@@ -329,7 +329,7 @@ Update plan items info
   ...  ELSE IF  "aboveThreshold" in "${tender_data.data.procurementMethodType}"  Заповнити поля для понадпорогів  ${tender_data}
   ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "negotiation"  Заповнити поля для переговорної процедури  ${tender_data}
   ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "competitiveDialogueEU"  Заповнити поля для конкурентного діалогу  ${tender_data}
-#  ...  ELSE IF  "${tender_data.data.procurementMethodType}" ==  "closeFrameworkAgreementUA"  Заповнити поля для рамкової угоди  ${tender_data}
+  ...  ELSE IF  "${tender_data.data.procurementMethodType}" ==  "closeFrameworkAgreementUA"  Заповнити поля для рамкової угоди  ${tender_data}
 #  ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "reporting"  Wait And Select From List By Value  name=tender_method  limited_reporting
 #  Conv And Select From List By Value  name=Tender[value][valueAddedTaxIncluded]  ${valueAddedTaxIncluded}
 
@@ -472,15 +472,15 @@ Add milestone_tender
   Log  ${tender_data}
   Input Text  xpath=//*[@name="Tender[title_en]"]  ${tender_data.data.title_en}
 
-#Заповнити поля для рамкової угоди
-#  [Arguments]  ${tender_data}
-#  Input Text  xpath=//*[@id="tender-maxawardscount"]  ${tender_data.data.maxAwardsCount}
-#  Click Element  xpats=//*[@class="durationPicker-ui"]
-#  Wait Until Element Is Visible  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]
-#  Дочекатися і клікнути  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]
-#  Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]  ${tender_data.data.agreementDuration}
-#  Wait Element Animation  xpats=//[@class="durationPicker-select clear"]
-#  Input Text  xpath=//*[@id="tender-title_en"]  ${tender_data.data.title_en}
+Заповнити поля для рамкової угоди
+  [Arguments]  ${tender_data}
+  Input Text  xpath=//*[@id="tender-maxawardscount"]  ${tender_data.data.maxAwardsCount}
+  Click Element  xpats=//*[@class="durationPicker-ui"]
+  Wait Until Element Is Visible  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]
+  Дочекатися і клікнути  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]
+  Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]  ${tender_data.data.agreementDuration}
+  Wait Element Animation  xpats=//[@class="durationPicker-select clear"]
+  Input Text  xpath=//*[@id="tender-title_en"]  ${tender_data.data.title_en}
 
 Додати багато лотів
   [Arguments]  ${tender_data}
