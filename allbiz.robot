@@ -1390,10 +1390,14 @@ Get info from funders
   [Arguments]  ${username}  ${tender_uaid}  ${fieldname}  ${fieldvalue}
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
   ${status}=  Run Keyword And Return Status  Page Should Not Contain  Замовником внесено зміни в умови
+  ${update}=  Run Keyword And Return Status  Page Should Contain  Недійсна
   Run Keyword If  ${status}  ConvToStr And Input Text  xpath=//input[contains(@name,'[value][amount]')]  ${fieldvalue}
   ...  ELSE  Подати Пропозицію Без Накладення ЕЦП
+  Run Keyword If  ${update}  Select Checkbox  xpath=//*[@class="competitiveCheckbox"]
+  ...  AND  Дочекатися І Клікнути  xpath=//button[@id="submit_bid"]
   Подати Пропозицію Без Накладення ЕЦП
   Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  xpath=//div[contains(@class, 'alert-success')]
+
 
 Завантажити документ в ставку
   [Arguments]  ${username}  ${path}  ${tender_uaid}  ${doc_type}=technicalSpecifications
