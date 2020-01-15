@@ -327,7 +327,7 @@ Update plan items info
 #  Run Keyword If  "aboveThreshold" in "${tender_data.data.procurementMethodType}"  Conv And Select From List By Value  xpath=(//select[@id="guarantee-exist"])[3]  1
 #  ...  ELSE  Conv And Select From List By Value  xpath=(//select[@id="guarantee-exist"])[1]  1
 #  Conv And Select From List By Value  xpath=(//*[@data-test-id="guarantee-exist"])[${index_strategy}]  1
-  Execute Javascript  document.querySelector('[name="fast_forward"]').setAttribute("checked", 'checked');
+  Execute Javascript  document.querySelector('[name="fast_forward"]').checked;
 
 #  Wait Until Keyword Succeeds  10 x  1 s  Check It  document.querySelector('[name="fast_forward"]').setAttribute("checked", 'checked');
 
