@@ -1372,7 +1372,7 @@ Get info from funders
   Run Keyword If  ${meat} > 0  Вибрати нецінові показники в пропозиції  ${bid}
   Run Keyword If  ${selfeligible_status}  Дочекатися І Клікнути  xpath=//input[@id="bid-selfeligible"]/..
   Run Keyword If  ${selfqualified_status}  Дочекатися І Клікнути  xpath=//input[@id="bid-selfqualified"]/..
-#  Подати Пропозицію Без Накладення ЕЦП
+  Подати Пропозицію Без Накладення ЕЦП
   Wait Until Element Is Visible  xpath=//div[contains(@class, 'alert-success')]
 
 Подати Пропозицію Без Накладення ЕЦП
@@ -1488,7 +1488,7 @@ Get info from funders
 Підтвердити кваліфікацію
   [Arguments]  ${username}  ${tender_uaid}  ${qualification_num}
   ${document}=  get_upload_file_path
-  ${qualification_num}=  Set Variable If  "${qualification_num}" == "-1"  1  ${qualification_num}  # Needed in cause of getting -1 for second qualifyer from Quinta`s code
+#  ${qualification_num}=  Set Variable If  "${qualification_num}" == "-1"  1  ${qualification_num}  # Needed in cause of getting -1 for second qualifyer from Quinta`s code
 #  allbiz.Завантажити документ у кваліфікацію  ${username}  ${document}  ${tender_uaid}  ${qualification_num}
 #  Wait And Select From List By Value  xpath=//select[@id="document-type-0"]  awardNotice
   ${qualification_num}=  Convert To Integer  ${qualification_num}
