@@ -334,7 +334,7 @@ Update plan items info
   Run Keyword If  "esco" in "${tender_data.data.procurementMethodType}"  Fill ESCO filds  ${tender_data}
   ...  ELSE  Fill tender filds  ${tender_data}
 
-  Run Keyword If  "${tender_data.data.procurementMethodType}" == "below"  Заповнити поля для допорогової закупівлі  ${tender_data}
+  Run Keyword If  "${tender_data.data.procurementMethodType}" == "belowThreshold"  Заповнити поля для допорогової закупівлі  ${tender_data}
   ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "aboveThreshold"  Заповнити поля для понадпорогів  ${tender_data}
   ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "negotiation"  Заповнити поля для переговорної процедури  ${tender_data}
   ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "competitiveDialogueEU"  Заповнити поля для конкурентного діалогу  ${tender_data}
@@ -1495,12 +1495,14 @@ Get info from funders
 
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//*[contains(@href,"tender/euprequalification/")]
-  Дочекатися І Клікнути  xpath=//*[@name="Qualifications[${qualification_num}][qualified]"]/ancestor::div[@class="col-xs-12"]/descendant::button[@class="mk-btn mk-btn_accept"]
-  Wait Until Keyword Succeeds  5x  1s   Page Should Contain Element  xpath=//*[@name="Qualifications[${qualification_num}][action]"]
-#  Дочекатися І Клікнути  xpath=//*[@name="Qualifications[${qualification_num} + 1][action]"]
-  Select From list By Index  xpath=//*[@name="Qualifications[${qualification_num}][action]"]  0
-  Click Element  xpath=//*[@name="Qualifications[${qualification_num}][qualified]"]/ancestor::div[contains(@class,"field-wrapper ")]
-  Click Element  xpath=//*[@name="Qualifications[${qualification_num}][eligible]"]/ancestor::div[contains(@class,"field-wrapper ")]
+#  ${status}=  Run Keyword And Return Status  Wait Until Element Is Visible  xpath=//button[@data-dismiss="modal"]  5
+#  Run Keyword If  ${status}  Закрити модалку  xpath=//button[@data-dismiss="modal"]
+  Дочекатися І Клікнути  xpath=//*[@name="Qualifications[${qualification_num * -1}][qualified]"]/ancestor::div[@class="col-xs-12"]/descendant::button[@class="mk-btn mk-btn_accept"]
+  Wait Element Animation  xpath=//*[@class="fade modal in"]
+#  Дочекатися І Клікнути  xpath=//*[@name="Qualifications[${qualification_num}][action]"]
+  Select From list By Index  xpath=//*[@name="Qualifications[${qualification_num * -1}][action]"]  0
+  Click Element  xpath=//*[@name="Qualifications[${qualification_num * -1}][qualified]"]/ancestor::div[contains(@class,"field-wrapper ")]
+  Click Element  xpath=//*[@name="Qualifications[${qualification_num * -1}][eligible]"]/ancestor::div[contains(@class,"field-wrapper ")]
   Click Element  xpath=(//*[@class="mk-btn mk-btn_accept btn-submitform_qualification"])[1]
   Wait Until Keyword Succeeds  5x  1s   Page Should Contain Element  xpath=//*[@name="cancel_prequalification"]
 
