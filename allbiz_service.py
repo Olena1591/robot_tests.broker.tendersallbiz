@@ -110,7 +110,6 @@ def convert_string_from_dict_allbiz(string):
         u'Визначення переможців': u'active.qualification',
         u'Відкриті торги для закупівлі енергосервісу': u'esco',
         u'співфінансування з бюджетних коштів': u'budget',
-        u'Швейцарська Конфедерація': u'Switzerland',
         u'Очікування переведення': u'active.stage2.pending',
         u'Укладання рамкової угоди': u'closeFrameworkAgreementUA',
         u'Пропозицiї розглянуто': u'active.qualification',
