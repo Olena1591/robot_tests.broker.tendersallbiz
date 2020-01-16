@@ -484,11 +484,14 @@ Add milestone_tender
 
 Заповнити поля для рамкової угоди
   [Arguments]  ${tender_data}
+#  ${tender_data.data.agreementDuration}=  Convert To String  ${tender_data.data.agreementDuration}
   Input Text  xpath=//*[@id="tender-maxawardscount"]  ${tender_data.data.maxAwardsCount}
-  Click Element  xpath=//*[@class="durationPicker-ui"]
+  Set Focus To Element  xpath=//*[@class="durationPicker-ui"]
   Wait Until Element Is Visible  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]
   Дочекатися і клікнути  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]
-  Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]  ${tender_data.data.agreementDuration}
+  Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]/descendant::input[@type="number"]  (${tender_data.data.agreementDuration})[1]
+  Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-M"]/descendant::input[@type="number"]  (${tender_data.data.agreementDuration})[3]
+  Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-D"]/descendant::input[@type="number"]  (${tender_data.data.agreementDuration})[5]
   Wait Element Animation  xpats=//[@class="durationPicker-select clear"]
   Input Text  xpath=//*[@id="tender-title_en"]  ${tender_data.data.title_en}
 
@@ -741,6 +744,14 @@ Go To And Assert
 
 allbiz.Перевести тендер на статус очікування обробки мостом
   [Arguments]  ${username}  ${tender_uaid}
+  allbiz.Пошук тендера по ідентифікатору
+  Click Element  xpath=//*[@class="mk-btn mk-btn_danger"]/ancestor::div[@class="text-center"]
+  Wait Until Keyword Succeeds  5x  1s   Page Should Contain  Очікування 2-го етапу
+
+allbiz.Отримати тендер другого етапу та зберегти його
+  [Arguments]  ${username}  ${tender_uaid}
+  allbiz.Пошук тендера по ідентифікатору
+
 
 
 

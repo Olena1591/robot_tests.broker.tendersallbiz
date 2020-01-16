@@ -111,6 +111,8 @@ def convert_string_from_dict_allbiz(string):
         u'Відкриті торги для закупівлі енергосервісу': u'esco',
         u'співфінансування з бюджетних коштів': u'budget',
         u'Швейцарська Конфедерація': u'Switzerland',
+        u'Очікування переведення': u'active.stage2.pending',
+        u'Укладання рамкової угоди': u'closeFrameworkAgreementUA',
     }.get(string, string)
 
 
@@ -160,6 +162,8 @@ def adapt_view_tender_data(value, field_name):
         value = float(value[0:5]) / 100
     elif 'minimalStepPercentage' in field_name:
         value = float(value[0:5]) / 100
+    elif 'maxAwardsCount' in field_name:
+        value = int(value)
     return convert_string_from_dict_allbiz(value)
 
 
