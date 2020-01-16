@@ -485,7 +485,7 @@ Add milestone_tender
 Заповнити поля для рамкової угоди
   [Arguments]  ${tender_data}
   Input Text  xpath=//*[@id="tender-maxawardscount"]  ${tender_data.data.maxAwardsCount}
-  Click Element  xpats=//*[@class="durationPicker-ui"]
+  Click Element  xpath=//*[@class="durationPicker-ui"]
   Wait Until Element Is Visible  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]
   Дочекатися і клікнути  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]
   Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]  ${tender_data.data.agreementDuration}
