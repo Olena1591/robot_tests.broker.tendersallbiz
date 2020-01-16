@@ -1168,6 +1168,8 @@ Feature Count Should Not Be Zero
   ...  ELSE IF  '${field_name}' == 'procuringEntity.identifier.scheme'  Get Element Attribute  xpath=//*[@data-test-id="procuringEntity.identifier.scheme"]@value
   ...  ELSE IF  '${field_name}' == 'documents[0].title'  Get Text  xpath=//a[contains(@href,"docs-sandbox")]
   ...  ELSE IF  '${field_name}' == 'contracts[0].status'  Отримати статус контракта  ${username}  ${tender_uaid}
+  ...  ELSE IF  '${field_name}' == 'lots[0].minimalStepPercentage'  Get Text  xpath=//*[@data-test-id="minimalStepPercentage"]
+  ...  ELSE IF  '${field_name}' == 'lots[0].yearlyPaymentsPercentageRange'  Get Text  xpath=//*[@data-test-id="yearlyPaymentsPercentageRange"]
   ...  ELSE IF   "stones" in "${field_name}"  allbiz.Get Info From Tender Milestones  ${field_name}
   ...  ELSE IF   "fundingKind" in "${field_name}"  Get Text  xpath=//*[@data-test-id="fundingKind"]
   ...  ELSE  Get Text  xpath=//*[@data-test-id="${field_name}"]
