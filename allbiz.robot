@@ -416,7 +416,6 @@ Fill ESCO filds
   ...  AND  ConvToStr And Input Text  xpath=//*[@id="tender-yearlypaymentspercentagerange"]  ${tender_data.data.yearlyPaymentsPercentageRange}
   ...  AND  Input Text  xpath=//*[@id="tender-title_en"]  ${tender_data.data.title_en}
   ...  ELSE  Додати багато лотів  ${tender_data}
-
   Input Text  xpath=//*[@id="tender-title_en"]  ${tender_data.data.description_en}
 
 
@@ -486,13 +485,14 @@ Add milestone_tender
   [Arguments]  ${tender_data}
 #  ${tender_data.data.agreementDuration}=  Convert To String  ${tender_data.data.agreementDuration}
   Input Text  xpath=//*[@id="tender-maxawardscount"]  ${tender_data.data.maxAwardsCount}
-  Set Focus To Element  xpath=//*[@class="durationPicker-ui"]
-  Wait Until Element Is Visible  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]
+  Mouse Over  xpath=//*[@class="durationPicker-ui"]
+  Capture Page Screenshot
+  Wait Until Element Is Visible  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]  10
   Дочекатися і клікнути  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]
   Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]/descendant::input[@type="number"]  (${tender_data.data.agreementDuration})[1]
   Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-M"]/descendant::input[@type="number"]  (${tender_data.data.agreementDuration})[3]
   Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-D"]/descendant::input[@type="number"]  (${tender_data.data.agreementDuration})[5]
-  Wait Element Animation  xpats=//[@class="durationPicker-select clear"]
+  Wait Element Animation  xpath=//[@class="durationPicker-select clear"]
   Input Text  xpath=//*[@id="tender-title_en"]  ${tender_data.data.title_en}
 
 Додати багато лотів
@@ -650,6 +650,13 @@ Add Item Tender
   :FOR   ${index}   IN RANGE   ${enum_length}
   \   Run Keyword if   ${index} != 0   Дочекатися І Клікнути   xpath=//input[@name="Tender[features][${feature_index}][title]"]/ancestor::div[@class="feature"]/descendant::button[contains(@class,"add_feature_enum")]
   \   Додати опцію   ${feature.enum[${index}]}   ${index}   ${feature_index}
+
+allbiz.Редагувати угоду
+  [Arguments]  ${username}  ${tender_uaid}  ${contract_index}  ${fieldname}  ${fieldvalue}
+  allbiz.Пошук тендера по ідентифікатору
+
+
+
 
 
 #Index Should Not Be Zero
@@ -1398,8 +1405,26 @@ Get info from funders
 Ввести пропозицію для лотової зкупівлі
   [Arguments]  ${bid}
   ${number_of_lots}=  Get Length  ${bid.data.lotValues}
+  Run Keyword If  '${mode}' != 'esco'
+  ...  :FOR  ${lot_index}  IN RANGE  ${number_of_lots}
+       \  ConvToStr And Input Text  name=Bid[lotValues][${bid.data.lotValues[${lot_index}].relatedLot}][value][amount]  ${bid.data.lotValues[${lot_index}].value.amount}
+  ...  ELSE  Add esco bid  ${bid}
+
+
+Add esco bid
+  [Arguments]  ${bid}
+  ${number_of_lots}=  Get Length  ${bid.data.lotValues}
+  ${length_reduction}=  Get Matching Xpath Count  xpath=//*[@name="Bid[lotValues][${bid.data.lotValues.relatedLot}][value][annualCostsReduction][]"]
+  ${length_reduction}=  Convert To Integer  ${length_reduction}
+
   :FOR  ${lot_index}  IN RANGE  ${number_of_lots}
-  \  ConvToStr And Input Text  name=Bid[lotValues][${bid.data.lotValues[${lot_index}].relatedLot}][value][amount]  ${bid.data.lotValues[${lot_index}].value.amount}
+   \  Дочекатися І Клікнути  xpath=//*[contains(@class,"btn btn-default collapsed")and contains(@aria-controls, "${bid.data.lotValues.relatedLot}")]
+   \  Wait And Select From List By Value  xpath=//*[contains(@id,"${bid.data.lotValues.relatedLot}")and contains(@class, "js_contract-duration-years")]  ${bid.data.lotValues[${lot_index}].value.contractDuration.years}
+   \  Input Text  xpatsh=//*[contains(@id,"${bid.data.lotValues.relatedLot}")and contains(@class, "js_contract-duration-days")]  ${bid.data.lotValues[${lot_index}].value.contractDuration.days}
+   \  Input Text  xpath=//*[contains(@id,"${bid.data.lotValues.relatedLot}")and contains(@class, "js_required-field-esco")]  ${bid.data.lotValues[${lot_index}].value.yearlyPaymentsPercentage}
+   ...  :FOR  ${index_reduction}  IN RANGE  ${length_reduction}
+        \  Input Text  xpath=//*[contains(@id,"${bid.data.lotValues.relatedLot}")and contains(@class, "annual-costs-reduction")][${index_reduction + 1}]  ${bid.data.lotValues[${lot_index}].value.annualCostsReduction[${index_reduction}]}
+
 
 Вибрати нецінові показники в пропозиції
   [Arguments]  ${bid}
