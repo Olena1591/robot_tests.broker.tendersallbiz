@@ -486,13 +486,12 @@ Add milestone_tender
 #  ${tender_data.data.agreementDuration}=  Convert To String  ${tender_data.data.agreementDuration}
   Input Text  xpath=//*[@id="tender-maxawardscount"]  ${tender_data.data.maxAwardsCount}
   Mouse Over  xpath=//*[@class="durationPicker-ui"]
-  Capture Page Screenshot
   Wait Until Element Is Visible  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]  10
   Дочекатися і клікнути  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]
   Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]/descendant::input[@type="number"]  (${tender_data.data.agreementDuration})[1]
   Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-M"]/descendant::input[@type="number"]  (${tender_data.data.agreementDuration})[3]
   Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-D"]/descendant::input[@type="number"]  (${tender_data.data.agreementDuration})[5]
-  Wait Element Animation  xpath=//[@class="durationPicker-select clear"]
+  Mouse Down On Imagen  xpath=//*[@class="durationPicker-ui"]
   Input Text  xpath=//*[@id="tender-title_en"]  ${tender_data.data.title_en}
 
 Додати багато лотів
@@ -654,6 +653,7 @@ Add Item Tender
 allbiz.Редагувати угоду
   [Arguments]  ${username}  ${tender_uaid}  ${contract_index}  ${fieldname}  ${fieldvalue}
   allbiz.Пошук тендера по ідентифікатору
+  Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
 
 
 
@@ -1589,7 +1589,7 @@ Add esco bid
   ${document}=  get_upload_file_path
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
-  Wait Until Keyword Succeeds  5 x  0.5 s  Дочекатися І Клікнути  xpath=//button[text()="Контракт"]
+  Wait Until Keyword Succeeds  5 x  0.5 s  Дочекатися І Клікнути  xpath=//button[@class="mk-btn mk-btn_default js-btn-contract-award"]
   Wait Until Element Is Visible  xpath=//*[text()="Додати документ"]
   Choose File  xpath=//input[@type="file"]  ${document}
   Wait And Select From List By Value  //select[@id="document-0-documentType"]  contractSigned
