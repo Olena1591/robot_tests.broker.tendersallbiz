@@ -684,6 +684,7 @@ Get Last Feature Index
   Input Text   name=Tender[features][${feature_index}][enum][${index}][title]   ${enum.title}
   Run Keyword If   '${mode}' == 'openeu'  Input Text   name=Tender[features][${feature_index}][enum][${index}][title_en]   ${enum.title}
   ...  ELSE IF  '${mode}' == 'open_esco'  Input Text  name=Tender[features][${feature_index}][enum][${index}][title_en]  ${enum.title}
+  ...  ELSE IF  '${mode}' == 'open_framework'  Input text  name=Tender[features][${feature_index}][enum][${index}][title_en]  ${enum.title}
   Input Text   name=Tender[features][${feature_index}][enum][${index}][value]   ${enum_value}
 
 Завантажити документ
