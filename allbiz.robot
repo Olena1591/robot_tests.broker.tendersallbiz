@@ -491,7 +491,7 @@ Add milestone_tender
   Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]/descendant::input[@type="number"]  (${tender_data.data.agreementDuration})[1]
   Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-M"]/descendant::input[@type="number"]  (${tender_data.data.agreementDuration})[3]
   Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-D"]/descendant::input[@type="number"]  (${tender_data.data.agreementDuration})[5]
-  Mouse Down On Imagen  xpath=//*[@class="durationPicker-ui"]
+  Mouse Out  xpath=//*[@class="durationPicker-ui"]
   Input Text  xpath=//*[@id="tender-title_en"]  ${tender_data.data.title_en}
 
 Додати багато лотів
