@@ -488,9 +488,9 @@ Add milestone_tender
   Mouse Over  xpath=//*[@class="durationPicker-ui"]
   Wait Until Element Is Visible  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]  10
   Дочекатися і клікнути  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]
-  Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]/descendant::input[@type="number"]  (${tender_data.data.agreementDuration})[1]
-  Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-M"]/descendant::input[@type="number"]  (${tender_data.data.agreementDuration})[3]
-  Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-D"]/descendant::input[@type="number"]  (${tender_data.data.agreementDuration})[5]
+  Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-Y"]/descendant::input[@type="number"]  ${tender_data.data.agreementDuration[1]}
+  Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-M"]/descendant::input[@type="number"]  ${tender_data.data.agreementDuration[3]}
+  Input Text  xpath=//*[@class="durationPicker-select-field durationPicker-select-field-0-D"]/descendant::input[@type="number"]  ${tender_data.data.agreementDuration[5]}
   Mouse Out  xpath=//*[@class="durationPicker-ui"]
   Input Text  xpath=//*[@id="tender-title_en"]  ${tender_data.data.title_en}
 
@@ -1018,6 +1018,7 @@ Feature Count Should Not Be Zero
   Run Keyword If  ${confirmation_data.data.satisfied}  Дочекатися І Клікнути  xpath=//button[@name="complaint_resolved"]
   ...  ELSE  Дочекатися І Клікнути  xpath=//button[@name="claim_satisfied_false"]
   Wait Until Keyword Succeeds  30 x  1 s  Page Should Contain Element  xpath=//*[@data-test-id="complaint.satisfied"]
+  Sleep  360
 
 Створити вимогу про виправлення умов лоту
   [Arguments]  ${username}  ${tender_uaid}  ${claim}  ${lot_id}  ${document}=${None}
