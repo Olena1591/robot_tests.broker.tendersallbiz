@@ -759,6 +759,9 @@ allbiz.Перевести тендер на статус очікування о
 allbiz.Отримати тендер другого етапу та зберегти його
   [Arguments]  ${username}  ${tender_uaid}
   allbiz.Пошук тендера по ідентифікатору
+  Click Element  xpath=//*[@class="mk-btn mk-btn_accept"]
+  Wait Until Keyword Succeeds  5x  1s   Page Should Contain  Чернетка 2-гий етап
+  Click Element  xpath=//*[@name="stage2_active_tendering"]
 
 
 
@@ -1427,11 +1430,10 @@ Add esco bid
   \   Wait And Select From List By Value  xpath=//*[contains(@id,"${bid.data.lotValues.relatedLot}")and contains(@class, "js_contract-duration-years")]  ${bid.data.lotValues[${lot_index}].value.contractDuration.years}
   \   Input Text  xpatsh=//*[contains(@id,"${bid.data.lotValues.relatedLot}")and contains(@class, "js_contract-duration-days")]  ${bid.data.lotValues[${lot_index}].value.contractDuration.days}
   \   Input Text  xpath=//*[contains(@id,"${bid.data.lotValues.relatedLot}")and contains(@class, "js_required-field-esco")]  ${bid.data.lotValues[${lot_index}].value.yearlyPaymentsPercentage}
-  \   Add annual costs reduction  ${bid.data.lotValues[${lot_index}].value}
-
+  \   Add annual costs reduction  ${lot_index}  ${bid.data.lotValues[${lot_index}].value}
 
 Add annual costs reduction
-  [Arguments]   ${bid.data.lotValues[${lot_index}].value}
+  [Arguments]   ${lot_index}  ${bid.data.lotValues[${lot_index}].value}
   ${length_reduction}=  Get Matching Xpath Count  xpath=//*[@name="Bid[lotValues][${bid.data.lotValues.relatedLot}][value][annualCostsReduction][]"]
   ${length_reduction}=  Convert To Integer  ${length_reduction}
 
@@ -1581,7 +1583,7 @@ Add annual costs reduction
   Дочекатися І Клікнути  xpath=//button[@name="cancel_prequalification"]
 
 
-Скасування рішення кваліфікаційної комісії
+allbiz.Скасування рішення кваліфікаційної комісії
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}
 
 
