@@ -1577,7 +1577,8 @@ Add annual costs reduction
   [Arguments]  ${username}  ${tender_uaid}  ${qualification_num}
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
   ${qualification_num}=  Convert To Integer  ${qualification_num}
-  Дочекатися І Клікнути  name=cancel_prequalification
+  Дочекатися І Клікнути  xpath=//*[contains(@href,"tender/euprequalification/")]
+  Дочекатися І Клікнути  xpath=//button[@name="cancel_prequalification"]
 
 
 Скасування рішення кваліфікаційної комісії
