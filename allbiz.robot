@@ -1410,8 +1410,10 @@ Get info from funders
 Ввести пропозицію для лотової зкупівлі
   [Arguments]  ${bid}
   ${number_of_lots}=  Get Length  ${bid.data.lotValues}
-  Run Keyword If  '${mode}' != 'esco'  Add bid  ${bid}
-  ...  ELSE  Add esco bid  ${bid}
+#  Run Keyword If  '${mode}' != 'esco'  Add bid  ${bid}
+#  ...  ELSE  Add esco bid  ${bid}
+  Run Keyword If  'annualCostsReduction' in '${bid.value}  Add esco bid  ${bid}
+  ...  ELSE  Add bid  ${bid}
 
 Add bid
   [Arguments]  ${bid}
@@ -1585,7 +1587,8 @@ Add annual costs reduction
 
 allbiz.Скасування рішення кваліфікаційної комісії
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}
-
+  allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
+  Дочекатися І Клікнути  xpath=//button[@class="mk-btn mk-btn_danger btn-award"]
 
 
 
