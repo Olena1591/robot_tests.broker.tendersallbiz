@@ -1406,10 +1406,13 @@ Get info from funders
 Ввести пропозицію для лотової зкупівлі
   [Arguments]  ${bid}
   ${number_of_lots}=  Get Length  ${bid.data.lotValues}
-  Run Keyword If  '${mode}' != 'esco'
-  ...  :FOR  ${lot_index}  IN RANGE  ${number_of_lots}
-       \  ConvToStr And Input Text  name=Bid[lotValues][${bid.data.lotValues[${lot_index}].relatedLot}][value][amount]  ${bid.data.lotValues[${lot_index}].value.amount}
+  Run Keyword If  '${mode}' != 'esco'  Add bid  ${bid}
   ...  ELSE  Add esco bid  ${bid}
+
+Add bid
+  [Arguments]  ${bid}
+   :FOR  ${lot_index}  IN RANGE  ${number_of_lots}
+   \  ConvToStr And Input Text  name=Bid[lotValues][${bid.data.lotValues[${lot_index}].relatedLot}][value][amount]  ${bid.data.lotValues[${lot_index}].value.amount}
 
 
 Add esco bid
