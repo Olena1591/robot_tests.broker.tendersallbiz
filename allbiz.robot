@@ -1419,16 +1419,24 @@ Add bid
 Add esco bid
   [Arguments]  ${bid}
   ${number_of_lots}=  Get Length  ${bid.data.lotValues}
+#  ${length_reduction}=  Get Matching Xpath Count  xpath=//*[@name="Bid[lotValues][${bid.data.lotValues.relatedLot}][value][annualCostsReduction][]"]
+#  ${length_reduction}=  Convert To Integer  ${length_reduction}
+
+  :FOR  ${lot_index}  IN RANGE  ${number_of_lots}
+  \   Дочекатися І Клікнути  xpath=//*[contains(@class,"btn btn-default collapsed")and contains(@aria-controls, "${bid.data.lotValues.relatedLot}")]
+  \   Wait And Select From List By Value  xpath=//*[contains(@id,"${bid.data.lotValues.relatedLot}")and contains(@class, "js_contract-duration-years")]  ${bid.data.lotValues[${lot_index}].value.contractDuration.years}
+  \   Input Text  xpatsh=//*[contains(@id,"${bid.data.lotValues.relatedLot}")and contains(@class, "js_contract-duration-days")]  ${bid.data.lotValues[${lot_index}].value.contractDuration.days}
+  \   Input Text  xpath=//*[contains(@id,"${bid.data.lotValues.relatedLot}")and contains(@class, "js_required-field-esco")]  ${bid.data.lotValues[${lot_index}].value.yearlyPaymentsPercentage}
+  \   Add annual costs reduction  ${bid.data.lotValues[${lot_index}].value}
+
+
+Add annual costs reduction
+  [Arguments]   ${bid.data.lotValues[${lot_index}].value}
   ${length_reduction}=  Get Matching Xpath Count  xpath=//*[@name="Bid[lotValues][${bid.data.lotValues.relatedLot}][value][annualCostsReduction][]"]
   ${length_reduction}=  Convert To Integer  ${length_reduction}
 
-  :FOR  ${lot_index}  IN RANGE  ${number_of_lots}
-   \  Дочекатися І Клікнути  xpath=//*[contains(@class,"btn btn-default collapsed")and contains(@aria-controls, "${bid.data.lotValues.relatedLot}")]
-   \  Wait And Select From List By Value  xpath=//*[contains(@id,"${bid.data.lotValues.relatedLot}")and contains(@class, "js_contract-duration-years")]  ${bid.data.lotValues[${lot_index}].value.contractDuration.years}
-   \  Input Text  xpatsh=//*[contains(@id,"${bid.data.lotValues.relatedLot}")and contains(@class, "js_contract-duration-days")]  ${bid.data.lotValues[${lot_index}].value.contractDuration.days}
-   \  Input Text  xpath=//*[contains(@id,"${bid.data.lotValues.relatedLot}")and contains(@class, "js_required-field-esco")]  ${bid.data.lotValues[${lot_index}].value.yearlyPaymentsPercentage}
-   ...  :FOR  ${index_reduction}  IN RANGE  ${length_reduction}
-        \  Input Text  xpath=//*[contains(@id,"${bid.data.lotValues.relatedLot}")and contains(@class, "annual-costs-reduction")][${index_reduction + 1}]  ${bid.data.lotValues[${lot_index}].value.annualCostsReduction[${index_reduction}]}
+   :FOR  ${index_reduction}  IN RANGE  ${length_reduction}
+   \   Input Text  xpath=//*[contains(@id,"${bid.data.lotValues.relatedLot}")and contains(@class, "annual-costs-reduction")][${index_reduction + 1}]  ${bid.data.lotValues[${lot_index}].value.annualCostsReduction[${index_reduction}]}
 
 
 Вибрати нецінові показники в пропозиції
