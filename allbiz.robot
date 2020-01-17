@@ -652,7 +652,7 @@ Add Item Tender
 
 allbiz.Редагувати угоду
   [Arguments]  ${username}  ${tender_uaid}  ${contract_index}  ${fieldname}  ${fieldvalue}
-  allbiz.Пошук тендера по ідентифікатору
+  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
 
 
@@ -1460,7 +1460,7 @@ Add annual costs reduction
   [Arguments]  ${username}  ${tender_uaid}  ${fieldname}  ${fieldvalue}
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
   ${status}=  Run Keyword And Return Status  Page Should Not Contain  Замовником внесено зміни в умови
-  ${update}=  Run Keyword And Return Status  Page Should Contain  Недійсна
+  ${update}=  Run Keyword And Return Status  Page Should Contain  Замовником внесено зміни в умови
   Run Keyword If  ${status}  ConvToStr And Input Text  xpath=//input[contains(@name,'[value][amount]')]  ${fieldvalue}
   ...  AND  Дочекатися І Клікнути  xpath=//button[@id="submit_bid"]
   ...  ELSE IF  ${update}  Select Checkbox  xpath=//*[@class="competitiveCheckbox"]
@@ -1615,8 +1615,8 @@ allbiz.Скасування рішення кваліфікаційної ком
   Wait Until Element Is Not Visible  xpath=//button[text()='Завантажити']
   Wait Until Keyword Succeeds  20 x  30 s  Run Keywords
   ...  Reload Page
-  ...  AND  Element Should Be Visible  xpath=//button[text()="Контракт"]
-  ...  AND  Click Element  xpath=//button[text()="Контракт"]
+  ...  AND  Element Should Be Visible  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
+  ...  AND  Click Element  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
   ...  AND  Page Should Not Contain  Файл завантажується...
   ...  AND  Page Should Contain Element  xpath=//button[contains(@class, "btn_submit_award_contract_activate")]
   Wait Element Animation  xpath=//*[contains(@name,"[dateSigned]")]
