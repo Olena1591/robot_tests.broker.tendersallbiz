@@ -1019,7 +1019,7 @@ Feature Count Should Not Be Zero
   Run Keyword If  ${confirmation_data.data.satisfied}  Дочекатися І Клікнути  xpath=//button[@name="complaint_resolved"]
   ...  ELSE  Дочекатися І Клікнути  xpath=//button[@name="claim_satisfied_false"]
   Wait Until Keyword Succeeds  30 x  1 s  Page Should Contain Element  xpath=//*[@data-test-id="complaint.satisfied"]
-  Sleep  360
+  Sleep  600
 
 Створити вимогу про виправлення умов лоту
   [Arguments]  ${username}  ${tender_uaid}  ${claim}  ${lot_id}  ${document}=${None}
@@ -1412,8 +1412,8 @@ Get info from funders
 
 Add bid
   [Arguments]  ${bid}
-   :FOR  ${lot_index}  IN RANGE  ${number_of_lots}
-   \  ConvToStr And Input Text  name=Bid[lotValues][${bid.data.lotValues[${lot_index}].relatedLot}][value][amount]  ${bid.data.lotValues[${lot_index}].value.amount}
+  :FOR  ${lot_index}  IN RANGE  ${number_of_lots}
+  \   ConvToStr And Input Text  name=Bid[lotValues][${bid.data.lotValues[${lot_index}].relatedLot}][value][amount]  ${bid.data.lotValues[${lot_index}].value.amount}
 
 
 Add esco bid
