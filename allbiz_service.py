@@ -161,7 +161,7 @@ def adapt_view_tender_data(value, field_name):
     elif 'NBUdiscountRate' in field_name:
         value = float(value[0:6]) / 100
     elif 'minimalStepPercentage' in field_name:
-        value = float(value[0:5]) / 100
+        value = float(value[0:4]) / 100
     elif 'maxAwardsCount' in field_name:
         value = int(value)
     elif 'agreementDuration' in field_name:
