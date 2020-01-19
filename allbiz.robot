@@ -1427,10 +1427,10 @@ Add esco bid
 #  ${length_reduction}=  Convert To Integer  ${length_reduction}
 
   :FOR  ${lot_index}  IN RANGE  ${number_of_lots}
-  \   Дочекатися І Клікнути  xpath=//*[contains(@class,"btn btn-default collapsed")and contains(@aria-controls, "${bid.data.lotValues.relatedLot}")]
-  \   Wait And Select From List By Value  xpath=//*[contains(@id,"${bid.data.lotValues.relatedLot}")and contains(@class, "js_contract-duration-years")]  ${bid.data.lotValues[${lot_index}].value.contractDuration.years}
-  \   Input Text  xpatsh=//*[contains(@id,"${bid.data.lotValues.relatedLot}")and contains(@class, "js_contract-duration-days")]  ${bid.data.lotValues[${lot_index}].value.contractDuration.days}
-  \   Input Text  xpath=//*[contains(@id,"${bid.data.lotValues.relatedLot}")and contains(@class, "js_required-field-esco")]  ${bid.data.lotValues[${lot_index}].value.yearlyPaymentsPercentage}
+  \   Дочекатися І Клікнути  xpath=//*[contains(@class,"btn btn-default collapsed")and contains(@aria-controls, "${bid.data.lotValues[${lot_index}].relatedLot}")]
+  \   Wait And Select From List By Value  xpath=//*[contains(@id,"${bid.data.lotValues[${lot_index}].relatedLot}")and contains(@class, "js_contract-duration-years")]  ${bid.data.lotValues[${lot_index}].value.contractDuration.years}
+  \   Input Text  xpatsh=//*[contains(@id,"${bid.data.lotValues[${lot_index}].relatedLot}")and contains(@class, "js_contract-duration-days")]  ${bid.data.lotValues[${lot_index}].value.contractDuration.days}
+  \   Input Text  xpath=//*[contains(@id,"${bid.data.lotValues[${lot_index}].relatedLot}")and contains(@class, "js_required-field-esco")]  ${bid.data.lotValues[${lot_index}].value.yearlyPaymentsPercentage}
   \   Add annual costs reduction  ${lot_index}  ${bid.data.lotValues[${lot_index}]}
 
 Add annual costs reduction
