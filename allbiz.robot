@@ -1412,18 +1412,17 @@ Get info from funders
   ${number_of_lots}=  Get Length  ${bid.data.lotValues}
 #  Run Keyword If  '${mode}' != 'esco'  Add bid  ${bid}
 #  ...  ELSE  Add esco bid  ${bid}
-  Run Keyword If  'annualCostsReduction' in '${bid.value}  Add esco bid  ${bid}
-  ...  ELSE  Add bid  ${bid}
+  Run Keyword If  '${mode}' == 'open_esco'  Add esco bid  ${bid}  ${number_of_lots}
+  ...  ELSE  Add bid  ${bid}  ${number_of_lots}
 
 Add bid
-  [Arguments]  ${bid}
+  [Arguments]  ${bid}  ${number_of_lots}
   :FOR  ${lot_index}  IN RANGE  ${number_of_lots}
   \   ConvToStr And Input Text  name=Bid[lotValues][${bid.data.lotValues[${lot_index}].relatedLot}][value][amount]  ${bid.data.lotValues[${lot_index}].value.amount}
 
 
 Add esco bid
-  [Arguments]  ${bid}
-  ${number_of_lots}=  Get Length  ${bid.data.lotValues}
+  [Arguments]  ${bid}  ${number_of_lots}
 #  ${length_reduction}=  Get Matching Xpath Count  xpath=//*[@name="Bid[lotValues][${bid.data.lotValues.relatedLot}][value][annualCostsReduction][]"]
 #  ${length_reduction}=  Convert To Integer  ${length_reduction}
 
@@ -1432,15 +1431,15 @@ Add esco bid
   \   Wait And Select From List By Value  xpath=//*[contains(@id,"${bid.data.lotValues.relatedLot}")and contains(@class, "js_contract-duration-years")]  ${bid.data.lotValues[${lot_index}].value.contractDuration.years}
   \   Input Text  xpatsh=//*[contains(@id,"${bid.data.lotValues.relatedLot}")and contains(@class, "js_contract-duration-days")]  ${bid.data.lotValues[${lot_index}].value.contractDuration.days}
   \   Input Text  xpath=//*[contains(@id,"${bid.data.lotValues.relatedLot}")and contains(@class, "js_required-field-esco")]  ${bid.data.lotValues[${lot_index}].value.yearlyPaymentsPercentage}
-  \   Add annual costs reduction  ${lot_index}  ${bid.data.lotValues[${lot_index}].value}
+  \   Add annual costs reduction  ${lot_index}  ${bid.data.lotValues[${lot_index}]}
 
 Add annual costs reduction
-  [Arguments]   ${lot_index}  ${bid.data.lotValues[${lot_index}].value}
-  ${length_reduction}=  Get Matching Xpath Count  xpath=//*[@name="Bid[lotValues][${bid.data.lotValues.relatedLot}][value][annualCostsReduction][]"]
-  ${length_reduction}=  Convert To Integer  ${length_reduction}
+  [Arguments]   ${lot_index}  ${lot_data}
+  ${number_length_reduction_matches}=  Get Matching Xpath Count  xpath=//*[@name="Bid[lotValues][${lot_data.relatedLot}][value][annualCostsReduction][]"]
+  ${number_length_reduction_matches}=  Convert To Integer  ${number_length_reduction_matches}
 
-   :FOR  ${index_reduction}  IN RANGE  ${length_reduction}
-   \   Input Text  xpath=//*[contains(@id,"${bid.data.lotValues.relatedLot}")and contains(@class, "annual-costs-reduction")][${index_reduction + 1}]  ${bid.data.lotValues[${lot_index}].value.annualCostsReduction[${index_reduction}]}
+   :FOR  ${index_reduction}  IN RANGE  ${number_length_reduction_matches}
+   \   Input Text  xpath=//*[contains(@id,"${lot_data.relatedLot}")and contains(@class, "annual-costs-reduction")][${index_reduction + 1}]  ${lot_data.value.annualCostsReduction[${index_reduction}]}
 
 
 Вибрати нецінові показники в пропозиції
