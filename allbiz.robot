@@ -752,13 +752,13 @@ Go To And Assert
 
 allbiz.Перевести тендер на статус очікування обробки мостом
   [Arguments]  ${username}  ${tender_uaid}
-  allbiz.Пошук тендера по ідентифікатору
+  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tenderID}
   Click Element  xpath=//*[@class="mk-btn mk-btn_danger"]/ancestor::div[@class="text-center"]
   Wait Until Keyword Succeeds  5x  1s   Page Should Contain  Очікування 2-го етапу
 
 allbiz.Отримати тендер другого етапу та зберегти його
   [Arguments]  ${username}  ${tender_uaid}
-  allbiz.Пошук тендера по ідентифікатору
+  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tenderID}
   Click Element  xpath=//*[@class="mk-btn mk-btn_accept"]
   Wait Until Keyword Succeeds  5x  1s   Page Should Contain  Чернетка 2-гий етап
   Click Element  xpath=//*[@name="stage2_active_tendering"]
@@ -1525,12 +1525,12 @@ Add annual costs reduction
   Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-award-qualification-button")]
   Wait Element Animation  xpath=//*[@class="h2 text-center"]
   Select From List By Value  xpath=//select[@class="choose_prequalification"]  active
-#  Wait Until Keyword Succeeds  10 x  400 ms  Page Should Contain Element  xpath=(//input[@type="file"])[last()]
   Choose File  xpath=//*[@class="active"]/descendant::input[@type="file"]  ${document}
   Wait Until Element Is Visible  xpath=//select[@id="document-type-0"]
   Select From List By Value  xpath=//select[@id="document-type-0"]  awardNotice
-  Select Checkbox  xpath=//input[@id="award-0-qualified"]
-  Select Checkbox  xpath=//input[@id="award-0-eligible"]
+  Run Keyword If  '${mode}' == 'belowThreshold'  Wait Until Keyword Succeeds  10 x  400 ms  Page Should Contain Element  xpath=(//input[@type="file"])[last()]
+  ...  ELSE    Select Checkbox  xpath=//input[@id="award-0-qualified"]
+  ...  AND  Select Checkbox  xpath=//input[@id="award-0-eligible"]
 
 #  ${status}=  Run Keyword And Return Status  Wait Until Keyword Succeeds  5 x  1 s  Page Should Contain Element  xpath=//input[contains(@id,"qualified")]/..
 #  Run Keyword If  ${status}  Run Keywords
@@ -1538,8 +1538,8 @@ Add annual costs reduction
 #  ...  AND  Дочекатися І Клікнути  xpath=//input[contains(@id,"eligible")]/..
   Дочекатися І Клікнути  xpath=(//*[@name="send_prequalification"])[1]
   Wait Until Element Is Not Visible  xpath=(//*[@name="send_prequalification"])[1]
-  Wait Element Animation  xpath=//*[@class="modal-dialog"]/descendant::button[contains(text(),"Накласти ЕЦП")]
-  Накласти ЄЦП
+  Run Keyword If  '${mode} != 'belowThreshold'  Wait Element Animation  xpath=//*[@class="modal-dialog"]/descendant::button[contains(text(),"Накласти ЕЦП")]
+  ... AND  Накласти ЄЦП
 
 Підтвердити постачальника
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}
