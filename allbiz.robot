@@ -1596,13 +1596,9 @@ allbiz.Скасування рішення кваліфікаційної ком
 #  Дочекатися І Клікнути  xpath=//button[@class="mk-btn mk-btn_danger btn-award"]
 #  Wait Element Animation  xpath//div[@class="modal-footer"][2]
 #  Дочекатися І Клікнути  xpath=//button[@class="btn mk-btn mk-btn_danger"]
-
-  Дочекатися І Клікнути  xpayh=class="mk-btn mk-btn_danger btn-award"
+  Дочекатися І Клікнути  xpath=//*[contains(@href,"tender/award/")]
+  Дочекатися І Клікнути  xpath=class="mk-btn mk-btn_danger btn-award"
   Дочекатися І Клікнути  xpath=//button[@class="btn mk-btn mk-btn_danger"]
-
-
-
-
 
 
 Затвердити остаточне рішення кваліфікації
