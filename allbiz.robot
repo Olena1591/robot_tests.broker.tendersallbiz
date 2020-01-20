@@ -756,21 +756,24 @@ allbiz.Перевести тендер на статус очікування о
   Click Element  xpath=//*[@class="mk-btn mk-btn_danger"]/ancestor::div[@class="text-center"]
   Wait Until Keyword Succeeds  5x  1s   Page Should Contain  Очікування 2-го етапу
 
-#allbiz.Отримати тендер другого етапу та зберегти його
-#  [Arguments]  ${username}  ${tender_uaid}
+allbiz.Отримати тендер другого етапу та зберегти його
+  [Arguments]  ${username}  ${tender_uaid}
+  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid[0:-2]}
+  Click Element  xpath=//*[@class="mk-btn mk-btn_accept"]
+  Wait Until Keyword Succeeds  5x  1s   Page Should Contain  Чернетка 2-гий етап
+#  Дочекатися І Клікнути  xpath=//a[contains(@href,"tender/update")]
+#  Click Element  xpath=//*[@name="stage2_active_tendering"]
+
+
+allbiz.Активувати другий етап
+    [Arguments]  ${username}  ${tender_uaid}
+    allbiz.Отримати тендер другого етапу та зберегти його
+    Click Element  xpath=//*[@name="stage2_active_tendering"]
 #  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid[0:-2]}
 #  Click Element  xpath=//*[@class="mk-btn mk-btn_accept"]
 #  Wait Until Keyword Succeeds  5x  1s   Page Should Contain  Чернетка 2-гий етап
 ##  Дочекатися І Клікнути  xpath=//a[contains(@href,"tender/update")]
 #  Click Element  xpath=//*[@name="stage2_active_tendering"]
-
-allbiz.Активувати другий етап
-    [Arguments]  ${username}  ${tender_uaid}
-  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid[0:-2]}
-  Click Element  xpath=//*[@class="mk-btn mk-btn_accept"]
-  Wait Until Keyword Succeeds  5x  1s   Page Should Contain  Чернетка 2-гий етап
-#  Дочекатися І Клікнути  xpath=//a[contains(@href,"tender/update")]
-  Click Element  xpath=//*[@name="stage2_active_tendering"]
 
 
 
@@ -1434,18 +1437,21 @@ Add esco bid
   [Arguments]  ${bid}  ${number_of_lots}
 #  ${length_reduction}=  Get Matching Xpath Count  xpath=//*[@name="Bid[lotValues][${bid.data.lotValues.relatedLot}][value][annualCostsReduction][]"]
 #  ${length_reduction}=  Convert To Integer  ${length_reduction}
-
+  ${contractDuration.years}=  Convert to string  ${bid.data.lotValues[${lot_index}].value.contractDuration.years}
+  ${contractDuration.days}=  Convert to string  ${bid.data.lotValues[${lot_index}].value.contractDuration.days}
+  ${yearlyPaymentsPercentage}=  Convert to string  ${bid.data.lotValues[${lot_index}].value.yearlyPaymentsPercentage}
   :FOR  ${lot_index}  IN RANGE  ${number_of_lots}
   \   Дочекатися І Клікнути  xpath=//a[@aria-controls="${bid.data.lotValues[${lot_index}].relatedLot}"]
-  \   Wait And Select From List By Value  xpath=//*[contains(@id,"${bid.data.lotValues[${lot_index}].relatedLot}")and contains(@class, "js_contract-duration-years")]  ${bid.data.lotValues[${lot_index}].value.contractDuration.years}
-  \   Input Text  xpatsh=//*[contains(@id,"${bid.data.lotValues[${lot_index}].relatedLot}")and contains(@class, "js_contract-duration-days")]  ${bid.data.lotValues[${lot_index}].value.contractDuration.days}
-  \   Input Text  xpath=//*[contains(@id,"${bid.data.lotValues[${lot_index}].relatedLot}")and contains(@class, "js_required-field-esco")]  ${bid.data.lotValues[${lot_index}].value.yearlyPaymentsPercentage}
+  \   Wait And Select From List By Value  xpath=//*[contains(@id,"${bid.data.lotValues[${lot_index}].relatedLot}")and contains(@class, "js_contract-duration-years")]  ${contractDuration.years}
+  \   Input Text  xpatsh=//*[contains(@id,"${bid.data.lotValues[${lot_index}].relatedLot}")and contains(@class, "js_contract-duration-days")]  ${contractDuration.days}
+  \   Input Text  xpath=//*[contains(@id,"${bid.data.lotValues[${lot_index}].relatedLot}")and contains(@class, "js_required-field-esco")]  ${yearlyPaymentsPercentage}
   \   Add annual costs reduction  ${lot_index}  ${bid.data.lotValues[${lot_index}]}
 
 Add annual costs reduction
   [Arguments]   ${lot_index}  ${lot_data}
   ${number_length_reduction_matches}=  Get Matching Xpath Count  xpath=//*[@name="Bid[lotValues][${lot_data.relatedLot}][value][annualCostsReduction][]"]
   ${number_length_reduction_matches}=  Convert To Integer  ${number_length_reduction_matches}
+  ${annualCostsReduction}=  Convert To String  ${lot_data.value.annualCostsReduction[${index_reduction}]}
 
    :FOR  ${index_reduction}  IN RANGE  ${number_length_reduction_matches}
    \   Input Text  xpath=//*[contains(@id,"${lot_data.relatedLot}")and contains(@class, "annual-costs-reduction")][${index_reduction + 1}]  ${lot_data.value.annualCostsReduction[${index_reduction}]}
@@ -1455,12 +1461,12 @@ Add annual costs reduction
   [Arguments]  ${bid}
   ${number_of_feature}=  Get Length  ${bid.data.parameters}
   :FOR  ${feature_index}  IN RANGE  ${number_of_feature}
-  \  ${value}=  Convert To Integer  ${bid.data.parameters[${feature_index}]["value"]}
   \  ${label}=  Get Text  xpath=//option[@value="${bid.data.parameters[${feature_index}]["code"]}" and @rel="${value * 100}"]
   \  Wait And Select From List By Label  xpath=//option[@value="${bid.data.parameters[${feature_index}]["code"]}"]/ancestor::select  ${label}
 
 
 Скасувати цінову пропозицію
+  \  ${value}=  Convert To Integer  ${bid.data.parameters[${feature_index}]["value"]}
   [Arguments]  ${username}  ${tender_uaid}
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
   Execute Javascript  window.confirm = function(msg) { return true; }

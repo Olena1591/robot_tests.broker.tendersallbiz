@@ -170,8 +170,8 @@ def adapt_view_tender_data(value, field_name):
         value = "P{}".format(value.replace(u" роки, ", "Y").replace(u" місяця, ", "M").replace(u" днів", "D"))
     # elif 'yearlyPaymentsPercentageRange' in field_name:
     #     value = int(value)
-    elif 'yearlyPaymentsPercentageRange'in field_name:
-        value = "{}"value.replace(u"від 0% до ", "")
+    # elif 'yearlyPaymentsPercentageRange'in field_name:
+    #     value = "{}"value.replace(u"від 0% до ", "")
     return convert_string_from_dict_allbiz(value)
 
 
