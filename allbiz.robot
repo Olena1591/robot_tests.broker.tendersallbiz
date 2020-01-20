@@ -1463,7 +1463,7 @@ Add annual costs reduction
   ${status}=  Run Keyword And Return Status  Page Should Not Contain  Замовником внесено зміни в умови
   ${update}=  Run Keyword And Return Status  Page Should Contain  Замовником внесено зміни в умови
   Run Keyword If  ${status}  ConvToStr And Input Text  xpath=//input[contains(@name,'[value][amount]')]  ${fieldvalue}
-  ...  AND  Дочекатися І Клікнути  xpath=//button[@id="submit_bid"]
+  ...  Дочекатися І Клікнути  xpath=//button[@id="submit_bid"]
   ...  ELSE IF  ${update}  Select Checkbox  xpath=//*[@class="competitiveCheckbox"]
   ...  AND  Дочекатися І Клікнути  xpath=//button[@id="submit_bid"]
   ...  ELSE  Подати Пропозицію Без Накладення ЕЦП
