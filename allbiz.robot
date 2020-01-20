@@ -756,8 +756,16 @@ allbiz.Перевести тендер на статус очікування о
   Click Element  xpath=//*[@class="mk-btn mk-btn_danger"]/ancestor::div[@class="text-center"]
   Wait Until Keyword Succeeds  5x  1s   Page Should Contain  Очікування 2-го етапу
 
-allbiz.Отримати тендер другого етапу та зберегти його
-  [Arguments]  ${username}  ${tender_uaid}
+#allbiz.Отримати тендер другого етапу та зберегти його
+#  [Arguments]  ${username}  ${tender_uaid}
+#  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid[0:-2]}
+#  Click Element  xpath=//*[@class="mk-btn mk-btn_accept"]
+#  Wait Until Keyword Succeeds  5x  1s   Page Should Contain  Чернетка 2-гий етап
+##  Дочекатися І Клікнути  xpath=//a[contains(@href,"tender/update")]
+#  Click Element  xpath=//*[@name="stage2_active_tendering"]
+
+allbiz.Активувати другий етап
+    [Arguments]  ${username}  ${tender_uaid}
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid[0:-2]}
   Click Element  xpath=//*[@class="mk-btn mk-btn_accept"]
   Wait Until Keyword Succeeds  5x  1s   Page Should Contain  Чернетка 2-гий етап
@@ -1463,9 +1471,11 @@ Add annual costs reduction
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
   ${status}=  Run Keyword And Return Status  Page Should Not Contain  Замовником внесено зміни в умови
   ${update}=  Run Keyword And Return Status  Page Should Contain  Замовником внесено зміни в умови
-  Run Keyword If  ${status}  ConvToStr And Input Text  xpath=//input[contains(@name,'[value][amount]')]  ${fieldvalue}
-  ...  Дочекатися І Клікнути  xpath=//button[@id="submit_bid"]
-  ...  ELSE IF  ${update}  Select Checkbox  xpath=//*[@class="competitiveCheckbox"]
+  Run Keyword If  ${status}  Run Keywords
+  ...  ConvToStr And Input Text  xpath=//input[contains(@name,'[value][amount]')]  ${fieldvalue}
+  ...  AND  Дочекатися І Клікнути  xpath=//button[@id="submit_bid"]
+  ...  ELSE IF  ${update}  Run Keywords
+  ...  Select Checkbox  xpath=//*[@class="competitiveCheckbox"]
   ...  AND  Дочекатися І Клікнути  xpath=//button[@id="submit_bid"]
   ...  ELSE  Подати Пропозицію Без Накладення ЕЦП
 #  Run Keyword If  ${update}  Select Checkbox  xpath=//*[@class="competitiveCheckbox"]

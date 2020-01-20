@@ -161,15 +161,17 @@ def adapt_view_tender_data(value, field_name):
     elif 'Date' in field_name:
         value = convert_time(value)
     elif 'NBUdiscountRate' in field_name:
-        value = float(value[0:-1]) / 100
+        value = round(float(value[0:-1]) / 100, 5)
     elif 'minimalStepPercentage' in field_name:
         value = float(value[0:-1]) / 100
     elif 'maxAwardsCount' in field_name:
         value = int(value)
     elif 'agreementDuration' in field_name:
-        value = "P{}".format(value.replace(" роки, ", "Y").replace(" місяця, ", "M").replace(" днів", "D"))
+        value = "P{}".format(value.replace(u" роки, ", "Y").replace(u" місяця, ", "M").replace(u" днів", "D"))
     # elif 'yearlyPaymentsPercentageRange' in field_name:
     #     value = int(value)
+    elif 'yearlyPaymentsPercentageRange'in field_name:
+        value = "{}"value.replace(u"від 0% до ", "")
     return convert_string_from_dict_allbiz(value)
 
 
