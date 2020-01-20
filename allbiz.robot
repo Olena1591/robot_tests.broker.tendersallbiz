@@ -1427,7 +1427,7 @@ Add esco bid
 #  ${length_reduction}=  Convert To Integer  ${length_reduction}
 
   :FOR  ${lot_index}  IN RANGE  ${number_of_lots}
-  \   Дочекатися І Клікнути  xpath=////a[@aria-controls="${bid.data.lotValues[${lot_index}].relatedLot}")]
+  \   Дочекатися І Клікнути  xpath=//a[@aria-controls="${bid.data.lotValues[${lot_index}].relatedLot}")]
   \   Wait And Select From List By Value  xpath=//*[contains(@id,"${bid.data.lotValues[${lot_index}].relatedLot}")and contains(@class, "js_contract-duration-years")]  ${bid.data.lotValues[${lot_index}].value.contractDuration.years}
   \   Input Text  xpatsh=//*[contains(@id,"${bid.data.lotValues[${lot_index}].relatedLot}")and contains(@class, "js_contract-duration-days")]  ${bid.data.lotValues[${lot_index}].value.contractDuration.days}
   \   Input Text  xpath=//*[contains(@id,"${bid.data.lotValues[${lot_index}].relatedLot}")and contains(@class, "js_required-field-esco")]  ${bid.data.lotValues[${lot_index}].value.yearlyPaymentsPercentage}
@@ -1523,18 +1523,23 @@ Add annual costs reduction
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
   Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-award-qualification-button")]
-  Wait Element Animation  xpath=//select[@class="choose_prequalification"]
+  Wait Element Animation  xpath=//*[@class="h2 text-center"]
   Select From List By Value  xpath=//select[@class="choose_prequalification"]  active
-  Wait Until Keyword Succeeds  10 x  400 ms  Page Should Contain Element  xpath=(//input[@type="file"])[last()]
+#  Wait Until Keyword Succeeds  10 x  400 ms  Page Should Contain Element  xpath=(//input[@type="file"])[last()]
   Choose File  xpath=//*[@class="active"]/descendant::input[@type="file"]  ${document}
   Wait Until Element Is Visible  xpath=//select[@id="document-type-0"]
   Select From List By Value  xpath=//select[@id="document-type-0"]  awardNotice
-  ${status}=  Run Keyword And Return Status  Wait Until Keyword Succeeds  5 x  1 s  Page Should Contain Element  xpath=//input[contains(@id,"qualified")]/..
-  Run Keyword If  ${status}  Run Keywords
-  ...  Дочекатися І Клікнути  xpath=//input[contains(@id,"qualified")]/..
-  ...  AND  Дочекатися І Клікнути  xpath=//input[contains(@id,"eligible")]/..
+  Select Checkbox  xpath=//input[@id="award-0-qualified"]
+  Select Checkbox  xpath=//input[@id="award-0-eligible"]
+
+#  ${status}=  Run Keyword And Return Status  Wait Until Keyword Succeeds  5 x  1 s  Page Should Contain Element  xpath=//input[contains(@id,"qualified")]/..
+#  Run Keyword If  ${status}  Run Keywords
+#  ...  Дочекатися І Клікнути  xpath=//input[contains(@id,"qualified")]/..
+#  ...  AND  Дочекатися І Клікнути  xpath=//input[contains(@id,"eligible")]/..
   Дочекатися І Клікнути  xpath=(//*[@name="send_prequalification"])[1]
   Wait Until Element Is Not Visible  xpath=(//*[@name="send_prequalification"])[1]
+  Wait Element Animation  xpath=//*[@class="modal-dialog"]/descendant::button[contains(text(),"Накласти ЕЦП")]
+  Накласти ЄЦП
 
 Підтвердити постачальника
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}
@@ -1560,6 +1565,7 @@ Add annual costs reduction
   Click Element  xpath=//*[@name="Qualifications[${qualification_num * -1}][eligible]"]/ancestor::div[contains(@class,"field-wrapper ")]
   Click Element  xpath=(//*[@class="mk-btn mk-btn_accept btn-submitform_qualification"])[1]
   Wait Until Keyword Succeeds  5x  1s   Page Should Contain Element  xpath=//*[@name="cancel_prequalification"]
+
 
 Відхилити кваліфікацію
   [Arguments]  ${username}  ${tender_uaid}  ${qualification_num}
@@ -1587,7 +1593,12 @@ Add annual costs reduction
 allbiz.Скасування рішення кваліфікаційної комісії
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
-  Дочекатися І Клікнути  xpath=//button[@class="mk-btn mk-btn_danger btn-award"]
+#  Дочекатися І Клікнути  xpath=//button[@class="mk-btn mk-btn_danger btn-award"]
+#  Wait Element Animation  xpath//div[@class="modal-footer"][2]
+#  Дочекатися І Клікнути  xpath=//button[@class="btn mk-btn mk-btn_danger"]
+
+  Дочекатися І Клікнути  xpayh=class="mk-btn mk-btn_danger btn-award"
+  Дочекатися І Клікнути  xpath=//button[@class="btn mk-btn mk-btn_danger"]
 
 
 
