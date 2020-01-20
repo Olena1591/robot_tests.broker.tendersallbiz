@@ -752,13 +752,13 @@ Go To And Assert
 
 allbiz.Перевести тендер на статус очікування обробки мостом
   [Arguments]  ${username}  ${tender_uaid}
-  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tenderID}
+  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  xpath=//*[@class="mk-btn mk-btn_danger"]/ancestor::div[@class="text-center"]
   Wait Until Keyword Succeeds  5x  1s   Page Should Contain  Очікування 2-го етапу
 
 allbiz.Отримати тендер другого етапу та зберегти його
   [Arguments]  ${username}  ${tender_uaid}
-  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tenderID}
+  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Click Element  xpath=//*[@class="mk-btn mk-btn_accept"]
   Wait Until Keyword Succeeds  5x  1s   Page Should Contain  Чернетка 2-гий етап
   Click Element  xpath=//*[@name="stage2_active_tendering"]
@@ -1427,7 +1427,7 @@ Add esco bid
 #  ${length_reduction}=  Convert To Integer  ${length_reduction}
 
   :FOR  ${lot_index}  IN RANGE  ${number_of_lots}
-  \   Дочекатися І Клікнути  xpath=//a[@aria-controls="${bid.data.lotValues[${lot_index}].relatedLot}")]
+  \   Дочекатися І Клікнути  xpath=//a[@aria-controls="${bid.data.lotValues[${lot_index}].relatedLot}"]
   \   Wait And Select From List By Value  xpath=//*[contains(@id,"${bid.data.lotValues[${lot_index}].relatedLot}")and contains(@class, "js_contract-duration-years")]  ${bid.data.lotValues[${lot_index}].value.contractDuration.years}
   \   Input Text  xpatsh=//*[contains(@id,"${bid.data.lotValues[${lot_index}].relatedLot}")and contains(@class, "js_contract-duration-days")]  ${bid.data.lotValues[${lot_index}].value.contractDuration.days}
   \   Input Text  xpath=//*[contains(@id,"${bid.data.lotValues[${lot_index}].relatedLot}")and contains(@class, "js_required-field-esco")]  ${bid.data.lotValues[${lot_index}].value.yearlyPaymentsPercentage}

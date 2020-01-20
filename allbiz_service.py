@@ -113,6 +113,7 @@ def convert_string_from_dict_allbiz(string):
         u'Очікування переведення': u'active.stage2.pending',
         u'Укладання рамкової угоди': u'closeFrameworkAgreementUA',
         u'Пропозицiї розглянуто': u'active.qualification',
+        u'Сполучені Штати Америки': u'USA',
     }.get(string, string)
 
 
