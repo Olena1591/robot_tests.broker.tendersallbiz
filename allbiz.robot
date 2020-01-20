@@ -335,7 +335,7 @@ Update plan items info
   ...  ELSE  Fill tender filds  ${tender_data}
 
   Run Keyword If  "${tender_data.data.procurementMethodType}" == "belowThreshold"  Заповнити поля для допорогової закупівлі  ${tender_data}
-  ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "aboveThreshold"  Заповнити поля для понадпорогів  ${tender_data}
+  ...  ELSE IF  "aboveThreshold" in "${tender_data.data.procurementMethodType}"  Заповнити поля для понадпорогів  ${tender_data}
   ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "negotiation"  Заповнити поля для переговорної процедури  ${tender_data}
   ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "competitiveDialogueEU"  Заповнити поля для конкурентного діалогу  ${tender_data}
   ...  ELSE IF  "${tender_data.data.procurementMethodType}" == "closeFrameworkAgreementUA"  Заповнити поля для рамкової угоди  ${tender_data}
