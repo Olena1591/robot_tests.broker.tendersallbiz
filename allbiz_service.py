@@ -114,6 +114,7 @@ def convert_string_from_dict_allbiz(string):
         u'Укладання рамкової угоди': u'closeFrameworkAgreementUA',
         u'Пропозицiї розглянуто': u'active.qualification',
         u'Сполучені Штати Америки': u'USA',
+        u'Завершена': u'complete',
     }.get(string, string)
 
 

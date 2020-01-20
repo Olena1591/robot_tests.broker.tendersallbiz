@@ -758,9 +758,10 @@ allbiz.Перевести тендер на статус очікування о
 
 allbiz.Отримати тендер другого етапу та зберегти його
   [Arguments]  ${username}  ${tender_uaid}
-  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid[0:-2]}
   Click Element  xpath=//*[@class="mk-btn mk-btn_accept"]
   Wait Until Keyword Succeeds  5x  1s   Page Should Contain  Чернетка 2-гий етап
+#  Дочекатися І Клікнути  xpath=//a[contains(@href,"tender/update")]
   Click Element  xpath=//*[@name="stage2_active_tendering"]
 
 
@@ -1538,7 +1539,7 @@ Add annual costs reduction
 #  ...  AND  Дочекатися І Клікнути  xpath=//input[contains(@id,"eligible")]/..
   Дочекатися І Клікнути  xpath=(//*[@name="send_prequalification"])[1]
   Wait Until Element Is Not Visible  xpath=(//*[@name="send_prequalification"])[1]
-  Run Keyword If  '${mode} != 'belowThreshold'  Wait Element Animation  xpath=//*[@class="modal-dialog"]/descendant::button[contains(text(),"Накласти ЕЦП")]
+  Run Keyword If  '${mode}' != 'belowThreshold'  Wait Element Animation  xpath=//*[@class="modal-dialog"]/descendant::button[contains(text(),"Накласти ЕЦП")]
   ...  Click Element  xpath=//button[@class="btn btn-danger"]
   ...  Дочекатися І Клікнути  xpath=//button[contains(@id, "modal-award-qualification-button")]
   ...  AND  Накласти ЄЦП
@@ -1636,6 +1637,7 @@ allbiz.Скасування рішення кваліфікаційної ком
   Input Text  xpath=//input[contains(@name,"[contractNumber]")]  777
   Input Text  name=ContractPeriod[0][startDate]  20/01/2020 00:00:00
   Input Text  name=ContractPeriod[0][endDate]  20/02/2020 00:00:00
+  Wait And Select From List By Value  xpath=//*[@class="select_valueAddedTaxIncluded"]  0
 #  Focus  xpath=//button[text()='Активувати']
   Дочекатися І Клікнути  xpath=//button[text()='Активувати']
   Run Keyword If  '${MODE}' != 'belowThreshold'  Run Keywords
