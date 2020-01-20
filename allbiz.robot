@@ -1595,10 +1595,10 @@ Add annual costs reduction
 #  Wait Until Keyword Succeeds  5x  1s   Page Should Contain Element  xpath=//*[@name="Qualifications[${qualification_num}][action]"]
   Wait Element Animation  xpath=//*[@class="fade modal in"]
   Select From list By Index  xpath=//*[@name="Qualifications[${qualification_num}][action]"]  1
-  Click Element  xpath=(//*[@name="Qualifications[cause][]"])[4]
-  Click Element  xpath=(//*[@name="Qualifications[cause][]"])[5]
-  Click Elemrnt  xpath=(//*[@name="Qualifications[cause][]"])[6]
-  Дочекатися І Клікнути  xpath=(/*[@name="send_prequalification"])[4]
+  Click Element  xpath=//*[@name="Qualifications[cause][]"][@value="Не вiдповiдає квалiфiкацiйним критерiям."]
+  Click Element  xpath=//*[@name="Qualifications[cause][]"][@value="Наявнi пiдстави, зазначенi у статтi 17."]
+  Click Elemrnt  xpath=//*[@name="Qualifications[cause][]"][@value="Не вiдповiдає вимогам тендерної документацiї."]
+  Дочекатися І Клікнути  xpath=(//*[@name="send_prequalification"])[4]
 
 
 
