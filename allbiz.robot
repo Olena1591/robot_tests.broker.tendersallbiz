@@ -1617,17 +1617,18 @@ allbiz.Скасування рішення кваліфікаційної ком
   Wait Until Element Is Not Visible  xpath=//button[text()='Завантажити']
   Wait Until Keyword Succeeds  20 x  30 s  Run Keywords
   ...  Reload Page
-  ...  AND  Element Should Be Visible  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
-  ...  AND  Click Element  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
+#  ...  AND  Element Should Be Visible  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
+#  ...  AND  Click Element  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
   ...  AND  Page Should Not Contain  Файл завантажується...
-  ...  AND  Page Should Contain Element  xpath=//button[contains(@class, "btn_submit_award_contract_activate")]
+  ...  AND  Page Should Contain Element  xpath=//button[@class="mk-btn mk-btn_default js-btn-contract-award"]
+  Дочекатися І Клікнути  xpath=//button[@class="mk-btn mk-btn_default js-btn-contract-award"]
   Wait Element Animation  xpath=//*[contains(@name,"[dateSigned]")]
-  Mouse Down  xpath=//*[contains(@name,"[dateSigned]")]
+#  Mouse Down  xpath=//*[contains(@name,"[dateSigned]")]
   Input Text  xpath=//input[contains(@name,"[contractNumber]")]  777
-  Input Text  name=ContractPeriod[0][startDate]  01/06/2018 00:00:00
-  Input Text  name=ContractPeriod[0][endDate]  09/06/2018 00:00:00
-  Focus  xpath=//button[text()='Активувати']
-  Click Element  xpath=//button[text()='Активувати']
+  Input Text  name=ContractPeriod[0][startDate]  20/01/2020 00:00:00
+  Input Text  name=ContractPeriod[0][endDate]  20/02/2020 00:00:00
+#  Focus  xpath=//button[text()='Активувати']
+  Дочекатися І Клікнути  xpath=//button[text()='Активувати']
   Run Keyword If  '${MODE}' != 'belowThreshold'  Run Keywords
   ...  Wait Element Animation  xpath=//*[@class="modal-dialog"]/descendant::button[contains(text(),"Накласти ЕЦП")]
   ...  AND  Накласти ЄЦП
