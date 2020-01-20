@@ -1539,7 +1539,9 @@ Add annual costs reduction
   Дочекатися І Клікнути  xpath=(//*[@name="send_prequalification"])[1]
   Wait Until Element Is Not Visible  xpath=(//*[@name="send_prequalification"])[1]
   Run Keyword If  '${mode} != 'belowThreshold'  Wait Element Animation  xpath=//*[@class="modal-dialog"]/descendant::button[contains(text(),"Накласти ЕЦП")]
-  ... AND  Накласти ЄЦП
+  ...  Click Element  xpath=//button[@class="btn btn-danger"]
+  ...  Дочекатися І Клікнути  xpath=//button[contains(@id, "modal-award-qualification-button")]
+  ...  AND  Накласти ЄЦП
 
 Підтвердити постачальника
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}
