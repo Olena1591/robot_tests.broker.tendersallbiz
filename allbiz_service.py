@@ -114,6 +114,7 @@ def convert_string_from_dict_allbiz(string):
         u'Пропозицiї розглянуто': u'active.qualification',
         u'Завершена': u'complete',
         u'відкликано скаржником': u'stopping',
+        u'USA': u'Сполучені Штати Америки',
     }.get(string, string)
 
 

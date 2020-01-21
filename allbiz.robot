@@ -1547,8 +1547,7 @@ Add annual costs reduction
   Choose File  xpath=//*[@class="active"]/descendant::input[@type="file"]  ${document}
   Wait Until Element Is Visible  xpath=//select[@id="document-type-0"]
   Select From List By Value  xpath=//select[@id="document-type-0"]  awardNotice
-  Run Keyword If  '${mode}' == 'belowThreshold'  Run Keywords
-  ...  Wait Until Keyword Succeeds  10 x  400 ms  Page Should Contain Element  xpath=(//input[@type="file"])[last()]
+  Run Keyword If  '${mode}' == 'belowThreshold'  Wait Until Keyword Succeeds  10 x  400 ms  Page Should Contain Element  xpath=(//input[@type="file"])[last()]
   ...  ELSE    Select Checkbox  xpath=//input[@id="award-0-qualified"]
   ...  AND  Select Checkbox  xpath=//input[@id="award-0-eligible"]
 
