@@ -166,7 +166,8 @@ def adapt_view_tender_data(value, field_name):
     elif 'maxAwardsCount' in field_name:
         value = int(value)
     elif 'agreementDuration' in field_name:
-        value = "P{}".format(value.replace(u" роки, ", "Y").replace(u" місяця, ", "M").replace(u" днів", "D"))
+        l = value.split(" ")
+        value = "P{}Y{}M{}D".format(l[0], l[2], l[4] )
     elif 'yearlyPaymentsPercentageRange'in field_name:
         value = float(value.split(" ")[-1][:-1]) / 100
     return convert_string_from_dict_allbiz(value)
