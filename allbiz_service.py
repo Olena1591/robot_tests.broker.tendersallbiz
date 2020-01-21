@@ -170,7 +170,7 @@ def adapt_view_tender_data(value, field_name):
         l = value.split(" ")
         value = "P{}Y{}M{}D".format(l[0], l[2], l[4] )
     elif 'yearlyPaymentsPercentageRange'in field_name:
-        value = float(value.split(" ")[-1][:-1]) / 100
+        value = round(float(value.split(" ")[-1][:-1]) / 100, 5)
     return convert_string_from_dict_allbiz(value)
 
 
