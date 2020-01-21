@@ -1456,10 +1456,9 @@ Add annual costs reduction
 
    :FOR  ${index_reduction}  IN RANGE  ${number_length_reduction_matches}
    \   ${annualCostsReduction}=  Convert To String  ${lot_data.value.annualCostsReduction[${index_reduction}]}
-   \   Input Text  xpath=//*[contains(@id,"${lot_data.relatedLot}")and contains(@class, "annual-costs-reduction")][${index_reduction + 1}]  ${lot_data.value.annualCostsReduction[${index_reduction}]}
+   \   Input Text  xpath=//*[contains(@id,"${lot_data.relatedLot}")and contains(@class, "annual-costs-reduction")][${index_reduction + 1}]  ${annualCostsReduction}
 
 
-Вибрати нецінові показники в пропозиції
   [Arguments]  ${bid}
   ${number_of_feature}=  Get Length  ${bid.data.parameters}
   :FOR  ${feature_index}  IN RANGE  ${number_of_feature}
@@ -1469,7 +1468,8 @@ Add annual costs reduction
 
 Скасувати цінову пропозицію
   \  ${value}=  Convert To Integer  ${bid.data.parameters[${feature_index}]["value"]}
-  [Arguments]  ${username}  ${tender_uaid}
+
+Вибрати нецінові показники в пропозиції  [Arguments]  ${username}  ${tender_uaid}
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
   Execute Javascript  window.confirm = function(msg) { return true; }
   Дочекатися І Клікнути  xpath=//button[@name="delete_bids"]
