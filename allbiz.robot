@@ -1457,7 +1457,7 @@ Add annual costs reduction
 
    :FOR  ${index_reduction}  IN RANGE  ${number_length_reduction_matches}
    \   ${annualCostsReduction}=  Convert To String  ${lot_data.value.annualCostsReduction[${index_reduction}]}
-   \   Input Text  xpath=//*[contains(@id,"${lot_data.relatedLot}")and contains(@class, "annual-costs-reduction")][${index_reduction + 1}]  ${annualCostsReduction}
+   \   Input Text  xpath=//*[contains(@id,"${lot_data.relatedLot}")and contains(@class, "annual-costs-reduction")][${index_reduction}]  ${annualCostsReduction}
 
 
 Вибрати нецінові показники в пропозиції
@@ -1600,7 +1600,7 @@ Add annual costs reduction
   Select From list By Index  xpath=//*[@name="Qualifications[${qualification_num}][action]"]  1
   Click Element  xpath=//*[@name="Qualifications[cause][]"][@value="Не вiдповiдає квалiфiкацiйним критерiям."]
   Click Element  xpath=//*[@name="Qualifications[cause][]"][@value="Наявнi пiдстави, зазначенi у статтi 17."]
-  Click Elemrnt  xpath=//*[@name="Qualifications[cause][]"][@value="Не вiдповiдає вимогам тендерної документацiї."]
+  Click Element  xpath=//*[@name="Qualifications[cause][]"][@value="Не вiдповiдає вимогам тендерної документацiї."]
   Дочекатися І Клікнути  xpath=//*[@class="mk-btn mk-btn_danger btn-submitform_qualification"]
 
 
