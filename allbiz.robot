@@ -1445,7 +1445,7 @@ Add esco bid
   \  ${yearlyPaymentsPercentage}=  Convert to string  ${bid.data.lotValues[${lot_index}].value.yearlyPaymentsPercentage * 100}
   \   Дочекатися І Клікнути  xpath=//a[@aria-controls="${bid.data.lotValues[${lot_index}].relatedLot}"]
   \   Wait And Select From List By Value  xpath=//*[contains(@id,"${bid.data.lotValues[${lot_index}].relatedLot}")and contains(@class, "js_contract-duration-years")]  ${contractDuration.years}
-  \   Input Text  xpatsh=//*[contains(@id,"${bid.data.lotValues[${lot_index}].relatedLot}")and contains(@class, "js_contract-duration-days")]  ${contractDuration.days}
+  \   Input Text  xpath=//*[contains(@id,"${bid.data.lotValues[${lot_index}].relatedLot}")and contains(@class, "js_contract-duration-days")]  ${contractDuration.days}
   \   Input Text  xpath=//*[contains(@id,"${bid.data.lotValues[${lot_index}].relatedLot}")and contains(@class, "js_required-field-esco")]  ${yearlyPaymentsPercentage}
   \   Add annual costs reduction  ${lot_index}  ${bid.data.lotValues[${lot_index}]}
 
