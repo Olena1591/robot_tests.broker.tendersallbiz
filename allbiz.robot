@@ -1372,7 +1372,7 @@ Get info from funders
   ...  ELSE IF  'amount' in '${field_name}'  Get Text  xpath=//*[@data-mtitle="Пропозицiя:"]/b
   ...  ELSE IF  'currency' in '${field_name}'  Get Text  xpath=//*[@data-mtitle="Пропозицiя:"]
   ...  ELSE IF  'value' in '${field_name}'  Get Text  xpath=//*[contains(text(), "ПДВ")]
-  ...  ELSE IF  '${field_name}' == 'awards[0].complaintPeriod.endDate'  Get Text  xpath=//div[contains(text(),"Завершення періоду подання вимог")]/following-sibling::div[1]
+  ...  ELSE IF  'complaintPeriod.endDate' in '${field_name}'  Get Text  xpath=//div[contains(text(),"Завершення періоду подання вимог")]/following-sibling::div[1]
   ...  ELSE IF  'legalName' in '${field_name}'  Get Text  xpath=//*[@data-test-id="awards.suppliers.name"]
   ...  ELSE  Get Text  xpath=//*[@data-test-id="${field_name.replace("[0]","")}"]
   [Return]  ${value.split(" - ")[-1]}
@@ -1465,7 +1465,7 @@ Add annual costs reduction
   [Arguments]  ${bid}
   ${number_of_feature}=  Get Length  ${bid.data.parameters}
   :FOR  ${feature_index}  IN RANGE  ${number_of_feature}
-  \  ${label}=  Get Text  xpath=//option[@value="${bid.data.parameters[${feature_index}]["code"]}" and @rel="${value}"]
+  \  ${label}=  Get Text  xpath=//option[@value="${bid.data.parameters[${feature_index}]["code"]}" and @rel="${bid.data.parameters.value * 100}"]
   \  Wait And Select From List By Label  xpath=//option[@value="${bid.data.parameters[${feature_index}]["code"]}"]/ancestor::select  ${label}
 
 
