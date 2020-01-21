@@ -1600,7 +1600,7 @@ Add annual costs reduction
   Click Element  xpath=//*[@name="Qualifications[cause][]"][@value="Не вiдповiдає квалiфiкацiйним критерiям."]
   Click Element  xpath=//*[@name="Qualifications[cause][]"][@value="Наявнi пiдстави, зазначенi у статтi 17."]
   Click Elemrnt  xpath=//*[@name="Qualifications[cause][]"][@value="Не вiдповiдає вимогам тендерної документацiї."]
-  Дочекатися І Клікнути  xpath=(//*[@name="send_prequalification"])[4]
+  Дочекатися І Клікнути  xpath=//*[@class="mk-btn mk-btn_danger btn-submitform_qualification"]
 
 
 
