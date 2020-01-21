@@ -1070,6 +1070,7 @@ Feature Count Should Not Be Zero
   Wait Until Keyword Succeeds  10 x  60 s  Run Keywords
   ...  Reload Page
   ...  AND  Page Should Contain  ${complaintID}
+  Sleep  1000
   Run Keyword If  "переможця" in "${TEST_NAME}"  Input Text  xpath=//*[contains(text(),"${complaintID}")]/../descendant::textarea[contains(@name,"resolution")]  ${answer_data.data.resolution}
   ...  ELSE  Input Text  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::textarea  ${answer_data.data.resolution}
   Run Keyword If  "resolved" in "${answer_data.data.resolutionType}"  Дочекатися І Клікнути  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::input[@value="resolved"]
@@ -1177,7 +1178,7 @@ Feature Count Should Not Be Zero
   [Arguments]  ${username}  ${tender_uaid}  ${field_name}
   ${red}=  Evaluate  "\\033[1;31m"
   Run Keyword If  'title' in '${field_name}'  Execute Javascript  $("[data-test-id|='title']").css("text-transform", "unset")
-  Run Keyword If  '${field_name}' == 'status'  Дочекатися І Клікнути  xpath=//*[contains(@href,"test-tenders.all.biz/tender/json/")]
+  Run Keyword If  'status' in '${field_name}'  Дочекатися І Клікнути  xpath=//*[contains(@href,"test-tenders.all.biz/tender/json/")]
 #  Run Keyword And Ignore Error  Click Element  xpath=//button[@data-dismiss="modal"]
   Run Keyword If  '${field_name}' == 'qualificationPeriod.endDate'  Wait Until Keyword Succeeds  10 x  60 s  Run Keywords
   ...  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
