@@ -769,6 +769,7 @@ allbiz.Активувати другий етап
     [Arguments]  ${username}  ${tender_uaid}
     allbiz.Отримати тендер другого етапу та зберегти його  ${username}  ${tender_uaid}
     Click Element  xpath=//*[@name="stage2_active_tendering"]
+    Element Should Not Be Visible  xpath=//*[@class="alert-danger alert fade in active"]
 #  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid[0:-2]}
 #  Click Element  xpath=//*[@class="mk-btn mk-btn_accept"]
 #  Wait Until Keyword Succeeds  5x  1s   Page Should Contain  Чернетка 2-гий етап
