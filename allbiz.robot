@@ -1464,9 +1464,9 @@ Add annual costs reduction
 Вибрати нецінові показники в пропозиції
   [Arguments]  ${bid}
   ${number_of_feature}=  Get Length  ${bid.data.parameters}
-  ${value}=  Convert To Number  ${bid.data.parameters.value} * 100
   :FOR  ${feature_index}  IN RANGE  ${number_of_feature}
-  \  ${label}=  Get Text  xpath=//option[@value="${bid.data.parameters[${feature_index}]["code"]}" and @rel="${value}"]
+  \  ${value}=  Convert To Number  ${bid.data.parameters[${feature_index}]["value"]}
+  \  ${label}=  Get Text  xpath=//option[@value="${bid.data.parameters[${feature_index}]["code"]}" and @rel="${value * 100}"]
   \  Wait And Select From List By Label  xpath=//option[@value="${bid.data.parameters[${feature_index}]["code"]}"]/ancestor::select  ${label}
 
 
