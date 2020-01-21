@@ -104,7 +104,6 @@ def convert_string_from_dict_allbiz(string):
         u'Товари': u'goods',
         u'Роботи': u'works',
         u'Класифікацiя предмета закупівлi за ДК 021:2015': u'ДК021',
-        u'Не визначено': u'Не відображене в інших розділах',
         u'Конкурентний діалог': u'competitiveDialogueUA',
         u'Конкурентний діалог з публікацією англ. мовою': u'competitiveDialogueEU',
         u'Визначення переможців': u'active.qualification',
