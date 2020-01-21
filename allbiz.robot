@@ -1549,7 +1549,8 @@ Add annual costs reduction
   Wait Until Element Is Visible  xpath=//select[@id="document-type-0"]
   Select From List By Value  xpath=//select[@id="document-type-0"]  awardNotice
   Run Keyword If  '${mode}' == 'belowThreshold'  Wait Until Keyword Succeeds  10 x  400 ms  Page Should Contain Element  xpath=(//input[@type="file"])[last()]
-  ...  ELSE    Select Checkbox  xpath=//input[@id="award-0-qualified"]
+  ...  ELSE    Run Keywords
+  ...  Select Checkbox  xpath=//input[@id="award-0-qualified"]
   ...  AND  Select Checkbox  xpath=//input[@id="award-0-eligible"]
 
 #  ${status}=  Run Keyword And Return Status  Wait Until Keyword Succeeds  5 x  1 s  Page Should Contain Element  xpath=//input[contains(@id,"qualified")]/..
@@ -1619,7 +1620,7 @@ allbiz.Скасування рішення кваліфікаційної ком
 #  Wait Element Animation  xpath//div[@class="modal-footer"][2]
 #  Дочекатися І Клікнути  xpath=//button[@class="btn mk-btn mk-btn_danger"]
   Дочекатися І Клікнути  xpath=//*[contains(@href,"tender/award/")]
-  Дочекатися І Клікнути  xpath=class="mk-btn mk-btn_danger btn-award"
+  Дочекатися І Клікнути  xpath=//*[class="mk-btn mk-btn_danger btn-award"]
   Дочекатися І Клікнути  xpath=//button[@class="btn mk-btn mk-btn_danger"]
 
 
