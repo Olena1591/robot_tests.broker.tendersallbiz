@@ -1463,7 +1463,7 @@ Add annual costs reduction
   [Arguments]  ${bid}
   ${number_of_feature}=  Get Length  ${bid.data.parameters}
   :FOR  ${feature_index}  IN RANGE  ${number_of_feature}
-  \  ${label}=  Get Text  xpath=//option[@value="${bid.data.parameters[${feature_index}]["code"]}" and @rel="${value * 100}"]
+  \  ${label}=  Get Text  xpath=//option[@value="${bid.data.parameters[${feature_index}]["code"]}" and @rel="${value}"]
   \  Wait And Select From List By Label  xpath=//option[@value="${bid.data.parameters[${feature_index}]["code"]}"]/ancestor::select  ${label}
 
 
