@@ -1774,7 +1774,8 @@ Scroll To Element
   ...  AND  Input text  id=PKeyPassword  12345677
   ...  AND  Дочекатися І Клікнути  id=PKeyReadButton
   ...  AND  Wait Until Page Contains  Ключ успішно завантажено  10
-  Click element  xpath=//span[@id="slidePanelArrowR"]
+  ${is_slidepanel_visible}=  Run Keyword And Return Status  Element Should Be Visible  xpath=xpath=//span[@id="slidePanelArrowR"]
+  Run Keyword If  ${is_slidepanel_visible}  Click element  xpath=//span[@id="slidePanelArrowR"]
   Wait Until Element Is Not Visible  xpath=//button[@id="delete-draft"]
   Дочекатися І Клікнути  id=SignDataButton
   Wait Until Keyword Succeeds  60 x  1 s  Page Should Not Contain Element  id=SignDataButton  120
