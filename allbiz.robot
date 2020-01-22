@@ -656,6 +656,8 @@ allbiz.Редагувати угоду
   Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
   Дочекатися І Клікнути  xpath=//button[@class="mk-btn mk-btn_default js-btn-contract-award"]
 
+Внести зміну в договір
+  [Arguments]  ${username}  ${contract_uaid}  ${change_data}
 
 
 
@@ -1372,7 +1374,7 @@ Get info from funders
   ...  ELSE IF  'amount' in '${field_name}'  Get Text  xpath=//*[@data-mtitle="Пропозицiя:"]/b
   ...  ELSE IF  'currency' in '${field_name}'  Get Text  xpath=//*[@data-mtitle="Пропозицiя:"]
   ...  ELSE IF  'value' in '${field_name}'  Get Text  xpath=//*[contains(text(), "ПДВ")]
-  ...  ELSE IF  'complaintPeriod.endDate' in '${field_name}'  Get Text  xpath=//div[contains(text(),"Завершення періоду подання вимог")]/following-sibling::div[1]
+#  ...  ELSE IF  'complaintPeriod.endDate' in '${field_name}'  Get Text  xpath=//div[contains(text(),"Завершення періоду подання вимог")]/following-sibling::div[1]
   ...  ELSE IF  'legalName' in '${field_name}'  Get Text  xpath=//*[@data-test-id="awards.suppliers.name"]
   ...  ELSE  Get Text  xpath=//*[@data-test-id="${field_name.replace("[0]","")}"]
   [Return]  ${value.split(" - ")[-1]}
