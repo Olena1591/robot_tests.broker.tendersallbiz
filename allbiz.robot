@@ -1490,14 +1490,13 @@ Add annual costs reduction
   [Arguments]  ${username}  ${tender_uaid}  ${fieldname}  ${fieldvalue}
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
   ${status}=  Run Keyword And Return Status  Page Should Not Contain  Замовником внесено зміни в умови
-  ${update}=  Run Keyword And Return Status  Page Should Contain  Замовником внесено зміни в умови
-  Run Keyword If  ${status}  Run Keywords
-  ...  ConvToStr And Input Text  xpath=//input[contains(@name,'[value][amount]')]  ${fieldvalue}
-  ...  AND  Дочекатися І Клікнути  xpath=//button[@id="submit_bid"]
-  ...  ELSE IF  ${update}  Run Keywords
-  ...  Select Checkbox  xpath=//*[@class="competitiveCheckbox"]
-  ...  AND  Дочекатися І Клікнути  xpath=//button[@id="submit_bid"]
-  ...  ELSE  Подати Пропозицію Без Накладення ЕЦП
+#  ${update}=  Run Keyword And Return Status  Page Should Contain  Замовником внесено зміни в умови
+  Run Keyword If  ${status} and ${mode} != "open_esco"  ConvToStr And Input Text  xpath=//input[contains(@name,'[value][amount]')]  ${fieldvalue}
+#  ...  AND  Дочекатися І Клікнути  xpath=//button[@id="submit_bid"]
+  ...  ELSE IF  ${mode} != "open_esco"  Select Checkbox  xpath=//*[@class="competitiveCheckbox"]
+#  ...  AND  Дочекатися І Клікнути  xpath=//button[@id="submit_bid"]
+#  ...  ELSE  Подати Пропозицію Без Накладення ЕЦП
+  Дочекатися І Клікнути  xpath=//button[@id="submit_bid"]
 #  Run Keyword If  ${update}  Select Checkbox  xpath=//*[@class="competitiveCheckbox"]
 #  ...  AND  Дочекатися І Клікнути  xpath=//button[@id="submit_bid"]
 #  Подати Пропозицію Без Накладення ЕЦП
@@ -1505,7 +1504,7 @@ Add annual costs reduction
 
 
 Завантажити документ в ставку
-  [Arguments]  ${username}  ${path}  ${tender_uaid}  ${doc_type}=technicalSpecifications
+  [Arguments]  ${username}  ${path}  ${tender_uaid}  ${doc_name}=documents  ${doc_type}=technicalSpecifications
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
   Scroll To Element  xpath=(//input[@type="file"])[last()]
   Choose File  xpath=(//input[@type="file"])[last()]  ${path}
