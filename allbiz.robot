@@ -1428,12 +1428,22 @@ Get info from funders
 #  Run Keyword If  '${mode}' != 'esco'  Add bid  ${bid}
 #  ...  ELSE  Add esco bid  ${bid}
   Run Keyword If  '${mode}' == 'open_esco'  Add esco bid  ${bid}  ${number_of_lots}
+  ...  ELSE IF  '${mode}' == 'open_competitive_dialogue'  Add competitive_dialogue bid  ${bid}  ${number_of_lots}
   ...  ELSE  Add bid  ${bid}  ${number_of_lots}
 
 Add bid
   [Arguments]  ${bid}  ${number_of_lots}
   :FOR  ${lot_index}  IN RANGE  ${number_of_lots}
   \   ConvToStr And Input Text  name=Bid[lotValues][${bid.data.lotValues[${lot_index}].relatedLot}][value][amount]  ${bid.data.lotValues[${lot_index}].value.amount}
+
+
+Add competitive_dialogue bid
+  [Arguments]  ${bid}  ${number_of_lots}
+  :FOR  ${lot_index}  IN RANGE  ${number_of_lots}
+  \  Select Checkbox  xpath=//input[@name="Bid[lotValues][${bid.data.lotValues[${lot_index}].relatedLot}][competitive_lot]"]
+  Select Checkbox  xpath=//input[contains(@id,"bid-selfeligible")]
+  Select Checkbox  xpath=//input[contains(@id,"bid-selfqualified")]
+#  Дочекатися І Клікнути  xpath=//button[contains(@id,"submit_bid")]
 
 
 Add esco bid
