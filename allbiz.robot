@@ -1331,7 +1331,7 @@ Get info from funders
 Отримати інформацію із пропозиції
   [Arguments]  ${username}  ${tender_uaid}  ${field}
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
-  Sleep  60
+  Sleep  300
   ${is_edited}=  Run Keyword And Return Status  Page Should Contain  Замовником внесено зміни в умови
   ${value}=  Run Keyword If  ${is_edited} == ${True}  Set Variable  invalid
   ...  ELSE  Get Element Attribute  xpath=//input[contains(@name,"[value][amount]")]@value
