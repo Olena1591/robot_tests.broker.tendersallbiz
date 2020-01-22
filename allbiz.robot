@@ -1440,8 +1440,8 @@ Add competitive_dialogue bid
   [Arguments]  ${bid}  ${number_of_lots}
   :FOR  ${lot_index}  IN RANGE  ${number_of_lots}
   \  Select Checkbox  xpath=//input[@name="Bid[lotValues][${bid.data.lotValues[${lot_index}].relatedLot}][competitive_lot]"]
-  Select Checkbox  xpath=//input[contains(@id,"bid-selfeligible")]
-  Select Checkbox  xpath=//input[contains(@id,"bid-selfqualified")]
+#  Select Checkbox  xpath=//input[contains(@id,"bid-selfeligible")]
+#  Select Checkbox  xpath=//input[contains(@id,"bid-selfqualified")]
 #  Дочекатися І Клікнути  xpath=//button[contains(@id,"submit_bid")]
 
 
