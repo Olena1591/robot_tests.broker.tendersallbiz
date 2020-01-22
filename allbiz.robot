@@ -1329,6 +1329,7 @@ Get info from funders
 Отримати інформацію із пропозиції
   [Arguments]  ${username}  ${tender_uaid}  ${field}
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
+  Sleep  60
   ${is_edited}=  Run Keyword And Return Status  Page Should Contain  Замовником внесено зміни в умови
   ${value}=  Run Keyword If  ${is_edited} == ${True}  Set Variable  invalid
   ...  ELSE  Get Element Attribute  xpath=//input[contains(@name,"[value][amount]")]@value
@@ -1426,8 +1427,10 @@ Get info from funders
   ${number_of_lots}=  Get Length  ${bid.data.lotValues}
 #  Run Keyword If  '${mode}' != 'esco'  Add bid  ${bid}
 #  ...  ELSE  Add esco bid  ${bid}
+  ${tender_name}=  Get Text  xpath=//span[@data-test-id="procurementMethodType"]
   Run Keyword If  '${mode}' == 'open_esco'  Add esco bid  ${bid}  ${number_of_lots}
-  ...  ELSE IF  '${mode}' == 'open_competitive_dialogue'  Add competitive_dialogue bid  ${bid}  ${number_of_lots}
+  ...  ELSE IF  '${tender_name}' == 'Конкурентний діалог'  Add competitive_dialogue bid  ${bid}  ${number_of_lots}
+  ...  ELSE IF  '${tender_name}' == 'Конкурентний діалог з публікацією англ. мовою'  Add competitive_dialogue bid  ${bid}  ${number_of_lots}
   ...  ELSE  Add bid  ${bid}  ${number_of_lots}
 
 Add bid
@@ -1440,9 +1443,7 @@ Add competitive_dialogue bid
   [Arguments]  ${bid}  ${number_of_lots}
   :FOR  ${lot_index}  IN RANGE  ${number_of_lots}
   \  Select Checkbox  xpath=//input[@name="Bid[lotValues][${bid.data.lotValues[${lot_index}].relatedLot}][competitive_lot]"]
-#  Select Checkbox  xpath=//input[contains(@id,"bid-selfeligible")]
-#  Select Checkbox  xpath=//input[contains(@id,"bid-selfqualified")]
-#  Дочекатися І Клікнути  xpath=//button[contains(@id,"submit_bid")]
+
 
 
 Add esco bid
