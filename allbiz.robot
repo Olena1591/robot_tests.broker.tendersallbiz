@@ -1492,9 +1492,9 @@ Add annual costs reduction
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
   ${status}=  Run Keyword And Return Status  Page Should Not Contain  Замовником внесено зміни в умови
 #  ${update}=  Run Keyword And Return Status  Page Should Contain  Замовником внесено зміни в умови
-  Run Keyword If  ${status} and ${mode} != "open_esco"  ConvToStr And Input Text  xpath=//input[contains(@name,'[value][amount]')]  ${fieldvalue}
+  Run Keyword If  '${status}' and '${mode}' != "open_esco"  ConvToStr And Input Text  xpath=//input[contains(@name,'[value][amount]')]  ${fieldvalue}
 #  ...  AND  Дочекатися І Клікнути  xpath=//button[@id="submit_bid"]
-  ...  ELSE IF  ${mode} != "open_esco"  Select Checkbox  xpath=//*[@class="competitiveCheckbox"]
+  ...  ELSE IF  '${mode}' != "open_esco"  Select Checkbox  xpath=//*[@class="competitiveCheckbox"]
 #  ...  AND  Дочекатися І Клікнути  xpath=//button[@id="submit_bid"]
 #  ...  ELSE  Подати Пропозицію Без Накладення ЕЦП
   Дочекатися І Клікнути  xpath=//button[@id="submit_bid"]
@@ -1574,7 +1574,7 @@ Add annual costs reduction
   ...  Wait Element Animation  xpath=//*[@class="modal-dialog"]/descendant::button[contains(text(),"Накласти ЕЦП")]
   ...  AND  Click Element  xpath=//button[@class="btn btn-danger"]
   ...  AND  Дочекатися І Клікнути  xpath=//button[contains(@id, "modal-award-qualification-button")]
-  ...  AND  Накласти ЄЦП
+  ...  AND  Накласти ЄЦП  ${False}
 
 Підтвердити постачальника
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}
@@ -1762,6 +1762,7 @@ Scroll To Element
   Execute Javascript  window.scrollTo(0,${elem_vert_pos - 300});
 
 Накласти ЄЦП
+  [Arguments]  ${hide_sidebar}=${True}
   Wait Until Page Contains  Накласти ЕЦП/КЕП
   Дочекатися І Клікнути  xpath=//button[@class="sign_btn mk-btn mk-btn_default"][contains(text(),"Накласти ЕЦП/КЕП")]
   Wait Until Page Contains Element  xpath=//button[@id="SignDataButton"]
@@ -1774,8 +1775,7 @@ Scroll To Element
   ...  AND  Input text  id=PKeyPassword  12345677
   ...  AND  Дочекатися І Клікнути  id=PKeyReadButton
   ...  AND  Wait Until Page Contains  Ключ успішно завантажено  10
-  ${is_slidepanel_visible}=  Run Keyword And Return Status  Element Should Be Visible  xpath=//span[@id="slidePanelArrowR"]
-  Run Keyword If  ${is_slidepanel_visible}  Click element  xpath=//span[@id="slidePanelArrowR"]
+  Run Keyword If  ${hide_sidebar}  Click element  xpath=//span[@id="slidePanelArrowR"]
   Wait Until Element Is Not Visible  xpath=//button[@id="delete-draft"]
   Дочекатися І Клікнути  id=SignDataButton
   Wait Until Keyword Succeeds  60 x  1 s  Page Should Not Contain Element  id=SignDataButton  120
