@@ -1467,7 +1467,7 @@ Add annual costs reduction
 
    :FOR  ${index_reduction}  IN RANGE  ${number_length_reduction_matches}
    \   ${annualCostsReduction}=  Convert To String  ${lot_data.value.annualCostsReduction[${index_reduction}]}
-   \   Input Text  xpath=//*[contains(@id,"${lot_data.relatedLot}")and contains(@class, "annual-costs-reduction")][${index_reduction + 1}]  ${annualCostsReduction}
+   \   Input Text  xpath=(//*[contains(@id,"${lot_data.relatedLot}")and contains(@class, "annual-costs-reduction")])[${index_reduction + 1}]  ${annualCostsReduction}
 
 
 Вибрати нецінові показники в пропозиції
