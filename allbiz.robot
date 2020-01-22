@@ -1070,7 +1070,6 @@ Feature Count Should Not Be Zero
   Wait Until Keyword Succeeds  10 x  60 s  Run Keywords
   ...  Reload Page
   ...  AND  Page Should Contain  ${complaintID}
-  Sleep  1000
   Run Keyword If  "переможця" in "${TEST_NAME}"  Input Text  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::textarea  ${answer_data.data.resolution}
   ...  ELSE  Input Text  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::textarea  ${answer_data.data.resolution}
   Run Keyword If  "resolved" in "${answer_data.data.resolutionType}"  Дочекатися І Клікнути  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::input[@value="resolved"]
