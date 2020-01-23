@@ -760,9 +760,11 @@ allbiz.Перевести тендер на статус очікування о
 
 allbiz.Отримати тендер другого етапу та зберегти його
   [Arguments]  ${username}  ${tender_uaid}
-  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid[0:-2]}
+#  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid[0:-2]}
+#  Capture Page Screenshot  filename=selenium-screenshot-{}.png
+  Click Element  xpath=//*[@class="mk-btn mk-btn_accept"]
   Wait Until Keyword Succeeds  5x  10s   Run Keywords
-  ...  Click Element  xpath=//*[@class="mk-btn mk-btn_accept"]
+  ...  Reload Page
   ...  AND  Wait Until Page Contains  Чернетка 2-гий етап
 #  Дочекатися І Клікнути  xpath=//a[contains(@href,"tender/update")]
 #  Click Element  xpath=//*[@name="stage2_active_tendering"]
