@@ -1336,8 +1336,8 @@ Get info from funders
   [Arguments]  ${username}  ${tender_uaid}  ${field}
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
   Run Keyword If  '${mode}' == 'open_esco'  Sleep  700
-  ...  ELSE  Sleep  300
-  ${is_edited}=  Run Keyword And Return Status  Page Should Contain  Замовником внесено зміни в умови
+  ...  ELSE  Sleep  450
+  ${is_edited}=  Run Keyword And Return Status  Page Should Contain  Недійсна
   ${value}=  Run Keyword If  ${is_edited} == ${True}  Set Variable  invalid
   ...  ELSE  Get Element Attribute  xpath=//input[contains(@name,"[value][amount]")]@value
   ${value}=  Run Keyword If  "value.amount" in "${field}"  Convert To Number  ${value}
@@ -1497,7 +1497,7 @@ Add annual costs reduction
 Змінити цінову пропозицію
   [Arguments]  ${username}  ${tender_uaid}  ${fieldname}  ${fieldvalue}
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
-  ${status}=  Run Keyword And Return Status  Page Should Not Contain  Замовником внесено зміни в умови
+  ${status}=  Run Keyword And Return Status  Page Should Not Contain  Недійсна
 #  ${update}=  Run Keyword And Return Status  Page Should Contain  Замовником внесено зміни в умови
   Run Keyword If  ${status} and "${mode}" != "open_esco"  ConvToStr And Input Text  xpath=//input[contains(@name,'[value][amount]')]  ${fieldvalue}
 #  ...  AND  Дочекатися І Клікнути  xpath=//button[@id="submit_bid"]
