@@ -1125,8 +1125,10 @@ Feature Count Should Not Be Zero
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
   Toggle Sidebar
-  Дочекатися І Клікнути  xpath=//a[contains(@href,"tender/qualification")]
-  Дочекатися І Клікнути  xpath=//a[contains(@href, "status=claim")]
+#  Дочекатися І Клікнути  xpath=//a[contains(@href,"tender/qualification")]
+  Дочекатися І Клікнути  xpath=(//a[contains(@href,"tender/qualification-complaints")])[2]
+  Дочекатися І Клікнути  xpath=//a[contains(@href,"tender/complaints-create")]
+#  Дочекатися І Клікнути  xpath=//a[contains(@href, "status=claim")]
   Input Text  name=Complaint[title]  ${claim.data.title}
   Input Text  name=Complaint[description]  ${claim.data.description}
   Run Keyword If  '${document}' != '${None}'  Run Keywords
@@ -1636,15 +1638,15 @@ Add annual costs reduction
 
 allbiz.Скасування рішення кваліфікаційної комісії
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}
-  ${is_contract_visible}=  Run Keyword And Return Status  Element Should Be Visible  xpath=//*[@class="mk-btn mk-btn_default js-btn-contract-award"]
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
+  ${is_contract_visible}=  Run Keyword And Return Status  Element Should Be Visible  xpath=//*[@class="mk-btn mk-btn_default js-btn-contract-award"]
 #  Дочекатися І Клікнути  xpath=//button[@class="mk-btn mk-btn_danger btn-award"]
 #  Wait Element Animation  xpath//div[@class="modal-footer"][2]
 #  Дочекатися І Клікнути  xpath=//button[@class="btn mk-btn mk-btn_danger"]
   Дочекатися І Клікнути  xpath=//*[contains(@href,"tender/award/")]
   Run Keyword If  ${is_contract_visible}  Click Element  xpath=//*[@class="mk-btn mk-btn_danger btn-award"]
   ...  ELSE  Run Keywords
-  ...  Дочекатися І Клікнути  xpath=//*[class="mk-btn mk-btn_danger btn-award"]
+  ...  Дочекатися І Клікнути  xpath=//*[@class="mk-btn mk-btn_danger btn-award"]
   ...  AND  Дочекатися І Клікнути  xpath=//button[@class="btn mk-btn mk-btn_danger"]
 
 
