@@ -1135,7 +1135,8 @@ Feature Count Should Not Be Zero
   Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
   Дочекатися завантаження документу
   Sleep  1000
-  Wait Until Keyword Succeeds  10 x  30 s  Page Should Contain Element  xpath=//*[contains(text(),"${claim.data.title}")]/preceding-sibling::*[@data-test-id="complaint.complaintID"]
+#  Wait Until Keyword Succeeds  10 x  30 s  Page Should Contain Element  xpath=//*[contains(text(),"${claim.data.title}")]/preceding-sibling::*[@data-test-id="complaint.complaintID"]
+  Wait Until Keyword Succeeds  10 x  30 s  Page Should Contain Element  xpath=//*[contains(text(),"")]/preceding-sibling::*[@data-test-id="complaint.complaintID"]
   ${complaintID}=   Get Text   xpath=(//*[@data-test-id="complaint.complaintID"])[last()]
   [Return]  ${complaintID}
 
@@ -1631,13 +1632,16 @@ Add annual costs reduction
 
 allbiz.Скасування рішення кваліфікаційної комісії
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}
+  ${is_contract_visible}=  Run Keyword And Return Status  Element Should Be Visible  xpath=//*[@class="mk-btn mk-btn_default js-btn-contract-award"]
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
 #  Дочекатися І Клікнути  xpath=//button[@class="mk-btn mk-btn_danger btn-award"]
 #  Wait Element Animation  xpath//div[@class="modal-footer"][2]
 #  Дочекатися І Клікнути  xpath=//button[@class="btn mk-btn mk-btn_danger"]
   Дочекатися І Клікнути  xpath=//*[contains(@href,"tender/award/")]
-  Дочекатися І Клікнути  xpath=//*[class="mk-btn mk-btn_danger btn-award"]
-  Дочекатися І Клікнути  xpath=//button[@class="btn mk-btn mk-btn_danger"]
+  Run Keyword If  ${is_contract_visible}  Click Element  xpath=//*[@class="mk-btn mk-btn_danger btn-award"]
+  ...  ELSE  Run Keywords
+  ...  Дочекатися І Клікнути  xpath=//*[class="mk-btn mk-btn_danger btn-award"]
+  ...  Дочекатися І Клікнути  xpath=//button[@class="btn mk-btn mk-btn_danger"]
 
 
 Затвердити остаточне рішення кваліфікації
