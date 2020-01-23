@@ -41,7 +41,7 @@ ${locator.plan.tender.procurementMethodType}=  xpath=//*[@data-test-id="procurem
   [Arguments]  ${username}
   ${chromeOptions}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
 #  ${prefs} =    Create Dictionary    download.default_directory=${downloadDir}
-  Call Method    ${chromeOptions}    add_argument    --headless
+#  Call Method    ${chromeOptions}    add_argument    --headless
 
 
   Create Webdriver    ${USERS.users['${username}'].browser}  alias=${username}   chrome_options=${chromeOptions}
@@ -1161,6 +1161,7 @@ Feature Count Should Not Be Zero
   [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${cancellation_data}  ${award_index}
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
+  Sleep  1000
   Дочекатися І Клікнути  xpath=//a[contains(@href,"tender/qualification")]
   Дочекатися І Клікнути  xpath=//input[@class="cancel_checkbox"]/..
   Ввести Текст  xpath=//*[contains(@name, "[cancellationReason]")]  ${cancellation_data.data.cancellationReason}
@@ -1381,7 +1382,7 @@ Get info from funders
   ...  ELSE IF  'amount' in '${field_name}'  Get Text  xpath=//*[@data-mtitle="Пропозицiя:"]/b
   ...  ELSE IF  'currency' in '${field_name}'  Get Text  xpath=//*[@data-mtitle="Пропозицiя:"]
   ...  ELSE IF  'value' in '${field_name}'  Get Text  xpath=//*[contains(text(), "ПДВ")]
-  ...  ELSE IF  'complaintPeriod.endDate' in '${field_name}'  Get Text  xpath=//*[@class="mk-btn mk-btn_danger btn-award"]
+  ...  ELSE IF  'complaintPeriod.endDate' in '${field_name}'  Get Text  xpath=//*[@data-test-id="awards.complaintPeriod.endDate"]
   ...  ELSE IF  'legalName' in '${field_name}'  Get Text  xpath=//*[@data-test-id="awards.suppliers.name"]
   ...  ELSE  Get Text  xpath=//*[@data-test-id="${field_name.replace("[0]","")}"]
   [Return]  ${value.split(" - ")[-1]}
