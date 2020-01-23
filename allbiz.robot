@@ -1645,7 +1645,7 @@ allbiz.Скасування рішення кваліфікаційної ком
   Run Keyword If  ${is_contract_visible}  Click Element  xpath=//*[@class="mk-btn mk-btn_danger btn-award"]
   ...  ELSE  Run Keywords
   ...  Дочекатися І Клікнути  xpath=//*[class="mk-btn mk-btn_danger btn-award"]
-  ...  Дочекатися І Клікнути  xpath=//button[@class="btn mk-btn mk-btn_danger"]
+  ...  AND  Дочекатися І Клікнути  xpath=//button[@class="btn mk-btn mk-btn_danger"]
 
 
 Затвердити остаточне рішення кваліфікації
