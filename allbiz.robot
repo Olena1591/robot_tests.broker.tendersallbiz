@@ -1603,7 +1603,7 @@ Add annual costs reduction
   Дочекатися І Клікнути  xpath=//*[contains(@href,"tender/euprequalification/")]
 #  ${status}=  Run Keyword And Return Status  Wait Until Element Is Visible  xpath=//button[@data-dismiss="modal"]  5
 #  Run Keyword If  ${status}  Закрити модалку  xpath=//button[@data-dismiss="modal"]
-  Run Keyword If  '${mode}' ==  'openeu"  Дочекатися І Клікнути  xpath=//*[@name="Qualifications[${qualification_num * -1}][qualified]"]/ancestor::div[@class="tbl-r"]/descendant::button[@class="mk-btn mk-btn_accept"]
+  Run Keyword If  '${mode}' ==  'openeu'  Дочекатися І Клікнути  xpath=//*[@name="Qualifications[${qualification_num * -1}][qualified]"]/ancestor::div[@class="tbl-r"]/descendant::button[@class="mk-btn mk-btn_accept"]
   ...  ELSE  Дочекатися І Клікнути  xpath=//*[@name="Qualifications[${qualification_num * -1}][qualified]"]/ancestor::div[@class="col-xs-12"]/descendant::button[@class="mk-btn mk-btn_accept"]
   Wait Element Animation  xpath=//*[@class="fade modal in"]
 #  Дочекатися І Клікнути  xpath=//*[@name="Qualifications[${qualification_num}][action]"]
