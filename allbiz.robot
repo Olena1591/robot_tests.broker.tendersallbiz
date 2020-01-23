@@ -1338,7 +1338,7 @@ Get info from funders
   Run Keyword If  '${mode}' == 'open_esco'  Sleep  700
   ...  ELSE  Sleep  450
   ${is_edited}=  Run Keyword And Return Status  Page Should Contain  Недійсна
-  ${value}=  Run Keyword If  ${is_edited} == ${True}  Set Variable  invalid
+  ${value}=  Run Keyword If  ${is_edited}  Set Variable  invalid
   ...  ELSE  Get Element Attribute  xpath=//input[contains(@name,"[value][amount]")]@value
   ${value}=  Run Keyword If  "value.amount" in "${field}"  Convert To Number  ${value}
   ...  ELSE  Set Variable  ${value}
