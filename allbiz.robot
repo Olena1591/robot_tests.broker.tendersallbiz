@@ -1617,9 +1617,12 @@ Add annual costs reduction
 #  ...  ELSE  Дочекатися І Клікнути  xpath=//*[@name="Qualifications[${qualification_num * -1}][qualified]"]/ancestor::div[@class="col-xs-12"]/descendant::button[@class="mk-btn mk-btn_accept"]
   Wait Element Animation  xpath=//*[@class="fade modal in"]
 #  Дочекатися І Клікнути  xpath=//*[@name="Qualifications[${qualification_num}][action]"]
-  Select From list By Index  xpath=//*[@name="Qualifications[${qualification_num * -1}][action]"]  0
-  Click Element  xpath=//*[@name="Qualifications[${qualification_num * -1}][qualified]"]/ancestor::div[contains(@class,"field-wrapper ")]
-  Click Element  xpath=//*[@name="Qualifications[${qualification_num * -1}][eligible]"]/ancestor::div[contains(@class,"field-wrapper ")]
+#  Select From list By Index  xpath=//*[@name="Qualifications[${qualification_num * -1}][action]"]  0
+  Select From list By Index  xpath=//select[@class="choose_prequalification"]  0
+#  Click Element  xpath=//*[@name="Qualifications[${qualification_num * -1}][qualified]"]/ancestor::div[contains(@class,"field-wrapper ")]
+  Click Element  xpath=//input[contains(@id, "qualified")]
+#  Click Element  xpath=//*[@name="Qualifications[${qualification_num * -1}][eligible]"]/ancestor::div[contains(@class,"field-wrapper ")]
+  Click Element  xpath=//input[contains(@id, "eligible")]
   Click Element  xpath=(//*[@class="mk-btn mk-btn_accept btn-submitform_qualification"])[1]
   Wait Until Keyword Succeeds  5x  1s   Page Should Contain Element  xpath=//*[@name="cancel_prequalification"]
 
