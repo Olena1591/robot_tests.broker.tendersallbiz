@@ -761,7 +761,7 @@ allbiz.Перевести тендер на статус очікування о
 
 allbiz.Отримати тендер другого етапу та зберегти його
   [Arguments]  ${username}  ${tender_uaid}
-#  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid[0:-2]}
+  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid[0:-2]}
 #  Capture Page Screenshot  filename=selenium-screenshot-{}.png
   Click Element  xpath=//*[@class="mk-btn mk-btn_accept"]
   Wait Until Keyword Succeeds  5x  10s   Run Keywords
@@ -1149,8 +1149,7 @@ Feature Count Should Not Be Zero
   [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${confirmation_data}  ${award_index}
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
-  sleep  1000
-  Дочекатися І Клікнути  xpath=//a[contains(@href,"tender/qualification-complaints")]/following-sibling::div[@data-test-id="awards.complaintPeriod.endDate"]
+  Дочекатися І Клікнути  xpath=//div[@data-test-id="awards.complaintPeriod.endDate"]/preceding-sibling::a[contains(@href,"tender/qualification-complaints")]
   Дочекатися І Клікнути  xpath=//button[@name="award_claim_resolved"]
   Wait Until Keyword Succeeds  30 x  1 s  Page Should Contain Element  xpath=//*[@data-test-id="complaint.satisfied"]
 
@@ -1163,10 +1162,10 @@ Feature Count Should Not Be Zero
   [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${cancellation_data}  ${award_index}
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
-  Дочекатися І Клікнути  xpath=//a[contains(@href,"tender/qualification-complaints")]/following-sibling::div[@data-test-id="awards.complaintPeriod.endDate"]
-  Дочекатися І Клікнути  xpath=//input[@class="cancel_checkbox"]/..
+  Дочекатися І Клікнути  xpath=//div[@data-test-id="awards.complaintPeriod.endDate"]/preceding-sibling::a[contains(@href,"tender/qualification-complaints")]
+  Select Checkbox  xpath=//input[@class="cancel_checkbox"]
   Ввести Текст  xpath=//*[contains(@name, "[cancellationReason]")]  ${cancellation_data.data.cancellationReason}
-  Дочекатися І Клікнути  xpath=//button[@name="complaint_cancelled"]
+  Дочекатися І Клікнути  xpath=(//button[@name="complaint_cancelled"])[1]
 
 Перетворити вимогу про виправлення визначення переможця в скаргу
   [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${escalating_data}  ${award_index}
