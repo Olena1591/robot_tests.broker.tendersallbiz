@@ -41,7 +41,7 @@ ${locator.plan.tender.procurementMethodType}=  xpath=//*[@data-test-id="procurem
   [Arguments]  ${username}
   ${chromeOptions}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
 #  ${prefs} =    Create Dictionary    download.default_directory=${downloadDir}
-  Call Method    ${chromeOptions}    add_argument    --headless
+#  Call Method    ${chromeOptions}    add_argument    --headless
 
 
   Create Webdriver    ${USERS.users['${username}'].browser}  alias=${username}   chrome_options=${chromeOptions}
@@ -652,9 +652,10 @@ Add Item Tender
 
 allbiz.Редагувати угоду
   [Arguments]  ${username}  ${tender_uaid}  ${contract_index}  ${fieldname}  ${fieldvalue}
-  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-  Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
-  Дочекатися І Клікнути  xpath=//button[@class="mk-btn mk-btn_default js-btn-contract-award"]
+#  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+#  Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
+#  Дочекатися І Клікнути  xpath=//button[@class="mk-btn mk-btn_default js-btn-contract-award"]
+  Log  ${fieldvalue}
 
 Внести зміну в договір
   [Arguments]  ${username}  ${contract_uaid}  ${change_data}
@@ -1148,6 +1149,7 @@ Feature Count Should Not Be Zero
   [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${confirmation_data}  ${award_index}
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
+  sleep  1000
   Дочекатися І Клікнути  xpath=//a[contains(@href,"tender/qualification-complaints")]/following-sibling::div[@data-test-id="awards.complaintPeriod.endDate"]
   Дочекатися І Клікнути  xpath=//button[@name="award_claim_resolved"]
   Wait Until Keyword Succeeds  30 x  1 s  Page Should Contain Element  xpath=//*[@data-test-id="complaint.satisfied"]
@@ -1339,7 +1341,7 @@ Get info from funders
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
   Run Keyword If  '${mode}' == 'open_esco'  Sleep  700
   ...  ELSE  Sleep  450
-  ${is_edited}=  Run Keyword And Return Status  Page Should Contain  Недійсна
+  ${is_edited}=  Run Keyword And Return Status  Page Should Contain Element  xpath=//span[@class="label label-success"][contains(text(),"Недійсна")]
   ${value}=  Run Keyword If  ${is_edited}  Set Variable  invalid
   ...  ELSE  Get Element Attribute  xpath=//input[contains(@name,"[value][amount]")]@value
   ${value}=  Run Keyword If  "value.amount" in "${field}"  Convert To Number  ${value}
