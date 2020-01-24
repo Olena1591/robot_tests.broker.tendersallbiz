@@ -1348,8 +1348,9 @@ Get info from funders
 Отримати інформацію із пропозиції
   [Arguments]  ${username}  ${tender_uaid}  ${field}
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
-  Run Keyword If  '${mode}' == 'open_esco'  Sleep  700
-  ...  ELSE  Sleep  550
+#  Run Keyword If  '${mode}' == 'open_esco'  Sleep  700
+#  ...  ELSE  Sleep  550
+  Sleep  700
   ${is_edited}=  Run Keyword And Return Status  Page Should Contain Element  xpath=//span[@class="label label-danger"][contains(text(),"Недійсна")] /ancestor::div[@class="pull-right"]
   ${value}=  Run Keyword If  ${is_edited}  Set Variable  invalid
   ...  ELSE  Get Element Attribute  xpath=//input[contains(@name,"[value][amount]")]@value
