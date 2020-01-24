@@ -391,7 +391,7 @@ Fill tender filds
   ${milestones}=  Get From Dictionary  ${tender_data.data}  milestones
   ${valueAddedTaxIncluded}=  Set Variable If  ${tender_data.data.value.valueAddedTaxIncluded}  1  0
   Conv And Select From List By Value  name=Tender[value][valueAddedTaxIncluded]  ${valueAddedTaxIncluded}
-  Conv And Select From List By Value  xpath=(//*[@data-test-id="guarantee-exist"])[${index_strategy}]  1
+  Run Keyword If  '${mode}' != 'reporting'  Conv And Select From List By Value  xpath=(//*[@data-test-id="guarantee-exist"])[${index_strategy}]  1
   Wait And Select From List By Value  name=Tender[value][currency]  ${tender_data.data.value.currency}
 
   :FOR   ${milestones_index}   IN RANGE   ${number_of_milestones}
