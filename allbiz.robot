@@ -657,8 +657,21 @@ allbiz.Редагувати угоду
 #  Дочекатися І Клікнути  xpath=//button[@class="mk-btn mk-btn_default js-btn-contract-award"]
   Log  ${fieldvalue}
 
-Внести зміну в договір
-  [Arguments]  ${username}  ${contract_uaid}  ${change_data}
+allbiz.Встановити дату підписання угоди
+  [Arguments]  ${username}  ${tender_uaid}  ${contract_index}  ${fieldvalue}
+  Log  ${fieldvalue}
+
+allbiz.Вказати період дії угоди
+  [Arguments]  ${username}  ${tender_uaid}  ${contract_index}  ${startDate}  ${endDate}
+  Log  ${startDate}  ${endDate}
+
+#allbiz.Завантажити документ в угоду
+#  [Arguments]  ${username}  ${path}  ${tender_uaid}  ${contract_index}  ${doc_type}=documents
+
+
+
+#Внести зміну в договір
+#  [Arguments]  ${username}  ${contract_uaid}  ${change_data}
 
 
 
@@ -1665,6 +1678,7 @@ Disqualification of the first winner
   Select Checkbox  xpath=//input[@value="Не вiдповiдає квалiфiкацiйним критерiям."]
   Дочекатися І Клікнути  xpath=//button[@class="mk-btn mk-btn_danger btn-submitform_award"]
   Дочекатися І Клікнути  xpath=//button[@class="btn mk-btn mk-btn_accept"]
+  Wait Element Animation  xpath=class=//h4[@class="modal-title"]
   Накласти ЄЦП  ${False}
   Wait Until Page Contains Element  xpath=//*[contains(@id,"modal-award-qualification-button")]  30
 
