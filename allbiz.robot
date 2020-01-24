@@ -1126,7 +1126,7 @@ Feature Count Should Not Be Zero
   Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
   Toggle Sidebar
 #  Дочекатися І Клікнути  xpath=//a[contains(@href,"tender/qualification")]
-  Дочекатися І Клікнути  xpath=(//a[contains(@href,"tender/qualification-complaints")])[2]
+  Дочекатися І Клікнути  xpath=(//a[contains(@href,"tender/qualification-complaints")])[last()]
   Дочекатися І Клікнути  xpath=//a[contains(@href,"tender/complaints-create")]
 #  Дочекатися І Клікнути  xpath=//a[contains(@href, "status=claim")]
   Input Text  name=Complaint[title]  ${claim.data.title}
@@ -1654,6 +1654,7 @@ allbiz.Скасування рішення кваліфікаційної ком
 
 Disqualification of the first winner
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}
+  ${document}=  get_upload_file_path
   Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-award-qualification-button")]
   Wait Element Animation  xpath=//*[@class="h2 text-center"]
   Select From List By Value  xpath=//select[@class="choose_prequalification"]  unsuccessful
