@@ -1148,7 +1148,7 @@ Feature Count Should Not Be Zero
   [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${confirmation_data}  ${award_index}
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
-  Дочекатися І Клікнути  xpath=//a[contains(@href,"tender/qualification")]
+  Дочекатися І Клікнути  xpath=//a[contains(@href,"tender/qualification-complaints")]/following-sibling::div[@data-test-id="awards.complaintPeriod.endDate"]
   Дочекатися І Клікнути  xpath=//button[@name="award_claim_resolved"]
   Wait Until Keyword Succeeds  30 x  1 s  Page Should Contain Element  xpath=//*[@data-test-id="complaint.satisfied"]
 
@@ -1161,8 +1161,7 @@ Feature Count Should Not Be Zero
   [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${cancellation_data}  ${award_index}
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
-  Sleep  1000
-  Дочекатися І Клікнути  xpath=//a[contains(@href,"tender/qualification")]
+  Дочекатися І Клікнути  xpath=//a[contains(@href,"tender/qualification-complaints")]/following-sibling::div[@data-test-id="awards.complaintPeriod.endDate"]
   Дочекатися І Клікнути  xpath=//input[@class="cancel_checkbox"]/..
   Ввести Текст  xpath=//*[contains(@name, "[cancellationReason]")]  ${cancellation_data.data.cancellationReason}
   Дочекатися І Клікнути  xpath=//button[@name="complaint_cancelled"]
@@ -1640,15 +1639,32 @@ Add annual costs reduction
 allbiz.Скасування рішення кваліфікаційної комісії
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
-  ${is_contract_visible}=  Run Keyword And Return Status  Element Should Be Visible  xpath=//*[@class="mk-btn mk-btn_default js-btn-contract-award"]
+  ${is_award}=  Run Keyword And Return Status  Page Should Contain  Визначення переможців
 #  Дочекатися І Клікнути  xpath=//button[@class="mk-btn mk-btn_danger btn-award"]
 #  Wait Element Animation  xpath//div[@class="modal-footer"][2]
 #  Дочекатися І Клікнути  xpath=//button[@class="btn mk-btn mk-btn_danger"]
   Дочекатися І Клікнути  xpath=//*[contains(@href,"tender/award/")]
-  Run Keyword If  ${is_contract_visible}  Click Element  xpath=//*[@class="mk-btn mk-btn_danger btn-award"]
-  ...  ELSE  Run Keywords
-  ...  Дочекатися І Клікнути  xpath=//*[@class="mk-btn mk-btn_danger btn-award"]
-  ...  AND  Дочекатися І Клікнути  xpath=//button[@class="btn mk-btn mk-btn_danger"]
+#  Run Keyword If  ${is_contract_visible}  Click Element  xpath=//*[@class="mk-btn mk-btn_danger btn-award"]
+#  ...  ELSE  Run Keywords
+#  ...  Дочекатися І Клікнути  xpath=//*[@class="mk-btn mk-btn_danger btn-award"]
+  Дочекатися І Клікнути  xpath=//*[@class="mk-btn mk-btn_danger btn-award"]
+  Дочекатися І Клікнути  xpath=//button[@class="btn mk-btn mk-btn_danger"]
+  Run Keyword If  ${is_award}  Disqualification of the first winner  ${username}  ${tender_uaid}  ${award_num}
+
+
+Disqualification of the first winner
+  [Arguments]  ${username}  ${tender_uaid}  ${award_num}
+  Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-award-qualification-button")]
+  Wait Element Animation  xpath=//*[@class="h2 text-center"]
+  Select From List By Value  xpath=//select[@class="choose_prequalification"]  unsuccessful
+  Choose File  xpath=//*[@class="unsuccessful"]/descendant::input[@type="file"]  ${document}
+  Wait Until Element Is Visible  xpath=//select[@id="document-type-0"]
+  Select From List By Value  xpath=//select[@id="document-type-0"]  awardNotice
+  Select Checkbox  xpath=//input[@value="Не вiдповiдає квалiфiкацiйним критерiям."]
+  Дочекатися І Клікнути  xpath=//button[@class="mk-btn mk-btn_danger btn-submitform_award"]
+  Дочекатися І Клікнути  xpath=//button[@class="btn mk-btn mk-btn_accept"]
+  Накласти ЄЦП  ${False}
+  Wait Until Page Contains Element  xpath=//*[contains(@id,"modal-award-qualification-button")]  30
 
 
 Затвердити остаточне рішення кваліфікації
