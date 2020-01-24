@@ -668,17 +668,17 @@ allbiz.Вказати період дії угоди
 #allbiz.Завантажити документ в угоду
 #  [Arguments]  ${username}  ${path}  ${tender_uaid}  ${contract_index}  ${doc_type}=contractSigned
 #  ${doc_type}=  Set Variable If  '${doc_type}' == 'None'  contractSigned  ${doc_type}
-  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
-
-  Дочекатися І Клікнути  xpath=//a[contains(text(),'Редагувати')]
-  Scroll To Element  xpath=//*[@data-test-id="tender.documents.upload"]/descendant::input[@type="file"][last()]
-  Choose File  xpath=//*[@data-test-id="tender.documents.upload"]/descendant::input[@type="file"][last()]  ${filepath}
-  Wait Until Element Is Visible  xpath=(//input[@class="file_name"])[last()]
-  Input Text  xpath=(//input[@class="file_name"])[last()]  ${filepath.split("/")[-1]}
-  Select From List By Value  xpath=(//select[contains(@name, "Tender[documents]")])[last()]  tender
-  Click Button  xpath=//button[contains(@class,'btn_submit_form')]
-  Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
-  Дочекатися завантаження документу
+#  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+#
+#  Дочекатися І Клікнути  xpath=//a[contains(text(),'Редагувати')]
+#  Scroll To Element  xpath=//*[@data-test-id="tender.documents.upload"]/descendant::input[@type="file"][last()]
+#  Choose File  xpath=//*[@data-test-id="tender.documents.upload"]/descendant::input[@type="file"][last()]  ${filepath}
+#  Wait Until Element Is Visible  xpath=(//input[@class="file_name"])[last()]
+#  Input Text  xpath=(//input[@class="file_name"])[last()]  ${filepath.split("/")[-1]}
+#  Select From List By Value  xpath=(//select[contains(@name, "Tender[documents]")])[last()]  tender
+#  Click Button  xpath=//button[contains(@class,'btn_submit_form')]
+#  Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
+#  Дочекатися завантаження документу
 
 
 
