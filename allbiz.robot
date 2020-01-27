@@ -1531,6 +1531,7 @@ Add annual costs reduction
 Завантажити документ в ставку
   [Arguments]  ${username}  ${path}  ${tender_uaid}  ${doc_name}=documents  ${doc_type}=technicalSpecifications
   ${doc_type}=  Set Variable If  '${doc_type}' == 'None'  technicalSpecifications  ${doc_type}
+  ${doc_type}=  Set Variable If  '${doc_type}' == 'winningBid'  technicalSpecifications  ${doc_type}
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
   Scroll To Element  xpath=(//input[@type="file"])[last()]
   Choose File  xpath=(//input[@type="file"])[last()]  ${path}
