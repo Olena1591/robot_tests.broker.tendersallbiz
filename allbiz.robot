@@ -361,8 +361,8 @@ Update plan items info
   Input text  name=Tender[description]  ${tender_data.data.description}
 #  Run Keyword If  "${tender_data.data.procurementMethodType}" == "belowThreshold"  Run Keywords
 #  Input date  name="Tender[enquiryPeriod][endDate]"  ${tender_data.data.enquiryPeriod.endDate}
-  Input date  name="Tender[tenderPeriod][startDate]"  ${tender_data.data.tenderPeriod.startDate}
-  Input date  name="Tender[tenderPeriod][endDate]"  ${tender_data.data.tenderPeriod.endDate}
+  Run Keyword If  '${mode}' != 'reporting'  Input date  name="Tender[tenderPeriod][startDate]"  ${tender_data.data.tenderPeriod.startDate}
+  Run Keyword If  '${mode}' != 'reporting'  Input date  name="Tender[tenderPeriod][endDate]"  ${tender_data.data.tenderPeriod.endDate}
   Run Keyword If   ${number_of_lots} != 0  Додати багато лотів  ${tender_data}
 #  Run Keyword If   ${number_of_lots} == 0  Додати багато предметів   ${tender_data}
 #  ...  ELSE  Додати багато лотів  ${tender_data}
@@ -1149,7 +1149,6 @@ Feature Count Should Not Be Zero
   Дочекатися І Клікнути  name=complaint_submit
   Wait Until Page Contains Element  xpath=//div[contains(@class, "alert-success")]
   Дочекатися завантаження документу
-  Sleep  1000
 #  Wait Until Keyword Succeeds  10 x  30 s  Page Should Contain Element  xpath=//*[contains(text(),"${claim.data.title}")]/preceding-sibling::*[@data-test-id="complaint.complaintID"]
   Wait Until Keyword Succeeds  10 x  30 s  Page Should Contain Element  xpath=//*[contains(text(),"")]/preceding-sibling::*[@data-test-id="complaint.complaintID"]
   ${complaintID}=   Get Text   xpath=(//*[@data-test-id="complaint.complaintID"])[last()]
@@ -1510,6 +1509,10 @@ Add annual costs reduction
 Змінити цінову пропозицію
   [Arguments]  ${username}  ${tender_uaid}  ${fieldname}  ${fieldvalue}
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
+  Run Keyword If  "${fieldname}" == "status"  Wait Until Keyword Succeeds  20 x  10 s  Run Keywords
+  ...  Дочекатися І Клікнути  xpath=//*[contains(@href,"test-tenders.all.biz/tender/json/")]
+  ...  AND  Page Should Contain Element  xpath=//span[@class="label label-danger"][contains(text(),"Недійсна")] /ancestor::div[@class="pull-right"]
+  Дочекатися І Клікнути  xpath=//*[contains(@href,"test-tenders.all.biz/tender/json/")]
   ${status}=  Run Keyword And Return Status  Page Should Not Contain  Недійсна
 #  ${update}=  Run Keyword And Return Status  Page Should Contain  Замовником внесено зміни в умови
   Run Keyword If  ${status} and "${mode}" != "open_esco"  ConvToStr And Input Text  xpath=//input[contains(@name,'[value][amount]')]  ${fieldvalue}
@@ -1521,7 +1524,7 @@ Add annual costs reduction
 #  Run Keyword If  ${update}  Select Checkbox  xpath=//*[@class="competitiveCheckbox"]
 #  ...  AND  Дочекатися І Клікнути  xpath=//button[@id="submit_bid"]
 #  Подати Пропозицію Без Накладення ЕЦП
-  Wait Until Keyword Succeeds  10 x  1 s  Element Should Be Visible  xpath=//div[contains(@class, 'alert-success')]
+  Wait Until Keyword Succeeds  30 x  1 s  Element Should Be Visible  xpath=//div[contains(@class, 'alert-success')]
 
 
 Завантажити документ в ставку
