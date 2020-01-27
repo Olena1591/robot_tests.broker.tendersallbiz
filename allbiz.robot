@@ -1678,7 +1678,7 @@ Disqualification of the first winner
   Select Checkbox  xpath=//input[@value="Не вiдповiдає квалiфiкацiйним критерiям."]
   Дочекатися І Клікнути  xpath=//button[@class="mk-btn mk-btn_danger btn-submitform_award"]
   Дочекатися І Клікнути  xpath=//button[@class="btn mk-btn mk-btn_accept"]
-  Wait Element Animation  xpath=class=//h4[@class="modal-title"]
+  Wait Element Animation  xpath=//h4[@class="modal-title"]
   Накласти ЄЦП  ${False}
   Wait Until Page Contains Element  xpath=//*[contains(@id,"modal-award-qualification-button")]  30
 
