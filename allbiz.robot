@@ -1696,7 +1696,6 @@ Disqualification of the first winner
   ...  AND  Input text  id=PKeyPassword  12345677
   ...  AND  Дочекатися І Клікнути  id=PKeyReadButton
   ...  AND  Wait Until Page Contains  Ключ успішно завантажено  10
-  Run Keyword If  ${hide_sidebar}  Click element  xpath=//span[@id="slidePanelArrowR"]
   Дочекатися І Клікнути  id=SignDataButton
   Wait Until Keyword Succeeds  60 x  1 s  Page Should Not Contain Element  id=SignDataButton  120
   Wait Until Page Contains Element  xpath=//*[contains(@id,"modal-award-qualification-button")]  30
