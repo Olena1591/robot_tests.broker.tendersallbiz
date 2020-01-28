@@ -1587,8 +1587,8 @@ Add annual costs reduction
   Select From List By Value  xpath=//select[@id="document-type-0"]  awardNotice
   Run Keyword If  '${mode}' == 'belowThreshold'  Wait Until Keyword Succeeds  10 x  400 ms  Page Should Contain Element  xpath=(//input[@type="file"])[last()]
   ...  ELSE    Run Keywords
-  ...  Select Checkbox  xpath=//input[@id="award-0-qualified"]
-  ...  AND  Select Checkbox  xpath=//input[@id="award-0-eligible"]
+  ...  Select Checkbox  xpath=//input[@id="award-${award_num}-qualified"]
+  ...  AND  Select Checkbox  xpath=//input[@id="award-${award_num}-eligible"]
 
 #  ${status}=  Run Keyword And Return Status  Wait Until Keyword Succeeds  5 x  1 s  Page Should Contain Element  xpath=//input[contains(@id,"qualified")]/..
 #  Run Keyword If  ${status}  Run Keywords
