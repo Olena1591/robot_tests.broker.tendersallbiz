@@ -41,7 +41,7 @@ ${locator.plan.tender.procurementMethodType}=  xpath=//*[@data-test-id="procurem
   [Arguments]  ${username}
   ${chromeOptions}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
 #  ${prefs} =    Create Dictionary    download.default_directory=${downloadDir}
-  Call Method    ${chromeOptions}    add_argument    --headless
+#  Call Method    ${chromeOptions}    add_argument    --headless
 
 
   Create Webdriver    ${USERS.users['${username}'].browser}  alias=${username}   chrome_options=${chromeOptions}
@@ -1172,7 +1172,7 @@ Feature Count Should Not Be Zero
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
   Дочекатися І Клікнути  xpath=//div[@data-test-id="awards.complaintPeriod.endDate"]/preceding-sibling::a[contains(@href,"tender/qualification-complaints")]
-  Select Checkbox  xpath=//input[@class="cancel_checkbox"]
+  Select Checkbox  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::*[@class="cancel_checkbox"]
   Ввести Текст  xpath=//*[contains(@name, "[cancellationReason]")]  ${cancellation_data.data.cancellationReason}
   Дочекатися І Клікнути  xpath=(//button[@name="complaint_cancelled"])[1]
 
