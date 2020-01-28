@@ -1393,10 +1393,17 @@ Get info from funders
   ...  ELSE IF  'amount' in '${field_name}'  Get Text  xpath=//*[@data-mtitle="Пропозицiя:"]/b
   ...  ELSE IF  'currency' in '${field_name}'  Get Text  xpath=//*[@data-mtitle="Пропозицiя:"]
   ...  ELSE IF  'value' in '${field_name}'  Get Text  xpath=//*[contains(text(), "ПДВ")]
-  ...  ELSE IF  'complaintPeriod.endDate' in '${field_name}'  Get Text  xpath=//div[@class="col-xs-12 col-sm-6 col-md-4"]/following-sibling::div
+  ...  ELSE IF  'complaintPeriod.endDate' in '${field_name}'  Get Info From Complaints  ${username}  ${tender_uaid}  ${field_name}
   ...  ELSE IF  'legalName' in '${field_name}'  Get Text  xpath=//*[@data-test-id="awards.suppliers.name"]
   ...  ELSE  Get Text  xpath=//*[@data-test-id="${field_name.replace("[0]","")}"]
   [Return]  ${value.split(" - ")[-1]}
+
+Get Info From Complaints
+  [Arguments]  ${username}  ${tender_uaid}  ${field_name}
+  ${value}=  Run Keywords
+  ...  Click Element  xpath=(//a[contains(@href,"tender/qualification-complaints")])[last()]
+  ...  AND  Get Text  xpath=//div[@class="col-xs-12 col-sm-6 col-md-4"]/following-sibling::div
+  [Return]  ${value}
 
 Отримати статус контракта
   [Arguments]  ${username}  ${tender_uaid}
