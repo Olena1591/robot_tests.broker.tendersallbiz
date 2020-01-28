@@ -100,6 +100,7 @@ Login
   ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "competitiveDialogueEU"  Wait And Select From List By Value  name=procurementMethod  open_competitiveDialogueEU
   ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "esco"  Wait And Select From List By Value  name=procurementMethod  open_esco
   ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "closeFrameworkAgreementUA"  Wait And Select From List By Value  name=procurementMethod  open_closeFrameworkAgreementUA
+  ...  ELSE IF  "${tender_data.data.tender.procurementMethodType}" == "aboveThresholdUA.defense"  Wait And Select From List By Value  name=procurementMethod  open_aboveThresholdUA.defense
   Input text  name=Plan[budget][description]  ${tender_data.data.budget.description}
   Run Keyword If  "${tender_data.data.tender.procurementMethodType}" != "esco"  Input text  name=Plan[budget][amount]  ${budget_amount}
   Run Keyword If  "${tender_data.data.tender.procurementMethodType}" != "esco"  Conv And Select From List By Value  name=Plan[budget][currency]  UAH
@@ -1732,14 +1733,15 @@ Disqualification of the first winner
   Wait Element Animation  xpath=//*[contains(@name,"[dateSigned]")]
 #  Mouse Down  xpath=//*[contains(@name,"[dateSigned]")]
   Input Text  xpath=//input[contains(@name,"[contractNumber]")]  777
-  Input Text  name=ContractPeriod[0][startDate]  20/01/2020 00:00:00
-  Input Text  name=ContractPeriod[0][endDate]  20/02/2020 00:00:00
+  Input Text  name=ContractPeriod[${contract_num}][startDate]  30/01/2020 00:00:00
+  Input Text  name=ContractPeriod[${contract_num}][endDate]  20/02/2020 00:00:00
   Wait And Select From List By Value  xpath=//*[@class="select_valueAddedTaxIncluded"]  0
 #  Focus  xpath=//button[text()='Активувати']
   Дочекатися І Клікнути  xpath=//button[text()='Активувати']
   Run Keyword If  '${MODE}' != 'belowThreshold'  Run Keywords
   ...  Wait Element Animation  xpath=//*[@class="modal-dialog"]/descendant::button[contains(text(),"Накласти ЕЦП")]
-  ...  AND  Накласти ЄЦП
+  ...  AND  Накласти ЄЦП  ${False}
+
 
 ###############################################################################################################
 ##############################################    АУКЦІОН    ##################################################
