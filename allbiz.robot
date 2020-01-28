@@ -663,12 +663,12 @@ allbiz.Встановити дату підписання угоди
 
 allbiz.Вказати період дії угоди
   [Arguments]  ${username}  ${tender_uaid}  ${contract_index}  ${startDate}  ${endDate}
-  Log  ${startDate}  ${endDate}
+  Log  ${startDate}
 
 allbiz.Завантажити документ в угоду
   [Arguments]  ${username}  ${path}  ${tender_uaid}  ${contract_index}  ${doc_type}=documents
 #  ${doc_type}=  Set Variable If  '${doc_type}' == 'None'  contractSigned  ${doc_type}
-  Log  ${path}  ${doc_type}
+  Log  ${doc_type}
 
 
 
