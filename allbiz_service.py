@@ -136,8 +136,8 @@ def adapt_procuringEntity(role_name, tender_data):
                 tender_data['data']['tenderPeriod']['startDate'] = subtract_min_from_date(
                     tender_data['data']['tenderPeriod']['startDate'], 1, '%Y-%m-%dT%H:%M:%S.%f')
         for item in tender_data['data']['items']:
-            if item['classification']['description'] == "Не відображене в інших розділах":
-                item['classification']['description'] == "Не визначено"
+            if item['classification']['description'] == u"Не відображене в інших розділах":
+                item['classification']['description'] == u"Не визначено"
     return tender_data
 
 

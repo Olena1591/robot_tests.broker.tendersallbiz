@@ -41,7 +41,7 @@ ${locator.plan.tender.procurementMethodType}=  xpath=//*[@data-test-id="procurem
   [Arguments]  ${username}
   ${chromeOptions}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
 #  ${prefs} =    Create Dictionary    download.default_directory=${downloadDir}
-  Call Method    ${chromeOptions}    add_argument    --headless
+#  Call Method    ${chromeOptions}    add_argument    --headless
 
 
   Create Webdriver    ${USERS.users['${username}'].browser}  alias=${username}   chrome_options=${chromeOptions}
@@ -362,8 +362,8 @@ Update plan items info
   Input text  name=Tender[description]  ${tender_data.data.description}
 #  Run Keyword If  "${tender_data.data.procurementMethodType}" == "belowThreshold"  Run Keywords
 #  Input date  name="Tender[enquiryPeriod][endDate]"  ${tender_data.data.enquiryPeriod.endDate}
-  Run Keyword If  '${mode}' != 'reporting'  Input date  name="Tender[tenderPeriod][startDate]"  ${tender_data.data.tenderPeriod.startDate}
-  Run Keyword If  '${mode}' != 'reporting'  Input date  name="Tender[tenderPeriod][endDate]"  ${tender_data.data.tenderPeriod.endDate}
+  Run Keyword If  '${mode}' != 'reporting' and '${mode}' != 'negotiation'  Input date  name="Tender[tenderPeriod][startDate]"  ${tender_data.data.tenderPeriod.startDate}
+  Run Keyword If  '${mode}' != 'reporting' and '${mode}' != 'negotiation'  Input date  name="Tender[tenderPeriod][endDate]"  ${tender_data.data.tenderPeriod.endDate}
   Run Keyword If   ${number_of_lots} != 0  Додати багато лотів  ${tender_data}
 #  Run Keyword If   ${number_of_lots} == 0  Додати багато предметів   ${tender_data}
 #  ...  ELSE  Додати багато лотів  ${tender_data}
@@ -392,7 +392,7 @@ Fill tender filds
   ${milestones}=  Get From Dictionary  ${tender_data.data}  milestones
   ${valueAddedTaxIncluded}=  Set Variable If  ${tender_data.data.value.valueAddedTaxIncluded}  1  0
   Conv And Select From List By Value  name=Tender[value][valueAddedTaxIncluded]  ${valueAddedTaxIncluded}
-  Run Keyword If  '${mode}' != 'reporting'  Conv And Select From List By Value  xpath=(//*[@data-test-id="guarantee-exist"])[${index_strategy}]  1
+  Run Keyword If  '${mode}' != 'reporting' and '${mode}' != 'negotiation'  Conv And Select From List By Value  xpath=(//*[@data-test-id="guarantee-exist"])[${index_strategy}]  1
   Wait And Select From List By Value  name=Tender[value][currency]  ${tender_data.data.value.currency}
 
   :FOR   ${milestones_index}   IN RANGE   ${number_of_milestones}
