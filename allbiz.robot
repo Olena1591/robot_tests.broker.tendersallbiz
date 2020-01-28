@@ -1348,7 +1348,7 @@ Get info from funders
   [Arguments]  ${username}  ${tender_uaid}  ${field}
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
   Run Keyword If  '${mode}' == 'open_esco'  Sleep  700
-  ...  ELSE  Sleep  300
+  ...  ELSE  Sleep  500
   Дочекатися І Клікнути  xpath=//*[contains(@href,"test-tenders.all.biz/tender/json/")]
   ${is_edited}=  Run Keyword And Return Status  Page Should Contain Element  xpath=//span[@class="label label-danger"][contains(text(),"Недійсна")] /ancestor::div[@class="pull-right"]
   ${value}=  Run Keyword If  ${is_edited}  Set Variable  invalid
