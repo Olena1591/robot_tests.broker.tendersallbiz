@@ -1174,7 +1174,7 @@ Feature Count Should Not Be Zero
   Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
   Дочекатися І Клікнути  xpath=//div[@data-test-id="awards.complaintPeriod.endDate"]/preceding-sibling::a[contains(@href,"tender/qualification-complaints")]
   Select Checkbox  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::*[@class="cancel_checkbox"]
-  Ввести Текст  xpath=//*[contains(@name, "[cancellationReason]")]  ${cancellation_data.data.cancellationReason}
+  Ввести Текст  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::*[@id="complaint-cancellationreason"]  ${cancellation_data.data.cancellationReason}
   Дочекатися І Клікнути  xpath=(//button[@name="complaint_cancelled"])[1]
 
 Перетворити вимогу про виправлення визначення переможця в скаргу
