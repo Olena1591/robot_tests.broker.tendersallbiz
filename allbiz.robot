@@ -1667,10 +1667,10 @@ Add annual costs reduction
   [Arguments]  ${username}  ${tender_uaid}  ${qualification_num}
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//*[contains(@href,"tender/euprequalification/")]
-  Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-qualification") and contains(@class,"mk-btn mk-btn_accept")][${qualification_num}]
+  Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-qualification") and contains(@class,"mk-btn mk-btn_accept")][${qualification_num + 1}]
 #  Wait Until Keyword Succeeds  5x  1s   Page Should Contain Element  xpath=//*[@name="Qualifications[${qualification_num}][action]"]
   Wait Element Animation  xpath=//*[@class="fade modal in"]
-  Select From list By Index  xpath=//*[@name="Qualifications[${qualification_num}][action]"]  1
+  Select From list By Index  xpath=//*[@name="Qualifications[${qualification_num + 1}][action]"]  1
   Click Element  xpath=//*[@name="Qualifications[cause][]"][@value="Не вiдповiдає квалiфiкацiйним критерiям."]
   Click Element  xpath=//*[@name="Qualifications[cause][]"][@value="Наявнi пiдстави, зазначенi у статтi 17."]
   Click Element  xpath=//*[@name="Qualifications[cause][]"][@value="Не вiдповiдає вимогам тендерної документацiї."]
