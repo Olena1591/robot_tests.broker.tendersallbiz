@@ -1605,6 +1605,7 @@ Add annual costs reduction
 
 Завантажити документ рішення кваліфікаційної комісії
   [Arguments]  ${username}  ${document}  ${tender_uaid}  ${award_num}
+  ${award_num}=  Convert To Integer  ${award_num}
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
   Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-award-qualification-button")]
