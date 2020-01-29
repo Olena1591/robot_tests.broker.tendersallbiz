@@ -907,7 +907,7 @@ Feature Count Should Not Be Zero
   Дочекатися І Клікнути  xpath=//a[text()="Пропозиції"]
   Wait And Select From List By Label  name=Award[suppliers][0][address][countryName]  ${supplier_data.data.suppliers[0].address.countryName}
   Wait And Select From List By Value  name=Award[suppliers][0][identifier][scheme]  ${supplier_data.data.suppliers[0].identifier.scheme}
-  Wait And Select From List By Value  name=Award[suppliers][0][scale]  ${supplier_data.data.scale}
+  Wait And Select From List By Value  name=Award[suppliers][0][scale]  ${supplier_data.data.suppliers[0].scale}
   Input Text  name=Award[suppliers][0][identifier][id]  ${supplier_data.data.suppliers[0].identifier.id}
   Input Text  name=Award[suppliers][0][name]  ${supplier_data.data.suppliers[0].name}
   Wait And Select From List By Label  name=Award[suppliers][0][address][region]  ${supplier_data.data.suppliers[0].address.region}
@@ -928,7 +928,7 @@ Feature Count Should Not Be Zero
   ...  Click Element  xpath=(//input[contains(@id,"qualified")])[1]/..
   ...  AND  Checkbox Should Be Selected  xpath=(//input[contains(@id,"qualified")])[1]
   Дочекатися І Клікнути  name=send_prequalification
-  Накласти ЄЦП
+  Накласти ЄЦП на контракт
 
 
 ###############################################################################################################
@@ -1669,7 +1669,7 @@ Add annual costs reduction
   ${qualification_num}=  Convert To Integer  ${qualification_num}
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//*[contains(@href,"tender/euprequalification/")]
-  Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-qualification") and contains(@class,"mk-btn mk-btn_accept")][${qualification_num + 1}]
+  Дочекатися І Клікнути  xpath=(//*[contains(@id,"modal-qualification") and contains(@class,"mk-btn mk-btn_accept")])[${qualification_num + 1}]
 #  Wait Until Keyword Succeeds  5x  1s   Page Should Contain Element  xpath=//*[@name="Qualifications[${qualification_num}][action]"]
   Wait Element Animation  xpath=//*[@class="fade modal in"]
   Select From list By Index  xpath=//*[@name="Qualifications[${qualification_num + 1}][action]"]  1
