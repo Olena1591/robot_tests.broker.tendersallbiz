@@ -1921,4 +1921,4 @@ Position Should Equals
   ...  AND  Wait Until Page Contains  Ключ успішно завантажено  10
   Дочекатися І Клікнути  id=SignDataButton
   Wait Until Keyword Succeeds  60 x  1 s  Page Should Not Contain Element  id=SignDataButton  120
-  Wait Until Page Contains Element  xpath=//*[contains(@id,"modal-award-qualification-button")]  30
+#  Wait Until Page Contains Element  xpath=//*[contains(@id,"modal-award-qualification-button")]  30
