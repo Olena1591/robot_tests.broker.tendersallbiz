@@ -1195,7 +1195,7 @@ allbiz.Створити скаргу про виправлення визнач�
   Дочекатися І Клікнути  xpath=//div[@data-test-id="awards.complaintPeriod.endDate"]/preceding-sibling::a[contains(@href,"tender/qualification-complaints")]
   Select Checkbox  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::*[@class="cancel_checkbox"]
   Ввести Текст  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::*[@id="complaint-cancellationreason"]  ${cancellation_data.data.cancellationReason}
-  Дочекатися І Клікнути  xpath=(//button[@name="complaint_cancelled"])[1]
+  Дочекатися І Клікнути  xpath=//*[contains(text(),"${complaintID}")]/ancestor::div[@class="mk-question"]/descendant::*[@class="mk-btn mk-btn_danger action-complaint-form-submit"]
 
 Перетворити вимогу про виправлення визначення переможця в скаргу
   [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${escalating_data}  ${award_index}
@@ -1614,7 +1614,7 @@ Add annual costs reduction
   Wait Until Element Is Visible  xpath=//select[@id="document-type-0"]
   Select From List By Value  xpath=//select[@id="document-type-0"]  awardNotice
   Run Keyword If  '${mode}' == 'belowThreshold'  Wait Until Keyword Succeeds  10 x  400 ms  Page Should Contain Element  xpath=(//input[@type="file"])[last()]
-  ...  ELSE IF  '${mode}' == 'open_esco' and '2' in ${award_num}  Run Keywords
+  ...  ELSE IF  '${mode}' == 'open_esco' and ${award_num} == 2  Run Keywords
   ...  Select Checkbox  xpath=//input[@id="award-${award_num - 1}-qualified"]
   ...  AND  Select Checkbox  xpath=//input[@id="award-${award_num - 1}-eligible"
   ...  ELSE    Run Keywords
