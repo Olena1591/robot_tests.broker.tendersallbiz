@@ -907,6 +907,7 @@ Feature Count Should Not Be Zero
   Дочекатися І Клікнути  xpath=//a[text()="Пропозиції"]
   Wait And Select From List By Label  name=Award[suppliers][0][address][countryName]  ${supplier_data.data.suppliers[0].address.countryName}
   Wait And Select From List By Value  name=Award[suppliers][0][identifier][scheme]  ${supplier_data.data.suppliers[0].identifier.scheme}
+  Wait And Select From List By Value  name=Award[suppliers][0][scale]  ${supplier_data.data.scale}
   Input Text  name=Award[suppliers][0][identifier][id]  ${supplier_data.data.suppliers[0].identifier.id}
   Input Text  name=Award[suppliers][0][name]  ${supplier_data.data.suppliers[0].name}
   Wait And Select From List By Label  name=Award[suppliers][0][address][region]  ${supplier_data.data.suppliers[0].address.region}
