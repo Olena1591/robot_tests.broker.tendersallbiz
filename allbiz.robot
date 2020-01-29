@@ -1747,7 +1747,7 @@ Disqualification of the first winner
   Дочекатися І Клікнути  xpath=//button[text()='Активувати']
   Run Keyword If  '${MODE}' != 'belowThreshold'  Run Keywords
   ...  Wait Element Animation  xpath=//*[@class="modal-dialog"]/descendant::button[contains(text(),"Накласти ЕЦП")]
-  ...  AND  Накласти ЄЦП  ${False}
+  ...  AND  Накласти ЄЦП на контракт
 
 
 ###############################################################################################################
@@ -1877,3 +1877,21 @@ Position Should Equals
   Wait Element Animation  ${locator}
   Click Element  ${locator}
   Wait Element Animation  ${locator}
+
+Накласти ЄЦП на контракт
+  Wait Element Animation  xpath=//h4[@class="modal-title"]
+  Wait Until Page Contains  Накласти ЕЦП/КЕП
+  Дочекатися І Клікнути  xpath=//button[@class="btn btn-success"]
+  Wait Until Page Contains Element  xpath=//button[@id="SignDataButton"]
+  Дочекатися І Клікнути  xpath=//select[@id="CAsServersSelect"]
+  ${status}=  Run Keyword And Return Status  Wait Until Keyword Succeeds  30 x  1 s  Page Should Contain  Оберіть файл з особистим ключем (зазвичай з ім'ям Key-6.dat) та вкажіть пароль захисту
+  Run Keyword If  ${status}  Wait Until Keyword Succeeds  30 x  20 s  Run Keywords
+  ...  Wait And Select From List By Label  id=CAsServersSelect  Тестовий ЦСК АТ "ІІТ"
+  ...  AND  Execute Javascript  var element = document.getElementById('PKeyFileInput'); element.style.visibility="visible";
+  ...  AND  Choose File  id=PKeyFileInput  ${CURDIR}/Key-6.dat
+  ...  AND  Input text  id=PKeyPassword  12345677
+  ...  AND  Дочекатися І Клікнути  id=PKeyReadButton
+  ...  AND  Wait Until Page Contains  Ключ успішно завантажено  10
+  Дочекатися І Клікнути  id=SignDataButton
+  Wait Until Keyword Succeeds  60 x  1 s  Page Should Not Contain Element  id=SignDataButton  120
+  Wait Until Page Contains Element  xpath=//*[contains(@id,"modal-award-qualification-button")]  30
