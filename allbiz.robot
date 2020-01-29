@@ -1160,8 +1160,19 @@ allbiz.Створити скаргу про виправлення визнач�
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
   Toggle Sidebar
-
-
+  Дочекатися І Клікнути  xpath=(//a[contains(@href,"tender/qualification-complaints")])[last()]
+  Дочекатися І Клікнути  xpath=//a[contains(text(),"Створити Скаргу")]
+  Input Text  xpath=//input[@id="complaint-title"]  ${claim.data.title}
+  Input Text  xpath=//*[@id="complaint-description"]  ${claim.data.description}
+  Run Keyword If  '${document}' != '${None}'  Run Keywords
+  ...  Choose File  xpath=//input[@type="file"]  ${document}
+  ...  AND  Wait Until Element Is Visible  xpath=//input[contains(@name, "[title]") and contains(@name,"documents")]
+  ...  AND  Input Text  xpath=//input[contains(@name, "[title]") and contains(@name,"documents")]  ${document.split("/")[-1]}
+  Дочекатися І Клікнути  xpath=//*[@class="mk-btn mk-btn_accept btn_submit_question"]
+  Дочекатися завантаження документу
+    Wait Until Keyword Succeeds  10 x  30 s  Page Should Contain Element  xpath=//*[contains(text(),"")]/preceding-sibling::*[@data-test-id="complaint.complaintID"]
+  ${complaintID}=   Get Text   xpath=(//*[@data-test-id="complaint.complaintID"])[last()]
+  [Return]  ${complaintID}
 
 
 Підтвердити вирішення вимоги про виправлення визначення переможця
@@ -1692,7 +1703,7 @@ allbiz.Скасування рішення кваліфікаційної ком
 
 allbiz.Дискваліфікувати постачальника
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}
-  Run Keyword  Disqualification of the first winner  ${username}  ${tender_uaid}  ${award_num}
+  Log  Необхідні дії було виконано у "Скасування рішення кваліфікаційної комісії"
 
 
 Disqualification of the first winner
