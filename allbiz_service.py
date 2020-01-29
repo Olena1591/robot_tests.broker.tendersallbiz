@@ -116,6 +116,7 @@ def convert_string_from_dict_allbiz(string):
         u'відкликано скаржником': u'stopping',
         u'USA': u'Сполучені Штати Америки',
         u'Не визначено': u'Не відображене в інших розділах',
+        u'без відповіді': u'ignored',
     }.get(string, string)
 
 
