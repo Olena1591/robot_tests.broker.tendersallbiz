@@ -1155,6 +1155,15 @@ Feature Count Should Not Be Zero
   ${complaintID}=   Get Text   xpath=(//*[@data-test-id="complaint.complaintID"])[last()]
   [Return]  ${complaintID}
 
+allbiz.Створити скаргу про виправлення визначення переможця
+  [Arguments]  ${username}  ${tender_uaid}  ${claim}  ${award_index}  ${document}=${None}
+  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/award")]
+  Toggle Sidebar
+
+
+
+
 Підтвердити вирішення вимоги про виправлення визначення переможця
   [Arguments]  ${username}  ${tender_uaid}  ${complaintID}  ${confirmation_data}  ${award_index}
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
@@ -1676,7 +1685,11 @@ allbiz.Скасування рішення кваліфікаційної ком
 #  ...  Дочекатися І Клікнути  xpath=//*[@class="mk-btn mk-btn_danger btn-award"]
   Дочекатися І Клікнути  xpath=//*[@class="mk-btn mk-btn_danger btn-award"]
   Дочекатися І Клікнути  xpath=//button[@class="btn mk-btn mk-btn_danger"]
-  Run Keyword If  ${is_award}  Disqualification of the first winner  ${username}  ${tender_uaid}  ${award_num}
+  Run Keyword If  ${is_award} and '${mode}' != 'open_esco'  Disqualification of the first winner  ${username}  ${tender_uaid}  ${award_num}
+
+allbiz.Дискваліфікувати постачальника
+  [Arguments]  ${username}  ${tender_uaid}  ${award_num}
+  Run Keyword  Disqualification of the first winner  ${username}  ${tender_uaid}  ${award_num}
 
 
 Disqualification of the first winner
