@@ -118,6 +118,7 @@ def convert_string_from_dict_allbiz(string):
         u'Не визначено': u'Не відображене в інших розділах',
         u'без відповіді': u'ignored',
         u'відкликано скаржником': u'stopping',
+        u'Без ответа': u'ignored',
     }.get(string, string)
 
 
