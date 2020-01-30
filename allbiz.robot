@@ -1239,6 +1239,7 @@ allbiz.Створити скаргу про виправлення визнач�
   ...  ELSE IF  '${field_name}' == 'lots[0].yearlyPaymentsPercentageRange'  Get Text  xpath=//*[@data-test-id="yearlyPaymentsPercentageRange"]
   ...  ELSE IF   "stones" in "${field_name}"  allbiz.Get Info From Tender Milestones  ${field_name}
   ...  ELSE IF   "fundingKind" in "${field_name}"  Get Text  xpath=//*[@data-test-id="fundingKind"]
+  ...  ELSE IF   "clarificationsUntil" in "${field_name}"  Get Text  xpath=//*[@data-test-id="clarificationsUntil"]
   ...  ELSE  Get Text  xpath=//*[@data-test-id="${field_name}"]
   ${value}=  adapt_view_tender_data  ${value}  ${field_name}
   [Return]  ${value}

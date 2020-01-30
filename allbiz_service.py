@@ -119,6 +119,8 @@ def convert_string_from_dict_allbiz(string):
         u'без відповіді': u'ignored',
         u'відкликано скаржником': u'stopping',
         u'Без ответа': u'ignored',
+        u'prozorroytenderowner@gmail.com prozorroytenderowner@gmail.com': u'Тестовий Замовник 2',
+        u'+38(099)353-10-28': u'380664445566',
     }.get(string, string)
 
 
