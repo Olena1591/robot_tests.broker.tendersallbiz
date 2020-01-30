@@ -1701,7 +1701,7 @@ allbiz.Скасування рішення кваліфікаційної ком
 #  ...  Дочекатися І Клікнути  xpath=//*[@class="mk-btn mk-btn_danger btn-award"]
   Дочекатися І Клікнути  xpath=//*[@class="mk-btn mk-btn_danger btn-award"]
   Дочекатися І Клікнути  xpath=//button[@class="btn mk-btn mk-btn_danger"]
-  Run Keyword If  ${is_award} and  Disqualification of the first winner  ${username}  ${tender_uaid}  ${award_num}
+  Run Keyword If  ${is_award}  Disqualification of the first winner  ${username}  ${tender_uaid}  ${award_num}
 
 allbiz.Дискваліфікувати постачальника
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}
