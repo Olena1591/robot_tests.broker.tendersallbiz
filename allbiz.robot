@@ -1229,11 +1229,12 @@ allbiz.Створити скаргу про виправлення визнач�
   ...  ELSE IF  'unit' in '${field_name}'  Get Text  xpath=//*[@data-test-id="unit.name"]
   ...  ELSE IF  'deliveryLocation' in '${field_name}'  Log To Console  ${red}\n\t\t\t Це поле не виводиться на allbiz
   ...  ELSE IF  'items' in '${field_name}'  Get Text  xpath=//*[@data-test-id="${field_name.replace('[0]', '')}"]
+#  ...  ELSE IF  'contracts' in '${field_name}'  Get info from contracts  ${username}  ${tender_uaid}  ${field_name}
   ...  ELSE IF  '${field_name}' == 'cause'  Get Element Attribute  xpath=//*[@data-test-id="${field_name}"]@data-test-cause
   ...  ELSE IF  '${field_name}' == 'procuringEntity.identifier.legalName'  Get Text  xpath=//*[@data-test-id="procuringEntity.name"]
   ...  ELSE IF  '${field_name}' == 'procuringEntity.identifier.scheme'  Get Element Attribute  xpath=//*[@data-test-id="procuringEntity.identifier.scheme"]@value
   ...  ELSE IF  '${field_name}' == 'documents[0].title'  Get Text  xpath=//a[contains(@href,"docs-sandbox")]
-  ...  ELSE IF  '${field_name}' == 'contracts[0].status'  Отримати статус контракта  ${username}  ${tender_uaid}
+  ...  ELSE IF  'contracts' in '${field_name}'  Отримати статус контракта  ${username}  ${tender_uaid}  ${field_name}
   ...  ELSE IF  '${field_name}' == 'lots[0].minimalStepPercentage'  Get Text  xpath=//*[@data-test-id="minimalStepPercentage"]
   ...  ELSE IF  '${field_name}' == 'lots[0].yearlyPaymentsPercentageRange'  Get Text  xpath=//*[@data-test-id="yearlyPaymentsPercentageRange"]
   ...  ELSE IF   "stones" in "${field_name}"  allbiz.Get Info From Tender Milestones  ${field_name}
@@ -1426,7 +1427,7 @@ Get Info From Complaints
   [Return]  ${value}
 
 Отримати статус контракта
-  [Arguments]  ${username}  ${tender_uaid}
+  [Arguments]  ${username}  ${tender_uaid}  ${field_name}
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
   ${is_visible}=  Run Keyword And Return Status  Element Should Be Visible  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/protokol")]
   Run Keyword If  ${is_visible}  Дочекатися І Клікнути  xpath=//div[@id="slidePanel"]/descendant::a[contains(@href,"tender/protokol")]
@@ -1435,7 +1436,7 @@ Get Info From Complaints
   ...  Click Element  xpath=//button[@class="mk-btn mk-btn_default js-btn-contract-award"]
   ...  AND  Wait Element Animation  xpath=//*[contains(@id,"modal-award")]/descendant::button[@class="close"]
   ...  AND  Page Should Contain  Договір активовано
-  ${value}=  Set Variable If  ${status}  active  pending
+  ${value}=  Set Variable If  ${status}  active
   ${is_modal_open}=  Run Keyword And Return Status  Element Should Be Visible  xpath=//*[contains(@id,"modal-award")]/descendant::button[@class="close"]
   Run Keyword If  ${is_modal_open}  Run Keywords
   ...  Click Element  xpath=//*[contains(@id,"modal-award")]/descendant::button[@class="close"]
