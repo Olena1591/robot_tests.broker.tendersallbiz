@@ -1670,7 +1670,7 @@ Add annual costs reduction
   ${qualification_num}=  Convert To Integer  ${qualification_num}
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//*[contains(@href,"tender/euprequalification/")]
-  Run Keyword If  '${mode} == 'openeu'  Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-qualification") and contains(@class,"mk-btn mk-btn_accept")]
+  Run Keyword If  '${mode}' == 'openeu'  Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-qualification") and contains(@class,"mk-btn mk-btn_accept")]
   ...  ELSE  Дочекатися І Клікнути  xpath=(//*[contains(@id,"modal-qualification") and contains(@class,"mk-btn mk-btn_accept")])[${qualification_num + 1}]
 #  Wait Until Keyword Succeeds  5x  1s   Page Should Contain Element  xpath=//*[@name="Qualifications[${qualification_num}][action]"]
   Wait Element Animation  xpath=//*[@class="fade modal in"]
@@ -1771,8 +1771,9 @@ Disqualification of the first winner
   Wait Element Animation  xpath=//*[contains(@name,"[dateSigned]")]
 #  Mouse Down  xpath=//*[contains(@name,"[dateSigned]")]
   Input Text  xpath=//input[contains(@name,"[contractNumber]")]  777
-  Input Text  name=ContractPeriod[${contract_num}][startDate]  30/01/2020 00:00:00
-  Input Text  name=ContractPeriod[${contract_num}][endDate]  20/02/2020 00:00:00
+  Run Keyword If  '${mode}' == 'reporting'  Click Element  xpath=//*[@name="Contract[${contract_num}][dateSigned]"]
+  Input Text  name=ContractPeriod[${contract_num}][startDate]  15/02/2020 00:00:00
+  Input Text  name=ContractPeriod[${contract_num}][endDate]  20/03/2020 00:00:00
   Wait And Select From List By Value  xpath=//*[@class="select_valueAddedTaxIncluded"]  0
 #  Focus  xpath=//button[text()='Активувати']
   Дочекатися І Клікнути  xpath=//button[text()='Активувати']
