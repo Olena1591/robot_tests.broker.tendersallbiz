@@ -1760,7 +1760,7 @@ Disqualification of the first winner
   Wait Until Keyword Succeeds  5 x  0.5 s  Дочекатися І Клікнути  xpath=//button[@class="mk-btn mk-btn_default js-btn-contract-award"]
   Wait Until Element Is Visible  xpath=//*[text()="Додати документ"]
   Choose File  xpath=//input[@type="file"]  ${document}
-  Wait And Select From List By Value  //select[@id="document-0-documentType"]  contractSigned
+  Wait And Select From List By Value  xpath=//select[@id="document-0-documentType"]  contractSigned
   Дочекатися І Клікнути  xpath=//button[text()='Завантажити']
   Wait Until Element Is Not Visible  xpath=//button[text()='Завантажити']
   Wait Until Keyword Succeeds  20 x  30 s  Run Keywords
