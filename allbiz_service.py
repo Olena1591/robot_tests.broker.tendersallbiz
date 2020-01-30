@@ -127,14 +127,14 @@ def convert_string_from_dict_allbiz(string):
 def adapt_procuringEntity(role_name, tender_data):
     if role_name == 'tender_owner':
         tender_data['data']['procuringEntity']['name'] = u"prozorroytenderowner"
-        # tender_data['data']['procuringEntity']['address']['postalCode'] = u"01010"
-        # tender_data['data']['procuringEntity']['address']['region'] = u"Вінницька область"
-        # tender_data['data']['procuringEntity']['address']['locality'] = u"Яйківка"
-        # tender_data['data']['procuringEntity']['address']['streetAddress'] = u"вул. Рогатої Худоби"
+        tender_data['data']['procuringEntity']['address']['postalCode'] = u"01001"
+        tender_data['data']['procuringEntity']['address']['region'] = u"м. Київ"
+        tender_data['data']['procuringEntity']['address']['locality'] = u"Київ"
+        tender_data['data']['procuringEntity']['address']['streetAddress'] = u"Вулична вулиця"
         tender_data['data']['procuringEntity']['identifier']['legalName'] = u"prozorroytenderowner"
         tender_data['data']['procuringEntity']['identifier']['id'] = u"12312312"
-        # tender_data['data']['procuringEntity']['contactPoint']['name'] = u"Олександров Олександр Олександрович"
-        # tender_data['data']['procuringEntity']['contactPoint']['telephone'] = u"+38(222)222-22-22"
+        tender_data['data']['procuringEntity']['contactPoint']['name'] = u"бла бла бла"
+        tender_data['data']['procuringEntity']['contactPoint']['telephone'] = u"+38(099)353-10-28"
         # tender_data['data']['procuringEntity']['contactPoint']['url'] = u"https://tenders.all.biz"
         if tender_data['data'].has_key('procurementMethodType'):
             if "above" in tender_data['data']['procurementMethodType']:

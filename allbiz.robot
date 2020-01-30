@@ -1688,7 +1688,8 @@ Add annual costs reduction
   allbiz.Пошук тендера по ідентифікатору   ${username}  ${tender_uaid}
   ${qualification_num}=  Convert To Integer  ${qualification_num}
   Дочекатися І Клікнути  xpath=//*[contains(@href,"tender/euprequalification/")]
-  Дочекатися І Клікнути  xpath=//button[@name="cancel_prequalification"]
+  Run Keyword If  '${mode}' == 'openeu'  Дочекатися І Клікнути  xpath=(//button[@name="cancel_prequalification"])[2]
+  ...  ELSE  Дочекатися І Клікнути  xpath=//button[@name="cancel_prequalification"]
 
 
 allbiz.Скасування рішення кваліфікаційної комісії
