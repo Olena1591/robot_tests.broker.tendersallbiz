@@ -1669,7 +1669,8 @@ Add annual costs reduction
   ${qualification_num}=  Convert To Integer  ${qualification_num}
   allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   Дочекатися І Клікнути  xpath=//*[contains(@href,"tender/euprequalification/")]
-  Дочекатися І Клікнути  xpath=(//*[contains(@id,"modal-qualification") and contains(@class,"mk-btn mk-btn_accept")])[${qualification_num + 1}]
+  Run Keyword If  '${mode} == 'openeu'  Дочекатися І Клікнути  xpath=//*[contains(@id,"modal-qualification") and contains(@class,"mk-btn mk-btn_accept")]
+  ...  ELSE  Дочекатися І Клікнути  xpath=(//*[contains(@id,"modal-qualification") and contains(@class,"mk-btn mk-btn_accept")])[${qualification_num + 1}]
 #  Wait Until Keyword Succeeds  5x  1s   Page Should Contain Element  xpath=//*[@name="Qualifications[${qualification_num}][action]"]
   Wait Element Animation  xpath=//*[@class="fade modal in"]
   Select From list By Index  xpath=//*[@name="Qualifications[${qualification_num + 1}][action]"]  1
