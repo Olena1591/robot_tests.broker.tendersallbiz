@@ -762,7 +762,8 @@ Go To And Assert
 
 Оновити сторінку з тендером
   [Arguments]  ${username}  ${tenderID}
-  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tenderID}
+
+#  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tenderID}
 
 allbiz.Перевести тендер на статус очікування обробки мостом
   [Arguments]  ${username}  ${tender_uaid}
@@ -1632,8 +1633,8 @@ Add annual costs reduction
   Wait Until Element Is Not Visible  xpath=(//*[@name="send_prequalification"])[1]
   Run Keyword If  '${mode}' != 'belowThreshold'  Run Keywords
   ...  Wait Element Animation  xpath=//*[@class="modal-dialog"]/descendant::button[contains(text(),"Накласти ЕЦП")]
-  ...  AND  Click Element  xpath=//button[@class="btn btn-danger"]
-  ...  AND  Дочекатися І Клікнути  xpath=//button[contains(@id, "modal-award-qualification-button")]
+  ...  AND  Click Element  xpath=//button[@class="btn btn-success"]
+#  ...  AND  Дочекатися І Клікнути  xpath=//button[contains(@id, "modal-award-qualification-button")]
   ...  AND  Накласти ЄЦП  ${False}
 
 Підтвердити постачальника
