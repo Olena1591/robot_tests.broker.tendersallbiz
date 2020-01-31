@@ -1634,9 +1634,9 @@ Add annual costs reduction
   Wait Until Element Is Not Visible  xpath=(//*[@name="send_prequalification"])[1]
   Run Keyword If  '${mode}' != 'belowThreshold'  Run Keywords
   ...  Wait Element Animation  xpath=//*[@class="modal-dialog"]/descendant::button[contains(text(),"Накласти ЕЦП")]
-  ...  AND  Click Element  xpath=//button[@class="btn btn-success"]
+#  ...  AND  Click Element  xpath=//button[@class="btn btn-success"]
 #  ...  AND  Дочекатися І Клікнути  xpath=//button[contains(@id, "modal-award-qualification-button")]
-  ...  AND  Накласти ЄЦП  ${False}
+  ...  AND  Накласти ЄЦП на контракт
 
 Підтвердити постачальника
   [Arguments]  ${username}  ${tender_uaid}  ${award_num}
@@ -1782,9 +1782,9 @@ Disqualification of the first winner
 #  Focus  xpath=//button[text()='Активувати']
   Дочекатися І Клікнути  xpath=//button[text()='Активувати']
   Wait Until Keyword Succeeds  10 x  2 s  Page Should Contain Element  xpath=//*[@class="modal-dialog"]/descendant::button[contains(text(),"Накласти ЕЦП")]
-  Run Keyword If  '${MODE}' != 'belowThreshold'  Run Keywords
-  ...  Wait Element Animation  xpath=//*[@class="modal-dialog"]/descendant::button[contains(text(),"Накласти ЕЦП")]
-  ...  AND  Накласти ЄЦП на контракт
+  Run Keyword If  '${MODE}' != 'belowThreshold'  Run Keyword  Накласти ЄЦП на контракт
+#  ...  Wait Element Animation  xpath=//*[@class="modal-dialog"]/descendant::button[contains(text(),"Накласти ЕЦП")]
+#  ...  AND  Накласти ЄЦП на контракт
 
 
 ###############################################################################################################
@@ -1875,7 +1875,7 @@ Scroll To Element
 Накласти ЄЦП
   [Arguments]  ${hide_sidebar}=${True}
   Wait Until Page Contains  Накласти ЕЦП/КЕП
-  Run Keyword If  '${mode}' != 'open_esco'  Дочекатися І Клікнути  xpath=//button[@class="sign_btn mk-btn mk-btn_default"][contains(text(),"Накласти ЕЦП/КЕП")]
+  Дочекатися І Клікнути  xpath=//button[@class="sign_btn mk-btn mk-btn_default"][contains(text(),"Накласти ЕЦП/КЕП")]
   Wait Until Page Contains Element  xpath=//button[@id="SignDataButton"]
   Дочекатися І Клікнути  xpath=//select[@id="CAsServersSelect"]
   ${status}=  Run Keyword And Return Status  Wait Until Keyword Succeeds  30 x  1 s  Page Should Contain  Оберіть файл з особистим ключем (зазвичай з ім'ям Key-6.dat) та вкажіть пароль захисту
