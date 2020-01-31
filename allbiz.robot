@@ -1215,7 +1215,9 @@ allbiz.Створити скаргу про виправлення визнач�
 
 Отримати інформацію із тендера
   [Arguments]  ${username}  ${tender_uaid}  ${field_name}
+  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   ${red}=  Evaluate  "\\033[1;31m"
+  ${index}=  Set Variable   ${field_name.split('[')[1].split(']')[0]}
   Run Keyword If  'title' in '${field_name}'  Execute Javascript  $("[data-test-id|='title']").css("text-transform", "unset")
   Run Keyword If  'status' in '${field_name}'  Дочекатися І Клікнути  xpath=//*[contains(@href,"test-tenders.all.biz/tender/json/")]
 #  Run Keyword And Ignore Error  Click Element  xpath=//button[@data-dismiss="modal"]
@@ -1228,7 +1230,7 @@ allbiz.Створити скаргу про виправлення визнач�
   ...  ELSE IF  'funders' in '${field_name}'  Get info from funders  ${username}  ${tender_uaid}  ${field_name}
   ...  ELSE IF  'unit' in '${field_name}'  Get Text  xpath=//*[@data-test-id="unit.name"]
   ...  ELSE IF  'deliveryLocation' in '${field_name}'  Log To Console  ${red}\n\t\t\t Це поле не виводиться на allbiz
-  ...  ELSE IF  'items' in '${field_name}'  Get Text  xpath=//*[@data-test-id="${field_name.replace('[0]', '')}"]
+  ...  ELSE IF  'items' in '${field_name}'  Get Text  xpath=//*[@data-test-id="${field_name.replace('[${index}]', '')}"]
 #  ...  ELSE IF  'contracts' in '${field_name}'  Get info from contracts  ${username}  ${tender_uaid}  ${field_name}
   ...  ELSE IF  '${field_name}' == 'cause'  Get Element Attribute  xpath=//*[@data-test-id="${field_name}"]@data-test-cause
   ...  ELSE IF  '${field_name}' == 'procuringEntity.identifier.legalName'  Get Text  xpath=//*[@data-test-id="procuringEntity.name"]
@@ -1873,7 +1875,7 @@ Scroll To Element
 Накласти ЄЦП
   [Arguments]  ${hide_sidebar}=${True}
   Wait Until Page Contains  Накласти ЕЦП/КЕП
-  Дочекатися І Клікнути  xpath=//button[@class="sign_btn mk-btn mk-btn_default"][contains(text(),"Накласти ЕЦП/КЕП")]
+  Run Keyword If  '${mode}' != 'open_esco'  Дочекатися І Клікнути  xpath=//button[@class="sign_btn mk-btn mk-btn_default"][contains(text(),"Накласти ЕЦП/КЕП")]
   Wait Until Page Contains Element  xpath=//button[@id="SignDataButton"]
   Дочекатися І Клікнути  xpath=//select[@id="CAsServersSelect"]
   ${status}=  Run Keyword And Return Status  Wait Until Keyword Succeeds  30 x  1 s  Page Should Contain  Оберіть файл з особистим ключем (зазвичай з ім'ям Key-6.dat) та вкажіть пароль захисту
