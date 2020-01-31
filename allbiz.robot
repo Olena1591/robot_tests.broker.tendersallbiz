@@ -760,10 +760,9 @@ Go To And Assert
 
 
 
-#Оновити сторінку з тендером
-#  [Arguments]  ${username}  ${tenderID}
-
-#  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tenderID}
+Оновити сторінку з тендером
+  [Arguments]  ${username}  ${tenderID}
+  allbiz.Пошук тендера по ідентифікатору  ${username}  ${tenderID}
 
 allbiz.Перевести тендер на статус очікування обробки мостом
   [Arguments]  ${username}  ${tender_uaid}
