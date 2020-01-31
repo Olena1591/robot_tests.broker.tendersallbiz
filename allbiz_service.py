@@ -133,7 +133,7 @@ def adapt_procuringEntity(role_name, tender_data):
         tender_data['data']['procuringEntity']['address']['streetAddress'] = u"Вулична вулиця"
         tender_data['data']['procuringEntity']['identifier']['legalName'] = u"prozorroytenderowner"
         tender_data['data']['procuringEntity']['identifier']['id'] = u"12312312"
-        tender_data['data']['procuringEntity']['contactPoint']['name'] = u"бла бла бла"
+        tender_data['data']['procuringEntity']['contactPoint']['name'] = u"бла бла"
         tender_data['data']['procuringEntity']['contactPoint']['telephone'] = u"+38(099)353-10-28"
         # tender_data['data']['procuringEntity']['contactPoint']['url'] = u"https://tenders.all.biz"
         if tender_data['data'].has_key('procurementMethodType'):
