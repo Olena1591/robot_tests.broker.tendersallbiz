@@ -1677,9 +1677,9 @@ Add annual costs reduction
 #  Wait Until Keyword Succeeds  5x  1s   Page Should Contain Element  xpath=//*[@name="Qualifications[${qualification_num}][action]"]
   Wait Element Animation  xpath=//*[@class="fade modal in"]
   Select From list By Index  xpath=//*[@name="Qualifications[${qualification_num + 1}][action]"]  1
-  Click Element  xpath=//*[@name="Qualifications[cause][]"][@value="Не вiдповiдає квалiфiкацiйним критерiям."]
-  Click Element  xpath=//*[@name="Qualifications[cause][]"][@value="Наявнi пiдстави, зазначенi у статтi 17."]
-  Click Element  xpath=//*[@name="Qualifications[cause][]"][@value="Не вiдповiдає вимогам тендерної документацiї."]
+  Click Element  xpath=//*[@data-mtitle="№" and contains(text(),"${qualification_num + 1}")]//ancestor::*[contains(@class,"tbl-r")]/descendant::*[@name="Qualifications[cause][]"][@value="Не вiдповiдає квалiфiкацiйним критерiям."]
+  Click Element  xpath=//*[@data-mtitle="№" and contains(text(),"${qualification_num + 1}")]//ancestor::*[contains(@class,"tbl-r")]/descendant::*[@name="Qualifications[cause][]"][@value="Наявнi пiдстави, зазначенi у статтi 17."]
+  Click Element  xpath=//*[@data-mtitle="№" and contains(text(),"${qualification_num + 1}")]//ancestor::*[contains(@class,"tbl-r")]/descendant::*[@name="Qualifications[cause][]"][@value="Не вiдповiдає вимогам тендерної документацiї."]
   Дочекатися І Клікнути  xpath=//*[@class="mk-btn mk-btn_danger btn-submitform_qualification"]
 
 
