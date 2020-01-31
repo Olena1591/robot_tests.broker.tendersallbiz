@@ -135,7 +135,7 @@ def adapt_procuringEntity(role_name, tender_data):
         tender_data['data']['procuringEntity']['identifier']['id'] = u"12312312"
         tender_data['data']['procuringEntity']['contactPoint']['name'] = u"бла бла"
         tender_data['data']['procuringEntity']['contactPoint']['telephone'] = u"+38(099)353-10-28"
-        # tender_data['data']['procuringEntity']['contactPoint']['url'] = u"https://tenders.all.biz"
+        tender_data['data']['procuringEntity']['contactPoint']['url'] = u"http://webpage.com.ua"
         if tender_data['data'].has_key('procurementMethodType'):
             if "above" in tender_data['data']['procurementMethodType']:
                 tender_data['data']['tenderPeriod']['startDate'] = subtract_min_from_date(
